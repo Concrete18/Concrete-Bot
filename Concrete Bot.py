@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord import Client
+import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
 import os
@@ -19,50 +19,44 @@ my_handler.setFormatter(log_formatter)
 logger.addHandler(my_handler)
 # Other
 logger.info(f'Discord Bot PID is {current_pid}.')
-client = Client()
 bot = commands.Bot(command_prefix='/')
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'We have logged in as {client.user}.')
-    logger.info(f'We have logged in as {client.user}.')
+    print(f'{bot.user} is ready.')
+    logger.info(f'Logged in as {bot.user}')
+    await bot.change_presence(activity = ds.Activity(type = ds.ActivityType.watching, name = 'Bot How To\'s'))
 
 
-@client.event
-async def on_message(message):
-    responses = {
-    'this is the best server':'Damn Right it is!',
-    'hello there':'Ahh general kenobi',
-            }
-    jojo = [
-        'oh my god', 'Oh? You\'re approaching me?'
-        ]
-    if message.author == client.user:
-        return
-    if message.content.lower() in responses:
-        await message.channel.send(responses[message.content.lower()])
-    if message.content.lower() in jojo:
-        await message.channel.send('Is that a Jojo reference?')
-
-
-@bot.command(pass_context=True)
-@commands.has_any_role('Admin', 'Moderator')
-async def clean(ctx, limit: int):
-        await ctx.channel.purge(limit=limit)
-        logger.info(f'Messages purged by {ctx.author.mention}.')
+# @client.event
+# async def on_message(message):
+#     responses = {
+#     'this is the best server':'Damn Right it is!',
+#     'hello there':'Ahh general kenobi',
+#             }
+#     jojo = [
+#         'oh my god', 'Oh? You\'re approaching me?'
+#         ]
+#     if message.author == client.user:
+#         return
+#     if message.content.lower() in responses:
+#         await message.channel.send(responses[message.content.lower()])
+#     if message.content.lower() in jojo:
+#         await message.channel.send('Is that a Jojo reference?')
 
 # TODO add games in common checker
 
-@clean.error
-async def clear_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You cant do that!")
 
-
-@bot.command()
+@bot.command(name = 'ping', help = 'Fetches latency.')
 async def ping(ctx):
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
 
-client.run(passcodefile)
+@bot.command(name = 'Shared game checker', help = 'Finds games in commmon among up to 4 accounts using steam id\'s.')
+# TODO add games in common checker
+async def test(ctx, id):
+    await ctx.send(f'Your ID is {id}')
+
+
+bot.run(passcodefile)
