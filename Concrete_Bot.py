@@ -26,9 +26,42 @@ with open('pid.txt', "w") as file:
 # var init
 jojo_run_cooldown = 4
 last_jojo_run = dt.datetime.now()-dt.timedelta(hours=jojo_run_cooldown)
+start_time = dt.datetime.now()
 # bot init
 bot = commands.Bot(command_prefix='/')
 client = ds.Client()
+
+
+def readable_time_since(seconds):
+    '''
+    Returns time since based on seconds argument in the unit of time that makes the most sense
+    rounded to 1 decimal place.
+    '''
+    seconds_in_minute = 60
+    seconds_in_hour = 3600
+    seconds_in_day = 86400
+    seconds_in_month = 2628288
+    seconds_in_year = 3.154e+7
+    # minutes
+    if seconds < seconds_in_hour:
+        minutes = round(seconds / seconds_in_minute, 1)
+        return f'{minutes} minutes'
+    # hours
+    elif seconds < seconds_in_day:
+        hours = round(seconds / seconds_in_hour, 1)
+        return f'{hours} hours'
+    # days
+    elif  seconds < seconds_in_month:
+        days = round(seconds / seconds_in_day, 1)
+        return f'{days} days'
+    # months
+    elif seconds < seconds_in_year:
+        months = round(seconds / seconds_in_month, 1)
+        return f'{months} months'
+    # years
+    else:
+        years = round(seconds / seconds_in_year, 1)
+        return f'{years} years'
 
 
 @bot.event
@@ -100,11 +133,11 @@ async def ping(ctx):
     await ctx.send(f'Current Ping: {round(bot.latency * 1000)}ms')
 
 
-@commands.has_permissions(manage_messages=True)
 @bot.command(
     name = 'purge',
     help = 'Deletes n number of messages.',
     brief='deletes n messages from newest to oldest.')
+@commands.has_permissions(manage_messages=True)
 async def purge(ctx, num: int):
     '''
     Purges n number of messages.
@@ -151,37 +184,49 @@ async def vote(ctx):
     await ctx.send(msg)
 
 
+@bot.command(
+    name = 'uptime',
+    help = 'Gets Bot uptime.')
+async def uptime(ctx):
+    '''
+    Sends the total time the bot has been running.
+    TODO add uptime function
+    '''
+    uptime_seconds = dt.datetime.now().timestamp()-start_time.timestamp()
+    await ctx.send(f'Bot Uptime: {readable_time_since(uptime_seconds)}')
+
+
 # wip commands
-# @bot.command(
-#     name = 'serverstatus',
-#     help = 'WIP Get server status of Rob\'s server.')
-# async def vote(ctx):
-#     '''
-#     TODO add server status function
-#     '''
-#     status = 'Unknown'
-#     await ctx.send(f'Server Status: {status}')
+@bot.command(
+    name = 'serverstatus',
+    help = 'WIP Get server status of Rob\'s server.')
+async def vote(ctx):
+    '''
+    TODO add server status function
+    '''
+    status = 'Unknown'
+    await ctx.send(f'Server Status: {status}')
 
 
-# @bot.command(
-#     name = 'vote',
-#     help = 'WIP | Voting system.')
-# async def vote(ctx):
-#     '''
-#     TODO add voting command
-#     '''
-#     await ctx.send(f'Starting Vote. WIP')
+@bot.command(
+    name = 'vote',
+    help = 'WIP | Voting system.')
+async def vote(ctx):
+    '''
+    TODO add voting command
+    '''
+    await ctx.send(f'Starting Vote. WIP')
 
 
-# @bot.command(
-#     name ='sharedgames',
-#     help = 'WIP | Finds games in commmon among up to 4 accounts using steam id\'s.')
-# async def sharedgames(ctx, id_1, id_2, id_3='', id_4=''):
-#     '''
-#     TODO finish shared game checker command
-#     '''
-#     msg = f'Your ID is {id_1}'
-#     await ctx.send(msg)
+@bot.command(
+    name ='sharedgames',
+    help = 'WIP | Finds games in commmon among up to 4 accounts using steam id\'s.')
+async def sharedgames(ctx, id_1, id_2, id_3='', id_4=''):
+    '''
+    TODO finish shared game checker command
+    '''
+    msg = f'Your ID is {id_1}'
+    await ctx.send(msg)
 
 
 bot.run(passcode)
