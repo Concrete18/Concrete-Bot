@@ -133,18 +133,18 @@ async def ping(ctx):
     await ctx.send(f'Current Ping: {round(bot.latency * 1000)}ms')
 
 
-@bot.command(
-    name = 'purge',
-    help = 'Deletes n number of messages.',
-    brief='deletes n messages from newest to oldest.')
-@commands.has_permissions(manage_messages=True)
-async def purge(ctx, num: int):
-    '''
-    Purges n number of messages.
-    '''
-    # TODO add support to delete user messages instead of a number of messages
-    num = int(num) + 1
-    await ctx.channel.purge(limit=num)
+# @bot.command(
+#     name = 'purge',
+#     help = 'Deletes n number of messages.',
+#     brief='deletes n messages from newest to oldest.')
+# @commands.has_permissions(manage_messages=True)
+# async def purge(ctx, num: int):
+#     '''
+#     Purges n number of messages.
+#     '''
+#     # TODO add support to delete user messages instead of a number of messages
+#     num = int(num) + 1
+#     await ctx.channel.purge(limit=num)
 
 
 @bot.command(
@@ -197,36 +197,36 @@ async def uptime(ctx):
 
 
 # wip commands
-@bot.command(
-    name = 'serverstatus',
-    help = 'WIP Get server status of Rob\'s server.')
-async def vote(ctx):
-    '''
-    TODO add server status function
-    '''
-    status = 'Unknown'
-    await ctx.send(f'Server Status: {status}')
+# @bot.command(
+#     name = 'serverstatus',
+#     help = 'WIP Get server status of Rob\'s server.')
+# async def vote(ctx):
+#     '''
+#     TODO add server status function
+#     '''
+#     status = 'Unknown'
+#     await ctx.send(f'Server Status: {status}')
 
 
-@bot.command(
-    name = 'vote',
-    help = 'WIP | Voting system.')
-async def vote(ctx):
-    '''
-    TODO add voting command
-    '''
-    await ctx.send(f'Starting Vote. WIP')
+# @bot.command(
+#     name = 'vote',
+#     help = 'WIP | Voting system.')
+# async def vote(ctx):
+#     '''
+#     TODO add voting command
+#     '''
+#     await ctx.send(f'Starting Vote. WIP')
 
 
-@bot.command(
-    name ='sharedgames',
-    help = 'WIP | Finds games in commmon among up to 4 accounts using steam id\'s.')
-async def sharedgames(ctx, id_1, id_2, id_3='', id_4=''):
-    '''
-    TODO finish shared game checker command
-    '''
-    msg = f'Your ID is {id_1}'
-    await ctx.send(msg)
+# @bot.command(
+#     name ='sharedgames',
+#     help = 'WIP | Finds games in commmon among up to 4 accounts using steam id\'s.')
+# async def sharedgames(ctx, id_1, id_2, id_3='', id_4=''):
+#     '''
+#     TODO finish shared game checker command
+#     '''
+#     msg = f'Your ID is {id_1}'
+#     await ctx.send(msg)
 
 
 bot.run(passcode)
