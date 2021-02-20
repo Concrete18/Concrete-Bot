@@ -44,11 +44,8 @@ class Shared_Games:
         lists_to_check = []
         for id in steam_ids:
             if len(id) == 17:
-                try:
-                    games = self.get_game_names(id)
-                    lists_to_check.append(games)
-                except Exception:
-                    print(f'Missing data for steam id: {id}')
+                games = self.get_game_names(id)
+                lists_to_check.append(games)
                 print()
         lists_to_check_num = len(lists_to_check)
         if lists_to_check_num == 1:
