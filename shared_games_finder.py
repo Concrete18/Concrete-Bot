@@ -16,14 +16,14 @@ class Shared_Games:
         base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
         data = requests.get(base_url)
         print(base_url)
-        if data.status_code == requests.codes.ok:
-            game_list = []
-            for item in data.json()['response']['games']:
-                game_name = item['name']
-                game_list.append(game_name)
-            return game_list
-        else:
-            raise Exception
+        # if data.status_code == requests.codes.ok:
+        game_list = []
+        for item in data.json()['response']['games']:
+            game_name = item['name']
+            game_list.append(game_name)
+        return game_list
+        # else:
+        #     raise Exception
 
 
     @staticmethod

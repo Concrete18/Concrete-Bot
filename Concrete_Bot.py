@@ -69,7 +69,7 @@ def readable_time_since(seconds):
 async def on_ready():
     if sys.platform != 'win32':
         logger.info(f'Logged in as {bot.user}')
-    print(f'{bot.user} is ready.')
+    print(f'{bot.user} is ready.\n')
     await bot.change_presence(activity = ds.Activity(type = ds.ActivityType.watching, name = 'Bot Basic Training'))
 
 

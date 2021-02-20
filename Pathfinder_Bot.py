@@ -26,16 +26,24 @@ async def ping(ctx):
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
 
-@bot.command()
+@bot.command(
+    name = 'roll',
+    help = 'Roll dice',
+    brief='Roll dice with the NdN format.',
+    description='Example: 2d6 for 2 6 sided dice. Gives the sum of the numbers and a list of all of the numbers')
 async def roll(ctx, dice: str):
-    """Rolls a dice in NdN format."""
+    '''
+    Rolls a dice in NdN format.
+    '''
     try:
         rolls, limit = map(int, dice.split('d'))
     except Exception:
-        await ctx.send('Format has to be in NdN!')
+        await ctx.send('Format has to be in NdN!\nExample: 2d6 for 2 6 sided dice.')
         return
-
-    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+    int_list = []
+    for _ in range(rolls):
+        int_list.append(random.randint(1, limit))
+    result = f'Sum: {sum(int_list)} | {", ".join(map(str, int_list))}'
     await ctx.send(result)
 
 
