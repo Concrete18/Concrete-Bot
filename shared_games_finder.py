@@ -1,5 +1,3 @@
-# import requests
-from logging import exception
 import requests
 import time
 
@@ -17,15 +15,14 @@ class Shared_Games:
         '''
         base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
         data = requests.get(base_url)
+        print(base_url)
         if data.status_code == requests.codes.ok:
-            print('good data for', steam_id)
             game_list = []
             for item in data.json()['response']['games']:
                 game_name = item['name']
                 game_list.append(game_name)
             return game_list
         else:
-            print('404')
             raise Exception
 
 
@@ -34,18 +31,9 @@ class Shared_Games:
         '''
         Finds the shared games among the lists entered.
         '''
-        list_num = len(games)
-        shared = []
-        if list_num == 2:
-            shared = set(games[0]) & set(games[1])
-        if list_num == 3:
-            shared = set(games[0]) & set(games[1]) & set(games[2])
-        if list_num == 4:
-            shared = set(games[0]) & set(games[1]) & set(games[2]) & set(games[3])
-        if list_num == 5:
-            shared = set(games[0]) & set(games[1]) & set(games[2]) & set(games[3]) & set(games[4])
-        if list_num == 6:
-            shared = set(games[0]) & set(games[1]) & set(games[2]) & set(games[3]) & set(games[4]) & set(games[5])
+        shared = set(games[0])
+        for game in games:
+            shared &= set(game)
         return shared
 
 
@@ -55,17 +43,14 @@ class Shared_Games:
         '''
         lists_to_check = []
         for id in steam_ids:
-            print('given id', id)
             if len(id) == 17:
-                print('accepted id', id)
                 try:
                     games = self.get_game_names(id)
                     lists_to_check.append(games)
                 except Exception:
-                    pass
+                    print(f'Missing data for steam id: {id}')
                 print()
         lists_to_check_num = len(lists_to_check)
-        print()
         if lists_to_check_num == 1:
             return 'Only 1 user is valid'
         elif lists_to_check_num == 0:
