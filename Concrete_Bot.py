@@ -213,7 +213,7 @@ async def sharedgames(ctx, id_1='', id_2='', id_3='', id_4='', id_5='', id_6='')
     '''
     App = Shared_Games()
     steam_ids = [id_1, id_2, id_3, id_4, id_5, id_6]
-    result = App.Create_Game_Lists(steam_ids)
+    result = App.create_game_lists(steam_ids)
     print(result)
     await ctx.send(result)
 
