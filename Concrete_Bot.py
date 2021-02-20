@@ -20,11 +20,8 @@ logger.addHandler(my_handler)
 with open('passcode.txt') as file:
     passcode = file.read()
 # pid info
-current_pid = os.getpid()
 if sys.platform != 'win32':
-    logger.info(f'Discord Bot PID is {current_pid}.')
-with open('pid.txt', "w") as file:
-    file.write(str(current_pid))
+    logger.info(f'Discord Bot PID is {os.getpid()}.')
 # var init
 jojo_run_cooldown = 4
 last_jojo_run = dt.datetime.now()-dt.timedelta(hours=jojo_run_cooldown)
