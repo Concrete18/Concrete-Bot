@@ -74,10 +74,10 @@ def split_string(string):
     elif len(string) > 4000:
         return 'Output is too large.'
     else:
-        body1 = string[0:len(string)//2]
-        body2 = string[len(string)//2 if len(string)%2 == 0 else ((len(string)//2)+1):]
+        middle = len(string)//2
+        body1 = string[0:middle]
+        body2 = string[middle:]
         return body1, body2
-    # split_count = string / 2000
 
 
 @bot.event
