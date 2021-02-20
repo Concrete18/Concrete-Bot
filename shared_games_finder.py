@@ -14,12 +14,12 @@ class Shared_Games:
         Gets names of games owned by the entered Steam ID.
         '''
         base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
-        data = requests.get(base_url).json()
+        data = requests.get(base_url)
+        print(data)
         # if data.status_code == requests.codes.ok:
         game_list = []
         data
-        print(data['response']['games'])
-        for item in data['response']['games']:
+        for item in data.json()['response']['games']:
             game_name = item['name']
             game_list.append(game_name)
         return game_list
