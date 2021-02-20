@@ -15,7 +15,6 @@ class Shared_Games:
         '''
         base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
         data = requests.get(base_url)
-        print(data)
         # if data.status_code == requests.codes.ok:
         game_list = []
         data
@@ -47,8 +46,6 @@ class Shared_Games:
             if len(id) == 17:
                 games = self.get_game_names(id)
                 lists_to_check.append(games)
-                time.sleep(2)
-                print()
         lists_to_check_num = len(lists_to_check)
         if lists_to_check_num == 1:
             return 'Only 1 user is valid'
