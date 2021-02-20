@@ -47,6 +47,7 @@ class Shared_Games:
             if len(id) == 17:
                 games = self.get_game_names(id)
                 lists_to_check.append(games)
+                time.sleep(2)
                 print()
         lists_to_check_num = len(lists_to_check)
         if lists_to_check_num == 1:
