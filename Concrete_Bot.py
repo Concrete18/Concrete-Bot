@@ -30,7 +30,7 @@ start_time = dt.datetime.now()
 bot = commands.Bot(command_prefix='/')
 client = ds.Client()
 
-print('Starting Bot')
+print('Starting Concrete Bot')
 
 
 def readable_time_since(seconds):
@@ -63,6 +63,21 @@ def readable_time_since(seconds):
     else:
         years = round(seconds / seconds_in_year, 1)
         return f'{years} years'
+
+
+def split_string(string):
+    '''
+    Splits given string in half if it is over 2000 characters without breaking words.
+    '''
+    if len(string) <= 2000:
+        return string
+    elif len(string) > 4000:
+        return 'Output is too large.'
+    else:
+        body1 = string[0:len(string)//2]
+        body2 = string[len(string)//2 if len(string)%2 == 0 else ((len(string)//2)+1):]
+        return body1, body2
+    # split_count = string / 2000
 
 
 @bot.event
@@ -196,7 +211,6 @@ async def vote(ctx):
 async def uptime(ctx):
     '''
     Sends the total time the bot has been running.
-    TODO add uptime function
     '''
     uptime_seconds = dt.datetime.now().timestamp()-start_time.timestamp()
     await ctx.send(f'Bot Uptime: {readable_time_since(uptime_seconds)}')
@@ -206,16 +220,20 @@ async def uptime(ctx):
 
 @bot.command(
     name ='sharedgames',
-    help = 'Finds games in commmon among the libraries of the entered steam id\'s.')
+    help = 'Finds games in commmon among the libraries of the entered steam id\'s.',
+    description='You can use steamidfinder.com to find the steam id\'s.\nExample: /sharedgames 21312313 123123123 12312312\n steam id\'s must be 17 characters long.')
 async def sharedgames(ctx, id_1='', id_2='', id_3='', id_4='', id_5='', id_6=''):
     '''
-    TODO finish shared game checker command
+    Finds games in commmon among the libraries of the entered steam id's.
     '''
+    # TODO use proper delete command
+    await ctx.channel.purge(limit=1)
     App = Shared_Games()
+    # TODO fix steam id entry to not be hardcoded
     steam_ids = [id_1, id_2, id_3, id_4, id_5, id_6]
     result = App.create_game_lists(steam_ids)
-    print(result)
-    await ctx.send(result)
+    for item in split_string(result):
+        await ctx.send(item)
 
 
 @bot.command(

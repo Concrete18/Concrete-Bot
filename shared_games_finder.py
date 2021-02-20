@@ -9,21 +9,26 @@ class Shared_Games:
             self.api_key = f.read()
 
 
+    def get_steam_id(self, vanity_url):
+        base_url = f'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={self.api_key}&vanityurl={vanity_url}&url_type=1'
+        print(base_url)
+
+
     def get_game_names(self, steam_id):
         '''
         Gets names of games owned by the entered Steam ID.
         '''
         base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
         data = requests.get(base_url)
-        # if data.status_code == requests.codes.ok:
-        game_list = []
-        data
-        for item in data.json()['response']['games']:
-            game_name = item['name']
-            game_list.append(game_name)
-        return game_list
-        # else:
-        #     raise Exception
+        if data.status_code == requests.codes.ok:
+            game_list = []
+            data
+            for item in data.json()['response']['games']:
+                game_name = item['name']
+                game_list.append(game_name)
+            return game_list
+        else:
+            raise Exception
 
 
     @staticmethod
@@ -41,6 +46,7 @@ class Shared_Games:
         '''
         Creates a list containing a list each of the profiles games entered using the get_game_names Function.
         '''
+        # TODO add a way to get info without steam id
         lists_to_check = []
         for id in steam_ids:
             if len(id) == 17:
@@ -59,6 +65,8 @@ class Shared_Games:
 
 if __name__ == "__main__":
     App = Shared_Games()
+    # App.get_steam_id('https://steamcommunity.com/id/PathieZ')
+    # input()
     overall_start = time.perf_counter() # start time for checking elaspsed runtime
     print(App.create_game_lists(['76561197982626192', '76561198088659293', '76561198093285176', '76561198084087457']))
     overall_finish = time.perf_counter() # stop time for checking elaspsed runtime
