@@ -206,7 +206,7 @@ async def uptime(ctx):
 
 @bot.command(
     name ='sharedgames',
-    help = 'Finds games in commmon among up to 6 accounts using steam id\'s.')
+    help = 'Finds games in commmon among the libraries of the entered steam id\'s.')
 async def sharedgames(ctx, id_1='', id_2='', id_3='', id_4='', id_5='', id_6=''):
     '''
     TODO finish shared game checker command
