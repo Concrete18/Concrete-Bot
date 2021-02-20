@@ -72,7 +72,7 @@ class Shared_Games:
             return 'No users are valid'
         final_list = self.check_for_shared_games(lists_to_check)
         shared_games = ', '.join(final_list)
-        result = f'{len(final_list)} shared games found.\n{shared_games}'
+        result = f'{len(final_list)} shared games found.\n\n{shared_games}'
         return result
 
 
