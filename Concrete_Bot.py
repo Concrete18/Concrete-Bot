@@ -1,4 +1,5 @@
 from logging.handlers import RotatingFileHandler
+from discord import channel
 from discord.ext import commands
 import discord as ds
 import datetime as dt
@@ -6,6 +7,7 @@ import logging as lg
 import random
 import sys
 import os
+from shared_games_finder import Shared_Games
 
 # Logging
 log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
@@ -30,6 +32,8 @@ start_time = dt.datetime.now()
 # bot init
 bot = commands.Bot(command_prefix='/')
 client = ds.Client()
+
+print('Starting Bot')
 
 
 def readable_time_since(seconds):
@@ -133,25 +137,29 @@ async def ping(ctx):
     await ctx.send(f'Current Ping: {round(bot.latency * 1000)}ms')
 
 
-# @bot.command(
-#     name = 'purge',
-#     help = 'Deletes n number of messages.',
-#     brief='deletes n messages from newest to oldest.')
-# @commands.has_permissions(manage_messages=True)
-# async def purge(ctx, num: int):
-#     '''
-#     Purges n number of messages.
-#     '''
-#     # TODO add support to delete user messages instead of a number of messages
-#     num = int(num) + 1
-#     await ctx.channel.purge(limit=num)
+@bot.command(
+    name = 'purge',
+    help = 'Deletes n number of messages.',
+    brief='deletes n messages from newest to oldest.')
+@commands.has_guild_permissions(manage_messages=True)
+async def purge(ctx, num: int):
+    '''
+    Purges n number of messages.
+    '''
+    # TODO add support to delete user messages instead of a number of messages
+    try:
+        num = int(num) + 1
+        await ctx.channel.purge(limit=num)
+    except:
+        user = 'Unknown'
+        logger.info(f'{user} User tried to use purge command.')
 
 
 @bot.command(
     name = 'roll',
-    help = 'Roll dice WIP',
+    help = 'Roll dice',
     brief='Roll dice with the NdN format.',
-    description='Roll dice with the NdN format. Example: 2d6 for 2 6 sided dice.')
+    description='Example: 2d6 for 2 6 sided dice. Gives the sum of the numbers and a list of all of the numbers')
 async def roll(ctx, dice: str):
     '''
     Rolls a dice in NdN format.
@@ -161,9 +169,10 @@ async def roll(ctx, dice: str):
     except Exception:
         await ctx.send('Format has to be in NdN!\nExample: 2d6 for 2 6 sided dice.')
         return
-    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-    # TODO add sum
-    # result = f'{rolls} | Sum:'
+    int_list = []
+    for _ in range(rolls):
+        int_list.append(random.randint(1, limit))
+    result = f'Sum: {sum(int_list)} | {", ".join(map(str, int_list))}'
     await ctx.send(result)
 
 
@@ -197,36 +206,56 @@ async def uptime(ctx):
 
 
 # wip commands
-# @bot.command(
-#     name = 'serverstatus',
-#     help = 'WIP Get server status of Rob\'s server.')
-# async def vote(ctx):
-#     '''
-#     TODO add server status function
-#     '''
-#     status = 'Unknown'
-#     await ctx.send(f'Server Status: {status}')
+
+@bot.command(
+    name ='sharedgames',
+    help = 'Finds games in commmon among up to 6 accounts using steam id\'s.')
+async def sharedgames(ctx, id_1='', id_2='', id_3='', id_4='', id_5='', id_6=''):
+    '''
+    TODO finish shared game checker command
+    '''
+    App = Shared_Games()
+    steam_ids = [id_1, id_2, id_3, id_4, id_5, id_6]
+    result = App.Create_Game_Lists(steam_ids)
+    print(result)
+    await ctx.send(result)
 
 
-# @bot.command(
-#     name = 'vote',
-#     help = 'WIP | Voting system.')
-# async def vote(ctx):
-#     '''
-#     TODO add voting command
-#     '''
-#     await ctx.send(f'Starting Vote. WIP')
+@bot.command(
+    name = 'speak',
+    help = 'speaks what I you type after the command.',
+    hidden=True)
+@commands.has_any_role('Mcdonald\'s CIEIO', 'Owner')
+async def speak(ctx, message):
+    '''
+    TODO add speak
+    '''
+    await channel.delete_message(message)
+    print(message)
+    await ctx.send(f'Message: {message}')
 
 
-# @bot.command(
-#     name ='sharedgames',
-#     help = 'WIP | Finds games in commmon among up to 4 accounts using steam id\'s.')
-# async def sharedgames(ctx, id_1, id_2, id_3='', id_4=''):
-#     '''
-#     TODO finish shared game checker command
-#     '''
-#     msg = f'Your ID is {id_1}'
-#     await ctx.send(msg)
+@bot.command(
+    name = 'serverstatus',
+    help = 'WIP Get server status of Rob\'s server.',
+    hidden=True)
+async def vote(ctx):
+    '''
+    TODO add server status function
+    '''
+    status = 'Unknown'
+    await ctx.send(f'Server Status: {status}')
+
+
+@bot.command(
+    name = 'vote',
+    help = 'WIP | Voting system.',
+    hidden=True)
+async def vote(ctx):
+    '''
+    TODO add voting command
+    '''
+    await ctx.send(f'Starting Vote. WIP')
 
 
 bot.run(passcode)
