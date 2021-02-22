@@ -29,6 +29,7 @@ start_time = dt.datetime.now()
 # bot init
 bot = commands.Bot(command_prefix='/')
 client = ds.Client()
+Shared = Shared_Games()
 
 print('Starting Concrete Bot')
 
@@ -65,19 +66,18 @@ def readable_time_since(seconds):
         return f'{years} years'
 
 
-def split_string(string):
+async def split_string(ctx, string):
     '''
-    Splits given string in half if it is over 2000 characters without breaking words.
+    Sends a split string in half if it is over 2000 characters.
     '''
     if len(string) <= 2000:
-        return string
+        await ctx.send(string)
     elif len(string) > 4000:
-        return 'Output is too large.'
+        await ctx.send('Output is too large.')
     else:
         middle = len(string)//2
-        body1 = string[0:middle]
-        body2 = string[middle:]
-        return body1, body2
+        await ctx.send(string[0:middle])
+        await ctx.send(string[middle:])
 
 
 @bot.event
@@ -133,15 +133,13 @@ async def on_message(message):
             await message.channel.send('Is that a Jojo reference?')
         else:
             print('Jojo reference detected but cooldown active.')
-    # for testing
-    # if message.content.lower() == 'new join':
-    #     await message.author.add_roles('Member', reason='New Member', atomic=True)
     await bot.process_commands(message)  # so command instances will still get called
 
 
 @bot.command(
     name = 'ping',
-    help = 'Fetches latency in milliseconds.')
+    brief = 'Fetches latency in milliseconds.',
+    description='Fetches latency in milliseconds.')
 async def ping(ctx):
     '''
     Returns current ping to bot server.
@@ -151,8 +149,8 @@ async def ping(ctx):
 
 @bot.command(
     name = 'purge',
-    help = 'Deletes n number of messages.',
-    brief='deletes n messages from newest to oldest.')
+    brief='Deletes n messages from newest to oldest.',
+    description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.')
 @commands.has_guild_permissions(manage_messages=True)
 async def purge(ctx, num: int):
     '''
@@ -169,7 +167,6 @@ async def purge(ctx, num: int):
 
 @bot.command(
     name = 'roll',
-    help = 'Roll dice',
     brief='Roll dice with the NdN format.',
     description='Example: 2d6 for 2 6 sided dice. Gives the sum of the numbers and a list of all of the numbers')
 async def roll(ctx, dice: str):
@@ -184,13 +181,14 @@ async def roll(ctx, dice: str):
     int_list = []
     for _ in range(rolls):
         int_list.append(random.randint(1, limit))
-    result = f'Sum: {sum(int_list)} | {", ".join(map(str, int_list))}'
+    result = f'Sum: {sum(int_list)}\nRolls: {", ".join(map(str, int_list))}'
     await ctx.send(result)
 
 
 @bot.command(
     name = 'flip',
-    help = 'Flip a coin.')
+    brief = 'Flip a coin.',
+    description='Flips a coin. Who knows what result will be.')
 async def vote(ctx):
     '''
     Flips a coin. Heads or Tails.
@@ -207,38 +205,37 @@ async def vote(ctx):
 
 @bot.command(
     name = 'uptime',
-    help = 'Gets Bot uptime.')
+    brief = 'Gets Bot uptime.',
+    description='Gets the Bot uptime since it last was started.')
 async def uptime(ctx):
     '''
-    Sends the total time the bot has been running.
+    Sends the total time the bot has been running using the readable_time_since function.
     '''
     uptime_seconds = dt.datetime.now().timestamp()-start_time.timestamp()
     await ctx.send(f'Bot Uptime: {readable_time_since(uptime_seconds)}')
 
 
-# wip commands
-
 @bot.command(
     name ='sharedgames',
-    help = 'Finds games in commmon among the libraries of the entered steam id\'s.',
-    description='You can use steamidfinder.com to find the steam id\'s.\nExample: /sharedgames 21312313 123123123 12312312\n steam id\'s must be 17 characters long.')
-async def sharedgames(ctx, id_1='', id_2='', id_3='', id_4='', id_5='', id_6=''):
+    brief = 'Finds owned games in commmon using steam id\'s.',
+    description='Finds games in commmon among the libraries of the entered steam id\'s.',
+    help='You can use steamidfinder.com to find the steam id\'s.\nExample: /sharedgames 21312313 123123123 12312312\nSteam Id\'s must be 17 characters long.')
+async def sharedgames(ctx, *steam_ids):
     '''
     Finds games in commmon among the libraries of the entered steam id's.
     '''
     # TODO use proper delete command
     await ctx.channel.purge(limit=1)
-    App = Shared_Games()
-    # TODO fix steam id entry to not be hardcoded
-    steam_ids = [id_1, id_2, id_3, id_4, id_5, id_6]
-    result = App.create_game_lists(steam_ids)
-    for item in split_string(result):
-        await ctx.send(item)
+    await ctx.send(f'Finding shared games from {len(steam_ids)} steam id\'s.')
+    result = Shared.create_game_lists(steam_ids)
+    await split_string(ctx, result)
 
+
+# wip commands
 
 @bot.command(
     name = 'speak',
-    help = 'speaks what I you type after the command.',
+    brief = 'speaks what I you type after the command.',
     hidden=True)
 @commands.has_any_role('Mcdonald\'s CIEIO', 'Owner')
 async def speak(ctx, message):
@@ -252,7 +249,7 @@ async def speak(ctx, message):
 
 @bot.command(
     name = 'serverstatus',
-    help = 'WIP Get server status of Rob\'s server.',
+    brief = 'WIP Get server status of Rob\'s server.',
     hidden=True)
 async def vote(ctx):
     '''
@@ -264,7 +261,7 @@ async def vote(ctx):
 
 @bot.command(
     name = 'vote',
-    help = 'WIP | Voting system.',
+    brief = 'WIP | Voting system.',
     hidden=True)
 async def vote(ctx):
     '''

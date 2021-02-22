@@ -10,16 +10,18 @@ class Shared_Games:
 
 
     def get_steam_id(self, vanity_url):
-        base_url = f'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={self.api_key}&vanityurl={vanity_url}&url_type=1'
-        print(base_url)
+        base_url = f'https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/'
+        url_end = f'?key={self.api_key}&vanityurl={vanity_url}&url_type=1'
+        print(base_url + url_end)
 
 
     def get_game_names(self, steam_id):
         '''
         Gets names of games owned by the entered Steam ID.
         '''
-        base_url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
-        data = requests.get(base_url)
+        base_url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/'
+        url_end = f'?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
+        data = requests.get(base_url + url_end)
         if data.status_code == requests.codes.ok:
             game_list = []
             data
@@ -58,6 +60,8 @@ class Shared_Games:
         elif lists_to_check_num == 0:
             return 'No users are valid'
         final_list = self.check_for_shared_games(lists_to_check)
+        if len(final_list) == 0:
+            return 'No shared games found.'
         shared_games = ', '.join(final_list)
         result = f'{len(final_list)} shared games found.\n\n{shared_games}'
         return result
@@ -65,8 +69,6 @@ class Shared_Games:
 
 if __name__ == "__main__":
     App = Shared_Games()
-    # App.get_steam_id('https://steamcommunity.com/id/PathieZ')
-    # input()
     overall_start = time.perf_counter() # start time for checking elaspsed runtime
     print(App.create_game_lists(['76561197982626192', '76561198088659293', '76561198093285176', '76561198084087457']))
     overall_finish = time.perf_counter() # stop time for checking elaspsed runtime
