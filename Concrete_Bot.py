@@ -91,14 +91,25 @@ async def on_ready():
 
 
 @bot.event
+async def on_command_error(ctx, error):
+    logger.debug(str(error))
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(f'{ctx.author.mention} is missing the required permission.')
+    elif isinstance(error, commands.MissingAnyRole):
+        await ctx.send(f'{ctx.author.mention} is missing the required role.')
+    else:
+        raise(error)
+
+
+@bot.event
 async def on_member_join(member):
     '''
     Give new members the "Member" role.
     '''
     logger.info(f'{member} joined the server')
     print(f'New member joined named: {member}.')
-    # TODO fix add role function
-    await member.add_roles('Member', reason='New Member', atomic=True)
+    role = member.guild.get_role(377683900580888576)
+    await member.add_roles(role, reason='New Member')
 
 
 @bot.event
@@ -122,10 +133,10 @@ async def on_message(message):
         await message.channel.send(responses[message.content.lower()])
     # jojo refrences
     jojo = [
-        'oh my god', 'ohhh myyy godddd', 'ohhh myyy godddd!!!',
+        'oh my god', 'oh my god!','ohhh myyy godddd', 'ohhh myyy godddd!!!',
         'oh? You\'re aproaching me?',
         'you truly are the lowest scum in history',
-        'diooo0!', 'diooo!', 'diooo', 'dioo!',
+        'diooo', 'diooo!', 'diooo', 'dioo!',
         'za warudo',
         'my name is yoshikage kira',
         'yare yare']
@@ -227,26 +238,26 @@ async def sharedgames(ctx, *steam_ids):
     Finds games in commmon among the libraries of the entered steam id's.
     '''
     # TODO use proper delete command
-    await ctx.channel.purge(limit=1)
+    await ctx.message.delete()
     await ctx.send(f'Finding shared games from {len(steam_ids)} steam id\'s.')
     result = Shared.create_game_lists(steam_ids)
     await split_string(ctx, result)
 
 
-# wip commands
-
+@commands.has_any_role('Mcdonald\'s CIEIO', 'Owner')
 @bot.command(
     name = 'speak',
     brief = 'speaks what I you type after the command.',
-    hidden=True)
-@commands.has_any_role('Mcdonald\'s CIEIO', 'Owner')
-async def speak(ctx, message):
-    '''
-    TODO add speak
-    '''
-    await channel.delete_message(message)
-    print(message)
-    await ctx.send(f'Message: {message}')
+    hidden=True,
+    pass_context = True)
+async def speak(ctx, *args):
+    mesg = ' '.join(args)
+    await ctx.message.delete()
+    # await bot.delete_message(ctx.message)
+    return await ctx.send(mesg)
+
+
+# wip commands
 
 
 @bot.command(
