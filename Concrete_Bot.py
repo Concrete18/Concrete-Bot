@@ -1,5 +1,5 @@
 from logging.handlers import RotatingFileHandler
-from discord import channel
+from discord import channel,Intents
 from discord.ext import commands
 import discord as ds
 import datetime as dt
@@ -27,7 +27,9 @@ jojo_run_cooldown = 4
 last_jojo_run = dt.datetime.now()-dt.timedelta(hours=jojo_run_cooldown)
 start_time = dt.datetime.now()
 # bot init
-bot = commands.Bot(command_prefix='/')
+
+intents = Intents.all()
+bot = commands.Bot(command_prefix='/', intents=intents)
 client = ds.Client()
 Shared = Shared_Games()
 
