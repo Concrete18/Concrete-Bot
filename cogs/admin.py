@@ -10,6 +10,7 @@ class Admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.client = ds.Client()
         # Logging
         log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
         self.logger = lg.getLogger(__name__)
@@ -17,15 +18,6 @@ class Admin(commands.Cog):
         my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
         my_handler.setFormatter(log_formatter)
         self.logger.addHandler(my_handler)
-
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        if sys.platform != 'win32':
-            self.logger.info(f'Logged in as {bot.user}')
-        print(f'{self.bot.user} is ready.\n')
-        activity_name = 'Bot Advanced Training'
-        await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.watching, name=activity_name))
 
 
     @commands.Cog.listener()
