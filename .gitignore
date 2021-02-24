@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # custon
-*.txt
+secret.json
 bot.log
+*.txt
+.vscode
