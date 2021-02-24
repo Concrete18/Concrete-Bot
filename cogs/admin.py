@@ -1,0 +1,98 @@
+from discord.ext import commands
+import discord as ds
+import sys
+import os
+
+class Admin(commands.Cog):
+
+
+    def __init__(self, bot):
+        self.bot = bot
+
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        if sys.platform != 'win32':
+            pass
+            logger.info(f'Logged in as {bot.user}')
+        print(f'{self.bot.user} is ready.\n')
+        activity_name = 'Bot Basic Training'
+        await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.watching, name=activity_name))
+
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        info = f'Command: {ctx.command} | Error: {str(error)}'
+        # logger.debug(info)
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.')
+        elif isinstance(error, commands.MissingAnyRole):
+            await ctx.send(f'{ctx.author.mention} is missing the required role for the {ctx.command} command.')
+        else:
+            raise(error)
+
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        '''
+        Give new members the "Member" role.
+        Make sure the bot role is above the role you are wanting it to assign.
+        '''
+        print(f'New member joined named: {member}.')
+        # logger.info(f'{member} joined the server')
+        role = member.guild.get_role(377683900580888576)
+        await member.add_roles(role, reason='New Member')
+
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        '''
+        Logs members that left the server.
+        '''
+        msg = f'{member} left the server'
+        print(msg)
+        # logger.info(msg)
+
+
+    @commands.command(
+        name ='purge',
+        brief='Deletes n messages from newest to oldest.',
+        description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.',
+        hidden=True)
+    @commands.has_guild_permissions(manage_messages=True)
+    async def purge(self, ctx, num: int):
+        '''
+        Purges n number of messages.
+        '''
+        # TODO add support to delete all of a specific users messages
+        await ctx.channel.purge(limit=int(num) + 1)
+
+
+    # FIXME permission error
+    @commands.command(
+        name = 'speak',
+        aliases=['say'],
+        brief = 'speaks what I you type after the command.',
+        hidden=True,
+        pass_context = True)
+    @commands.has_role('Owner')
+    async def speak(self, ctx, *args):
+        msg = ' '.join(args)
+        await ctx.message.delete()
+        return await ctx.send(msg)
+
+
+    @commands.command(
+        name ='pid',
+        brief='Sends current bot PID.',
+        description='Sends current bot PID.',
+        hidden=True)
+    async def pid(self, ctx):
+        '''
+        Sends current bot PID.
+        '''
+        await ctx.send(f'PID: {os.getpid()}')
+
+
+def setup(bot):
+    bot.add_cog(Admin(bot))
