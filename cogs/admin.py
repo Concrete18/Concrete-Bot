@@ -1,5 +1,7 @@
 from discord.ext import commands
 import discord as ds
+from logging.handlers import RotatingFileHandler
+import logging as lg
 import sys
 import os
 
@@ -8,22 +10,29 @@ class Admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        # Logging
+        log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
+        self.logger = lg.getLogger(__name__)
+        self.logger.setLevel(lg.DEBUG) # Log Level
+        my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
+        my_handler.setFormatter(log_formatter)
+        self.logger.addHandler(my_handler)
 
 
     @commands.Cog.listener()
     async def on_ready(self):
         if sys.platform != 'win32':
-            pass
-            logger.info(f'Logged in as {bot.user}')
+            self.logger.info(f'Logged in as {bot.user}')
         print(f'{self.bot.user} is ready.\n')
-        activity_name = 'Bot Basic Training'
+        activity_name = 'Bot Advanced Training'
         await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.watching, name=activity_name))
 
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         info = f'Command: {ctx.command} | Error: {str(error)}'
-        # logger.debug(info)
+        print(info)
+        self.logger.debug(info)
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.')
         elif isinstance(error, commands.MissingAnyRole):
@@ -38,8 +47,9 @@ class Admin(commands.Cog):
         Give new members the "Member" role.
         Make sure the bot role is above the role you are wanting it to assign.
         '''
-        print(f'New member joined named: {member}.')
-        # logger.info(f'{member} joined the server')
+        msg = f'{member} joined the server'
+        print(msg)
+        self.logger.info(msg)
         role = member.guild.get_role(377683900580888576)
         await member.add_roles(role, reason='New Member')
 
@@ -51,7 +61,7 @@ class Admin(commands.Cog):
         '''
         msg = f'{member} left the server'
         print(msg)
-        # logger.info(msg)
+        self.logger.info(msg)
 
 
     @commands.command(
@@ -72,7 +82,7 @@ class Admin(commands.Cog):
     @commands.command(
         name = 'speak',
         aliases=['say'],
-        brief = 'speaks what I you type after the command.',
+        brief = 'Bot says what you type after the command.',
         hidden=True,
         pass_context = True)
     @commands.has_role('Owner')

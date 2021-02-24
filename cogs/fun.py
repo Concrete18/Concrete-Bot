@@ -1,6 +1,8 @@
 from discord.ext import commands
-import datetime as dt
 import discord as ds
+from logging.handlers import RotatingFileHandler
+import logging as lg
+import datetime as dt
 import random
 import json
 
@@ -18,6 +20,14 @@ class Fun(commands.Cog):
         self.jojo_run_cooldown = self.data['settings']['jojo_run_cooldown']
         self.last_jojo_run = dt.datetime.now()-dt.timedelta(hours=self.jojo_run_cooldown)
         self.client = ds.Client()
+        # Logging
+        log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
+        self.logger = lg.getLogger(__name__)
+        self.logger.setLevel(lg.DEBUG) # Log Level
+        my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
+        my_handler.setFormatter(log_formatter)
+        self.logger.addHandler(my_handler)
+
 
 
     # TODO add birthday task
@@ -40,7 +50,7 @@ class Fun(commands.Cog):
                 await message.channel.send('Is that a Jojo reference?')
             else:
                 print('Jojo reference detected but cooldown active.')
-                # TODO add logging
+                self.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
 
 
     @commands.command(
@@ -55,7 +65,8 @@ class Fun(commands.Cog):
         result = random.randint(1, 6000+1)
         if result == 1:
             msg = '...... It landed on its side. There is a 1 in 6000 chance of that happening.'
-            # logger.info(f'{ctx.author} flipped a coin onto it\'s side.')
+            print(msg)
+            self.logger.info(f'{ctx.author} flipped a coin onto it\'s side.')
         elif (result % 2) == 0:
             msg = 'It landed on Heads.'
         else:

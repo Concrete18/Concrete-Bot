@@ -1,4 +1,6 @@
 from discord.ext import commands
+from logging.handlers import RotatingFileHandler
+import logging as lg
 import datetime as dt
 
 
@@ -8,6 +10,13 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.start_time = dt.datetime.now()
+        # Logging
+        log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
+        self.logger = lg.getLogger(__name__)
+        self.logger.setLevel(lg.DEBUG) # Log Level
+        my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
+        my_handler.setFormatter(log_formatter)
+        self.logger.addHandler(my_handler)
 
 
     @staticmethod
