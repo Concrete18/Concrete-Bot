@@ -1,0 +1,31 @@
+{
+    "settings":
+    {
+        "jojo_run_cooldown":4
+    },
+    "responses":
+    {
+        "this is the best server":"Damn Right it is!",
+        "hello there":"Ah, General Kenobi!",
+        "who is the bot":"I am Concrete Bot!",
+        "this bot sucks":"I swear I am trying.",
+        "good morning":"Good morning",
+        "good night":"Ahh, Good night",
+        "happy birthday":"Happy Birthday!",
+        "merry christmas":"Merry Christmas!"
+    },
+    "jojo":
+    [
+        "oh my god", "oh my god!","ohhh myyy godddd", "ohhh myyy godddd!!!",
+        "oh? You\"re aproaching me?",
+        "you truly are the lowest scum in history",
+        "diooo", "diooo!", "diooo", "dioo!",
+        "za warudo",
+        "my name is yoshikage kira",
+        "yare yare"
+    ],
+    "birthdays":
+    {
+        "Robinhorn":"unset"
+    }
+}
