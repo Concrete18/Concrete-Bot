@@ -35,8 +35,8 @@ for filename in os.listdir('./cogs'):
 
 @bot.event
 async def on_ready():
-    # if sys.platform != 'win32':
-    logger.info(f'Logged in as {bot.user}')
+    if sys.platform != 'win32':
+        logger.info(f'Logged in as {bot.user}')
     print(f'{bot.user} is ready.')
     activity_name = 'Cog Training'
     await bot.change_presence(activity=ds.Activity(type = ds.ActivityType.watching, name=activity_name))
