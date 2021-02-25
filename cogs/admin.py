@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
-import sys
 import os
 
 class Admin(commands.Cog):
@@ -70,7 +69,6 @@ class Admin(commands.Cog):
         await ctx.channel.purge(limit=int(num) + 1)
 
 
-    # FIXME permission error
     @commands.command(
         name = 'speak',
         aliases=['say'],
