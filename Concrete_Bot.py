@@ -1,7 +1,9 @@
+from discord.activity import Streaming
 from discord.ext import commands
 import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
+import random
 import json
 import sys
 import os
@@ -33,13 +35,38 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 
+# @bot.has_guild_permissions(manage_messages=True)  # TODO fix permissions
+@bot.command(
+    name = 'reload',
+    brief='Reloads all cogs',
+    hidden=True)
+async def reload_cogs(ctx):
+    '''
+    Reloads all cogs without stopping bot.
+    '''
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            bot.reload_extension(f'cogs.{filename[:-3]}')
+    await ctx.message.delete()
+    print('Cogs have been reloaded.')
+
+
 @bot.event
 async def on_ready():
     if sys.platform != 'win32':
+        channel = bot.get_channel(812394370849570866)
         logger.info(f'Logged in as {bot.user}')
+    else:
+        channel = bot.get_channel(667229260976619561)
     print(f'{bot.user} is ready.')
-    activity_name = 'Cog Training'
-    await bot.change_presence(activity=ds.Activity(type = ds.ActivityType.watching, name=activity_name))
+    # Sends a greeting on on_ready
+    greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.\nI am back.']
+    greeting = random.choice(greetings)
+    await channel.send(greeting)
+    # sets discord activity
+    # types: playing Streaming listening watching competing = 5
+    activity_name = 'Battle Bots'
+    await bot.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity_name))
 
 
 bot.run(secret_key)
