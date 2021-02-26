@@ -14,7 +14,7 @@ class Fun(commands.Cog):
         self.bot = bot
         # settings setup
         with open('data.json') as json_file:
-            self.data = json.load(json_file)  # TODO add periodic reload of data.json
+            self.data = json.load(json_file)
         self.responses = self.data['responses']
         self.jojo_lines = self.data['jojo']
         self.jojo_run_cooldown = self.data['settings']['jojo_run_cooldown']
@@ -51,6 +51,20 @@ class Fun(commands.Cog):
             else:
                 print('Jojo reference detected but cooldown active.')
                 self.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
+
+
+    @commands.command(
+        name = 'refresh',
+        brief = 'Refreshes responses data',
+        hidden=True)
+    @commands.has_role('Owner')
+    async def refresh(self, ctx):
+        with open('data.json') as json_file:
+            self.data = json.load(json_file)
+        self.responses = self.data['responses']
+        self.jojo_lines = self.data['jojo']
+        await ctx.message.delete()
+        print('Responses have been reloaded.')
 
 
     @commands.command(
