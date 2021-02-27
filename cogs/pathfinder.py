@@ -1,4 +1,6 @@
 from discord.ext import commands
+import discord as ds
+from functions import *
 import random
 import re
 
@@ -7,6 +9,7 @@ class Pathfinder(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.bot_func = bot_functions()
 
 
     @commands.command(
@@ -68,9 +71,8 @@ class Pathfinder(commands.Cog):
                     coins[coin] += int(arg.rstrip(coin))
                 elif arg.isdigit():
                     coins['way'] = int(arg)
-        amounts = f'Plat: {coins["p"]} | Gold: {coins["g"]} | Silver: {coins["s"]} | Copper: {coins["c"]}'
-        entered = f'Entered {coins["way"]} Way Split: {amounts}'
-        await ctx.channel.send(entered)
+        amounts = f'Platinum: {coins["p"]} | Gold: {coins["g"]} | Silver: {coins["s"]} | Copper: {coins["c"]}'
+        entered = f'Entered totals: {amounts}'
         # create split
         goldtotal = (coins['c'] / 100) + (coins['s'] / 10) + coins['g'] + (coins['p'] * 10)
         goldsplit = goldtotal / coins['way']
@@ -78,17 +80,17 @@ class Pathfinder(commands.Cog):
         copperleft = silverleft * 10 % 10
         extraCopper = round((copperleft - int(copperleft)) * coins['way'])
         # shows results
-        # TODO use .join to create same format as entered amount when showing split
-        result = f'Split {coins["way"]} ways:'
-        if int(goldsplit) > 0:
-            result += f' {int(goldsplit)} Gold'
-        if int(silverleft) > 0:
-            result += f' {int(silverleft)} Silver'
-        if int(copperleft) > 0:
-            result += f' {int(copperleft)} Copper'
-        if extraCopper > 0:
-            result += f' with {extraCopper} unsplit Copper'
-        await ctx.channel.send(result)
+        embed = ds.Embed(
+            title='Party Gold Splitter',
+            description=entered,
+            colour=ds.Colour(0x99cc))
+        # embed.set_author('Author')
+        embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
+        embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
+        embed.add_field(name='Silver', value=f'{int(silverleft)}', inline=True)
+        embed.add_field(name='Copper', value=f'{int(copperleft)}', inline=True)
+        embed.add_field(name='Extra Copper', value=f'{int(extraCopper)}', inline=True)
+        await ctx.channel.send(embed=embed)
 
 
 def setup(bot):
