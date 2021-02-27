@@ -22,13 +22,23 @@ intents = ds.Intents.all()
 bot = commands.Bot(command_prefix='/', intents=intents)
 bot_func = bot_functions()
 
-# loads all cogs
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
+
+def set_extensions(action='load' ):
+    '''
+    Loads all cogs
+    '''
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            location = f'cogs.{filename[:-3]}'
+            if action == 'load':
+                bot.load_extension(location)
+            else:
+                bot.reload_extension(location)
 
 
-# @bot.has_guild_permissions(manage_messages=True)  # TODO fix permissions
+set_extensions('load')
+
+# @bot.has_any_role('Owner', 'Admin')  # TODO fix permissions
 @bot.command(
     name = 'reload',
     brief='Reloads all cogs',
@@ -37,13 +47,17 @@ async def reload_cogs(ctx):
     '''
     Reloads all cogs without stopping bot.
     '''
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            bot.reload_extension(f'cogs.{filename[:-3]}')
+    try:
+        set_extensions('reload')
+    except Exception as error:
+        await ctx.send(error)
+        await ctx.message.delete()
+        return
     await ctx.message.delete()
     msg = 'Cogs have been reloaded.'
     print(msg)
     bot_func.logger.info(msg)
+    await ctx.send(msg)
 
 
 start_time = dt.datetime.now()

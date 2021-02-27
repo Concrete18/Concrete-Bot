@@ -49,8 +49,8 @@ class Misc(commands.Cog):
         '''
         TODO add roles function
         '''
-        self.get_avail_roles(ctx)
-        available_roles = ' ,'.join(all_roles)
+        avail_roles = self.get_avail_roles(ctx)
+        available_roles = ' ,'.join(avail_roles)
         print(available_roles)
         await ctx.send(f'Available Roles:\n{available_roles}')
 

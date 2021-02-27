@@ -87,5 +87,22 @@ class Admin(commands.Cog):
         await ctx.send(f'PID: {os.getpid()}')
 
 
+    # WIP commands
+
+
+    @commands.command(
+        name ='getinactive',
+        brief='Check members that would be purged for inactivity passed a specific total days.',
+        description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.',
+        hidden=True)
+    @commands.has_any_role('Owner', 'Admin')
+    async def getinactive(self, days: int):
+        '''
+        Check members that would be purged for inactivity passed a specific total days.
+        '''
+        await self.bot.estimate_pruned_members(days)
+        print(await self.bot.estimate_pruned_members(days))
+
+
 def setup(bot):
     bot.add_cog(Admin(bot))

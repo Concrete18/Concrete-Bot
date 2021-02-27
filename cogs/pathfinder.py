@@ -73,18 +73,17 @@ class Pathfinder(commands.Cog):
                     coins['way'] = int(arg)
         amounts = f'Platinum: {coins["p"]} | Gold: {coins["g"]} | Silver: {coins["s"]} | Copper: {coins["c"]}'
         entered = f'Entered totals: {amounts}'
-        # create split
+        # create gold split
         goldtotal = (coins['c'] / 100) + (coins['s'] / 10) + coins['g'] + (coins['p'] * 10)
         goldsplit = goldtotal / coins['way']
         silverleft = goldsplit * 10 % 10
         copperleft = silverleft * 10 % 10
         extraCopper = round((copperleft - int(copperleft)) * coins['way'])
-        # shows results
+        # shows results via embed
         embed = ds.Embed(
             title='Party Gold Splitter',
             description=entered,
-            colour=ds.Colour(0x99cc))
-        # embed.set_author('Author')
+            colour=ds.Colour(0xf1c40f))
         embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
         embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
         embed.add_field(name='Silver', value=f'{int(silverleft)}', inline=True)
