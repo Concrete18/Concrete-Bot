@@ -3,6 +3,8 @@ from discord.ext import commands
 import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
+from functions import *
+import datetime as dt
 import random
 import json
 import sys
@@ -49,6 +51,19 @@ async def reload_cogs(ctx):
             bot.reload_extension(f'cogs.{filename[:-3]}')
     await ctx.message.delete()
     print('Cogs have been reloaded.')
+
+
+start_time = dt.datetime.now()
+@bot.command(
+    name = 'uptime',
+    brief = 'Gets Bot uptime.',
+    description='Gets the Bot uptime since it last was started.')
+async def uptime(ctx):
+    '''
+    Sends the total time the bot has been running using the readable_time_since function.
+    '''
+    uptime_seconds = dt.datetime.now().timestamp()-start_time.timestamp()
+    await ctx.send(f'Bot Uptime: {readable_time_since(uptime_seconds)}')
 
 
 @bot.event

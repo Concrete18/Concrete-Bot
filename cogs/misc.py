@@ -9,7 +9,6 @@ class Misc(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.start_time = dt.datetime.now()
         # Logging
         log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
         self.logger = lg.getLogger(__name__)
@@ -17,39 +16,6 @@ class Misc(commands.Cog):
         my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
         my_handler.setFormatter(log_formatter)
         self.logger.addHandler(my_handler)
-
-
-    @staticmethod
-    def readable_time_since(seconds):
-        '''
-        Returns time since based on seconds argument in the unit of time that makes the most sense
-        rounded to 1 decimal place.
-        '''
-        seconds_in_minute = 60
-        seconds_in_hour = 3600
-        seconds_in_day = 86400
-        seconds_in_month = 2628288
-        seconds_in_year = 3.154e+7
-        # minutes
-        if seconds < seconds_in_hour:
-            minutes = round(seconds / seconds_in_minute, 1)
-            return f'{minutes} minutes'
-        # hours
-        elif seconds < seconds_in_day:
-            hours = round(seconds / seconds_in_hour, 1)
-            return f'{hours} hours'
-        # days
-        elif  seconds < seconds_in_month:
-            days = round(seconds / seconds_in_day, 1)
-            return f'{days} days'
-        # months
-        elif seconds < seconds_in_year:
-            months = round(seconds / seconds_in_month, 1)
-            return f'{months} months'
-        # years
-        else:
-            years = round(seconds / seconds_in_year, 1)
-            return f'{years} years'
 
 
     @commands.command(
@@ -61,18 +27,6 @@ class Misc(commands.Cog):
         Returns current ping to bot server.
         '''
         await ctx.send(f'Current Ping: {round(self.bot.latency * 1000)}ms')
-
-
-    @commands.command(
-        name = 'uptime',
-        brief = 'Gets Bot uptime.',
-        description='Gets the Bot uptime since it last was started.')
-    async def uptime(self, ctx):
-        '''
-        Sends the total time the bot has been running using the readable_time_since function.
-        '''
-        uptime_seconds = dt.datetime.now().timestamp()-self.start_time.timestamp()
-        await ctx.send(f'Bot Uptime: {self.readable_time_since(uptime_seconds)}')
 
 
     # wip commands
