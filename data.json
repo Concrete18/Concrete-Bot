@@ -24,6 +24,10 @@
         "my name is yoshikage kira",
         "yare yare"
     ],
+    "insults":
+    [
+        "bucko", "buster", "punk", ""
+    ],
     "birthdays":
     {
         "Robinhorn":"unset"
