@@ -1,7 +1,6 @@
 from discord.ext import commands
-from logging.handlers import RotatingFileHandler
-import logging as lg
-import datetime as dt
+import discord as ds
+from functions import *
 
 
 class Misc(commands.Cog):
@@ -9,13 +8,7 @@ class Misc(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        # Logging
-        log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
-        self.logger = lg.getLogger(__name__)
-        self.logger.setLevel(lg.DEBUG) # Log Level
-        my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
-        my_handler.setFormatter(log_formatter)
-        self.logger.addHandler(my_handler)
+        self.bot_func = bot_functions()
 
 
     @commands.command(
@@ -32,6 +25,21 @@ class Misc(commands.Cog):
     # wip commands
 
 
+    async def get_avail_roles(self, ctx):
+        '''
+        Returns a list of available roles that are not in a blacklist.
+        '''
+        blacklist = []
+        blacklist = ['Owner', 'Admin', 'Active Member']
+        avail_roles = []
+        all_roles = ctx.guild.roles
+        for role in all_roles:
+            print(str(role.id))
+            if str(role) not in blacklist:
+                avail_roles.append(str(role))
+        return avail_roles
+
+
     @commands.command(
         name = 'roles',
         brief = 'Shows all roles that can be given with giverole command.',
@@ -41,14 +49,10 @@ class Misc(commands.Cog):
         '''
         TODO add roles function
         '''
-        blacklist = ['Owner', 'Admin']
-        all_roles = ctx.guild.roles
-        for role in all_roles:
-            if role.id not in blacklist:
-                print(self.bot.get_role(role.id))
-        # available_roles = ' ,'.join(all_roles)
-        # print(available_roles)
-        # await ctx.send(f'Available Roles:\n{available_roles}')
+        self.get_avail_roles(ctx)
+        available_roles = ' ,'.join(all_roles)
+        print(available_roles)
+        await ctx.send(f'Available Roles:\n{available_roles}')
 
 
     @commands.command(
@@ -57,9 +61,25 @@ class Misc(commands.Cog):
         brief = 'Gives chosen role.',
         description='Gives chosen role if it is one of possible roles. To view roles use /roles command',
         hidden=True)
-    async def giverole(self, ctx, time, *args):
+    async def addrole(self, ctx, role: ds.Role):
         '''
-        TODO add addrole and remove function
+        TODO addrole function
+        '''
+        print(role)
+        role_info = ds.utils.get(role)
+        await ctx.author.add_roles(role_info)
+        await ctx.send(f'Added Role: {str(role)}')
+
+
+    @commands.command(
+        name = 'removerole',
+        aliases=['remrole'],
+        brief = 'Removes chosen role.',
+        description='Removes chosen role. To view roles use /roles command',
+        hidden=True)
+    async def removerole(self, ctx, time, *args):
+        '''
+        TODO removerole function
         '''
         msg = ' '.join(args)
         await ctx.send(f'Sheduled Message for {time}')

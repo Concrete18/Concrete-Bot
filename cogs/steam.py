@@ -1,4 +1,5 @@
 from discord.ext import commands
+from functions import *
 import requests
 import json
 
@@ -8,6 +9,7 @@ class Steam(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.bot_func = bot_functions()
         with open('secret.json') as json_file:
             self.api_key = json.load(json_file)['config']['steam_key']
 
@@ -60,21 +62,6 @@ class Steam(commands.Cog):
         shared_games = ', '.join(final_list)
         result = f'{len(final_list)} shared games found.\n\n{shared_games}'
         return result
-
-
-    @staticmethod
-    async def split_string(ctx, string):
-        '''
-        Sends a split string in half if it is over 2000 characters.
-        '''
-        if len(string) <= 2000:
-            await ctx.send(string)
-        elif len(string) > 4000:
-            await ctx.send('Output is too large.')
-        else:
-            middle = len(string)//2
-            await ctx.send(string[0:middle])
-            await ctx.send(string[middle:])
 
 
     @commands.command(

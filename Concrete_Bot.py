@@ -1,8 +1,5 @@
-from discord.activity import Streaming
 from discord.ext import commands
 import discord as ds
-from logging.handlers import RotatingFileHandler
-import logging as lg
 from functions import *
 import datetime as dt
 import random
@@ -10,13 +7,6 @@ import json
 import sys
 import os
 
-# Logging
-log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
-logger = lg.getLogger(__name__)
-logger.setLevel(lg.DEBUG) # Log Level
-my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
-my_handler.setFormatter(log_formatter)
-logger.addHandler(my_handler)
 
 print('Starting Bot')
 
@@ -30,6 +20,7 @@ with open('secret.json') as json_file:
 # bot init
 intents = ds.Intents.all()
 bot = commands.Bot(command_prefix='/', intents=intents)
+bot_func = bot_functions()
 
 # loads all cogs
 for filename in os.listdir('./cogs'):
@@ -50,7 +41,9 @@ async def reload_cogs(ctx):
         if filename.endswith('.py'):
             bot.reload_extension(f'cogs.{filename[:-3]}')
     await ctx.message.delete()
-    print('Cogs have been reloaded.')
+    msg = 'Cogs have been reloaded.'
+    print(msg)
+    bot_func.logger.info(msg)
 
 
 start_time = dt.datetime.now()
@@ -63,14 +56,14 @@ async def uptime(ctx):
     Sends the total time the bot has been running using the readable_time_since function.
     '''
     uptime_seconds = dt.datetime.now().timestamp()-start_time.timestamp()
-    await ctx.send(f'Bot Uptime: {readable_time_since(uptime_seconds)}')
+    await ctx.send(f'Bot Uptime: {bot_func.readable_time_since(uptime_seconds)}')
 
 
 @bot.event
 async def on_ready():
     if sys.platform != 'win32':
         channel = bot.get_channel(812394370849570866)
-        logger.info(f'Logged in as {bot.user}')
+        bot_func.logger.info(f'Logged in as {bot.user}')
     else:
         channel = bot.get_channel(667229260976619561)
     print(f'{bot.user} is ready.')

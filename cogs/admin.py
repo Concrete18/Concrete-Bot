@@ -1,7 +1,6 @@
 from discord.ext import commands
+from functions import *
 import discord as ds
-from logging.handlers import RotatingFileHandler
-import logging as lg
 import os
 
 class Admin(commands.Cog):
@@ -10,20 +9,14 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.client = ds.Client()
-        # Logging
-        log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
-        self.logger = lg.getLogger(__name__)
-        self.logger.setLevel(lg.DEBUG) # Log Level
-        my_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=2)
-        my_handler.setFormatter(log_formatter)
-        self.logger.addHandler(my_handler)
+        self.bot_func = bot_functions()
 
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         info = f'Command: {ctx.command} | Error: {str(error)}'
         print(info)
-        self.logger.debug(info)
+        self.bot_func.logger.debug(info)
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.')
         elif isinstance(error, commands.MissingAnyRole):
@@ -40,7 +33,7 @@ class Admin(commands.Cog):
         '''
         msg = f'{member} joined the server'
         print(msg)
-        self.logger.info(msg)
+        self.bot_func.logger.info(msg)
         role = member.guild.get_role(377683900580888576)
         await member.add_roles(role, reason='New Member')
 
@@ -52,7 +45,7 @@ class Admin(commands.Cog):
         '''
         msg = f'{member} left the server'
         print(msg)
-        self.logger.info(msg)
+        self.bot_func.logger.info(msg)
 
 
     @commands.command(
