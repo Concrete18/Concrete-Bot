@@ -25,7 +25,7 @@ bot_func = bot_functions()
 
 def set_extensions(action='load' ):
     '''
-    Loads all cogs
+    Loads all cogs by default. Can also be used to reload cogs if action is set not set to 'load'.
     '''
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
@@ -38,7 +38,7 @@ def set_extensions(action='load' ):
 
 set_extensions('load')
 
-# @bot.has_any_role('Owner', 'Admin')  # TODO fix permissions
+@commands.has_any_role('Owner', 'Admin')
 @bot.command(
     name = 'reload',
     brief='Reloads all cogs',
