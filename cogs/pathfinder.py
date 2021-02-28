@@ -59,10 +59,8 @@ class Pathfinder(commands.Cog):
         '''
         # parses args
         combined=''.join(args)
-        combined = combined.replace("platinum", "p")
-        combined = combined.replace("gold", "g")
-        combined = combined.replace("silver", "s")
-        combined = combined.replace("copper", "c")
+        for word in ['lat', 'latinum', 'old', 'ilver', 'opper', 'way', 'w']:
+            combined = combined.replace(word, '')
         args = re.findall(r'\d+\w?', combined)
         coins = {'p': 0, 'g': 0, 's': 0, 'c': 0, 'way': 4}
         for coin in coins:
@@ -85,10 +83,14 @@ class Pathfinder(commands.Cog):
             description=entered,
             colour=ds.Colour(0xf1c40f))
         embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
-        embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
-        embed.add_field(name='Silver', value=f'{int(silverleft)}', inline=True)
-        embed.add_field(name='Copper', value=f'{int(copperleft)}', inline=True)
-        embed.add_field(name='Extra Copper', value=f'{int(extraCopper)}', inline=True)
+        if int(goldsplit) > 0:
+            embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
+        if int(silverleft) > 0:
+            embed.add_field(name='Silver', value=f'{int(silverleft)}', inline=True)
+        if int(copperleft) > 0:
+            embed.add_field(name='Copper', value=f'{int(copperleft)}', inline=True)
+        if int(extraCopper) > 0:
+            embed.add_field(name='Extra Copper', value=f'{int(extraCopper)}', inline=False)
         await ctx.channel.send(embed=embed)
 
 
