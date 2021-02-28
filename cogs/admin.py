@@ -76,6 +76,22 @@ class Admin(commands.Cog):
 
 
     @commands.command(
+        name = 'changeactivity',
+        aliases=['changegame'],
+        brief = 'Change the bot\'s current game with an admin command.',
+        hidden=True,
+        pass_context = True)
+    @commands.has_role('Owner')
+    async def changeactivity(self, ctx, *activity):
+        '''
+        Change Bot Activty.
+        '''
+        activity = ' '.join(activity)
+        await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity))
+        await ctx.message.delete()
+
+
+    @commands.command(
         name ='pid',
         brief='Sends current bot PID.',
         description='Sends current bot PID.',
