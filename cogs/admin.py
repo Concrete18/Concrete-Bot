@@ -54,7 +54,7 @@ class Admin(commands.Cog):
         description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.',
         hidden=True)
     @commands.has_guild_permissions(manage_messages=True)
-    async def purge(self, ctx, num: int):
+    async def purge(self, ctx, num: int=5):
         '''
         Purges n number of messages.
         '''
