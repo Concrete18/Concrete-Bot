@@ -22,6 +22,31 @@ class Misc(commands.Cog):
         await ctx.send(f'Current Ping: {round(self.bot.latency * 1000)}ms')
 
 
+    @commands.command(
+        name = 'membercount',
+        brief = 'Gets total members in server and total online/offline.',
+        description='Gets total members in server and total online/offline.',
+        hidden=True)
+    async def membercount(self, ctx):
+        '''
+        Gets total members in server and total online/offline.
+        '''
+        # TODO finish online and offline
+        all_members = []
+        all_bots = []
+        for member in ctx.guild.members:
+            if member.bot == False:
+                all_members.append(member)
+            else:
+                all_bots.append(member)
+        embed=ds.Embed(
+            title='Member Count',
+            color=ds.Color((0x2ecc71)))
+        embed.add_field(name='Total Members', value=len(all_members), inline=True)
+        embed.add_field(name='Total Bots', value=len(all_bots), inline=True)
+        await ctx.send(embed=embed)
+
+
     # wip commands
 
 
@@ -47,7 +72,7 @@ class Misc(commands.Cog):
         hidden=True)
     async def roles(self, ctx):
         '''
-        TODO add roles function
+        TODO roles function
         '''
         avail_roles = self.get_avail_roles(ctx)
         available_roles = ' ,'.join(avail_roles)
@@ -92,7 +117,7 @@ class Misc(commands.Cog):
         hidden=True)
     async def schedulemsg(self, ctx, time, *args):
         '''
-        TODO add Shedule a message function
+        TODO add Schedule a message function
         '''
         msg = ' '.join(args)
         await ctx.send(f'Sheduled Message for {time}')
@@ -108,17 +133,6 @@ class Misc(commands.Cog):
         '''
         status = 'Unknown'
         await ctx.send(f'Server Status: {status}')
-
-
-    @commands.command(
-        name = 'vote',
-        brief = 'WIP | Voting system.',
-        hidden=True)
-    async def vote(self, ctx):
-        '''
-        TODO add voting command
-        '''
-        await ctx.send(f'Starting Vote. WIP')
 
 
 def setup(bot):
