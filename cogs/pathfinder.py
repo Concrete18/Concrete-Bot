@@ -4,11 +4,12 @@ from functions import *
 import random
 import re
 
-class Pathfinder(commands.Cog):
+class RPG(commands.Cog):
 
 
     def __init__(self, bot):
         self.bot = bot
+        self.testing = 0
         self.bot_func = bot_functions()
 
 
@@ -40,15 +41,15 @@ class Pathfinder(commands.Cog):
         description='Splits Plat, Gold, Silver and Copper coins for as large of a party as needed.',
         help='''
         Just use the /groupsplit then type your totals of Plat, Gold, Silver and Copper in any order.
-        If you do not specify a split of the gold then it will default to 4.
+        If you do not specify a split using (n)way, the split will default to 4.
 
         Example:
 
-        /groupsplit 12gold 14copper 20silver 8gold
-        /groupsplit 12g14c20s8g
+        /groupsplit 12gold 14copper 20silver 8gold 5way
+        /groupsplit 12g14c20s8g5
 
         The above 2 command detects 20 gold, 14 copper, and 20 silver. Spaces and full coin names are optional.
-        This works the same way.
+        This works the same way and both are a 5 way split.
 
         You should notice that it can accept more then one set of each type of coin in case you want to add 438 gold
         from selling some items plus the 1250 award for the quest.
@@ -56,6 +57,20 @@ class Pathfinder(commands.Cog):
     async def groupsplit(self, ctx, *args):
         '''
         Gives a group coin split divided by any number.
+
+        For testing
+
+        command:
+
+        /gsplit 10g 56p 12gold 152s 83copper 7
+
+        answer:
+
+        Split 7 Way
+        Gold 85
+        Silver 4
+        Copper 3
+        Extra Copper 2
         '''
         # parses args
         combined=''.join(args)
@@ -70,7 +85,6 @@ class Pathfinder(commands.Cog):
                 elif arg.isdigit():
                     coins['way'] = int(arg)
         amounts = f'Platinum: {coins["p"]} | Gold: {coins["g"]} | Silver: {coins["s"]} | Copper: {coins["c"]}'
-        entered = f'Entered totals: {amounts}'
         # create gold split
         goldtotal = (coins['c'] / 100) + (coins['s'] / 10) + coins['g'] + (coins['p'] * 10)
         goldsplit = goldtotal / coins['way']
@@ -80,7 +94,7 @@ class Pathfinder(commands.Cog):
         # shows results via embed
         embed = ds.Embed(
             title='Party Gold Splitter',
-            description=entered,
+            description=f'Entered totals: {amounts}',
             colour=ds.Colour(0xf1c40f))
         embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
         if int(goldsplit) > 0:
@@ -95,4 +109,4 @@ class Pathfinder(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Pathfinder(bot))
+    bot.add_cog(RPG(bot))
