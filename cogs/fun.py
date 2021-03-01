@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord as ds
 from functions import *
+from typing import Optional
 import datetime as dt
 import random
 import json
@@ -11,6 +12,7 @@ class Fun(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.client = ds.Client()
         self.bot_func = bot_functions()
         # settings setup
         with open('data.json') as json_file:
@@ -19,7 +21,8 @@ class Fun(commands.Cog):
         self.jojo_lines = self.data['jojo']
         self.jojo_run_cooldown = self.data['settings']['jojo_run_cooldown']
         self.last_jojo_run = dt.datetime.now()-dt.timedelta(hours=self.jojo_run_cooldown)
-        self.client = ds.Client()
+        # poll
+        self.polls = []
 
 
     @commands.Cog.listener()
@@ -56,10 +59,44 @@ class Fun(commands.Cog):
         print('Responses have been reloaded.')
 
 
+    async def complete_poll(self, channel_id, message_id):
+        message = await self.bot.get_channel(channel_id).fetch_message(message_id)
+        most_voted = max(message.reactions, key=lambda r: r.count)
+        await message.channel.send(f"The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!")
+        self.polls.remove((message.channel.id, message.id))
+
+
+    @commands.command(name="createpoll", aliases=["mkpoll"])
+    @commands.has_permissions(manage_guild=True)
+    async def create_poll(self, ctx, hours: int, question: str, *options):
+        numbers = (
+            "1️⃣", "2⃣", "3⃣", "4⃣", "5⃣",
+		   "6⃣", "7⃣", "8⃣", "9⃣", "🔟")
+        if len(options) > 10:
+            await ctx.send("You can only supply a maximum of 10 options.")
+        else:
+            embed = ds.Embed(title="Poll",
+                        description=question,
+                        colour=ctx.author.colour,
+                        timestamp=dt.datetime.utcnow())
+            fields = [
+                ("Options", "\n".join([f"{numbers[idx]} {option}" for idx, option in enumerate(options)]), False),
+                    ("Instructions", "React to cast a vote!", False)]
+            for name, value, inline in fields:
+                embed.add_field(name=name, value=value, inline=inline)
+            message = await ctx.send(embed=embed)
+            for emoji in numbers[:len(options)]:
+                await message.add_reaction(emoji)
+            self.polls.append((message.channel.id, message.id))
+            self.bot.scheduler.add_job(
+                self.complete_poll, "date",
+                run_date=dt.datetime.now()+dt.timedelta(seconds=hours),
+                args=[message.channel.id, message.id])
+
+
     @commands.command(
         name = 'taco',
-        aliases=['givetaco', 'maketaco'],
-        hidden=True)
+        aliases=['givetaco', 'maketaco'])
     async def taco(self, ctx):
         '''
         Command for PathieZ
