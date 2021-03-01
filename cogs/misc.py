@@ -31,7 +31,6 @@ class Misc(commands.Cog):
         '''
         Gets total members in server and total online/offline.
         '''
-        # TODO finish online and offline
         all_members = []
         all_bots = []
         for member in ctx.guild.members:
@@ -40,7 +39,7 @@ class Misc(commands.Cog):
             else:
                 all_bots.append(member)
         embed=ds.Embed(
-            title='Member Count',
+            title='Member and Bot Count',
             color=ds.Color((0x2ecc71)))
         embed.add_field(name='Total Members', value=len(all_members), inline=True)
         embed.add_field(name='Total Bots', value=len(all_bots), inline=True)

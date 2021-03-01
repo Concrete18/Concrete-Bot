@@ -64,7 +64,6 @@ class Fun(commands.Cog):
         '''
         Command for PathieZ
         '''
-        # TODO finish responses
         if dt.datetime.today().weekday() == 1:
             is_tuesday = [
                 'Fine, I will get you a taco.... What is your address. I am finding the number for deliviery.',

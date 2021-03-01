@@ -75,6 +75,11 @@ async def uptime(ctx):
 
 @bot.event
 async def on_ready():
+    '''
+    Notifies that bot is ready and sets activity to a random topic.
+
+    Possible activity types: playing Streaming listening watching competing
+    '''
     if sys.platform != 'win32':
         channel = bot.get_channel(812394370849570866)
         bot_func.logger.info(f'Logged in as {bot.user}')
@@ -82,12 +87,13 @@ async def on_ready():
         channel = bot.get_channel(667229260976619561)
     print(f'{bot.user} is ready.')
     # Sends a greeting on on_ready
-    greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.\nI am back.']
+    greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.']
     greeting = random.choice(greetings)
     await channel.send(greeting)
     # sets discord activity
-    # types: playing Streaming listening watching competing = 5
-    activity_name = 'Battle Bots'
+    # types: playing Streaming listening watching competing
+    activity_names = ['Battle Bots', 'Transformers: Battle for Cybertron', 'Factorio', 'Shenzen I/O']
+    activity_name = random.choice(activity_names)
     await bot.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity_name))
 
 
