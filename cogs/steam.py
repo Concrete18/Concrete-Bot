@@ -2,6 +2,7 @@ from discord.ext import commands
 from functions import *
 import requests
 import json
+import time
 
 
 class Steam(commands.Cog):
@@ -12,12 +13,14 @@ class Steam(commands.Cog):
         self.bot_func = bot_functions()
         with open('secret.json') as json_file:
             self.api_key = json.load(json_file)['config']['steam_key']
-
+        self.check_delay = 0
 
     def get_game_names(self, steam_id):
         '''
         Gets names of games owned by the entered Steam ID.
         '''
+        if self.check_delay:
+            time.sleep(1)
         base_url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/'
         url_end = f'?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1'
         data = requests.get(base_url + url_end)
@@ -47,6 +50,8 @@ class Steam(commands.Cog):
         Creates a list containing a list each of the profiles games entered using the get_game_names Function.
         '''
         lists_to_check = []
+        if len(steam_ids) > 4:
+            self.check_delay = 1
         for id in steam_ids:
             if len(id) == 17:
                 games = self.get_game_names(id)
@@ -77,7 +82,7 @@ class Steam(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f'Finding shared games from {len(steam_ids)} steam id\'s.')
         result = self.create_game_lists(steam_ids)
-        await self.split_string(ctx, result)
+        await self.bot_func.split_string(ctx, result)
 
 
 def setup(bot):
