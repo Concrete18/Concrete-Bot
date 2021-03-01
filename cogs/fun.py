@@ -57,6 +57,31 @@ class Fun(commands.Cog):
 
 
     @commands.command(
+        name = 'taco',
+        aliases=['givetaco', 'maketaco'],
+        hidden=True)
+    async def taco(self, ctx):
+        '''
+        Command for PathieZ
+        '''
+        # TODO finish responses
+        if dt.datetime.today().weekday() == 1:
+            is_tuesday = [
+                'Fine, I will get you a taco.... What is your address. I am finding the number for deliviery.',
+                'It is actually Taco tuesday so give me 3 to 35,956 bussines days to find you a taco.'
+                'Busy this Tuesday, ask next Tuesday']
+            msg = random.choice(is_tuesday)
+        else:
+            not_tuesday = [
+                'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
+                'Taco, hahahaha',
+                'Yo quiero Taco Bell!',
+                'Can you make me a Taco?']
+            msg = random.choice(not_tuesday)
+        await ctx.send(msg)
+
+
+    @commands.command(
         name = 'flip',
         aliases=['flipcoin'],
         brief = 'Flip a coin.',
