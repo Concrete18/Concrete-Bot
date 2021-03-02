@@ -29,11 +29,9 @@ class Member_Log(commands.Cog):
         if len(self.member_data) != 0:
             if member in self.member_data.keys():
                 if self.member_data[member] == last_action:
-                    if sys.platform == 'win32':
-                        print('Skipped')
                     return
-        if sys.platform == 'win32':
-            print(f'{member}: New Activity Detected')
+        # if sys.platform == 'win32':
+        print(f'{member}: New Activity Detected')
         self.member_data[member] = last_action
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file)
