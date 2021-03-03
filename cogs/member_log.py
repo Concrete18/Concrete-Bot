@@ -26,29 +26,6 @@ class Member_Log(commands.Cog):
             self.member_data = {}
 
 
-    @commands.command(
-        name = 'updatemembers')
-    @commands.has_guild_permissions(manage_messages=True)
-    async def update_member_data(self, ctx):
-        '''
-        Adds members to self.member_data if they are not already in it.
-        '''
-        print('Updating member_data')
-        if sys.platform != 'win32':
-            guild_id = 172069829690261504
-        else:
-            guild_id = 665031048941404201
-        self.concrete_server = await self.bot.fetch_guild(guild_id)
-        print()
-        for member in self.concrete_server.members:
-            # FIXME prints nothing
-            print(member)
-            if member not in self.member_data.keys():
-                self.member_data[member] = 'no activity since 2021-03-03'
-        with open('member_data.json', 'w') as json_file:
-            json.dump(self.member_data, json_file, indent=4)
-
-
     def update_activity(self, member):
         '''
         Updates member in member_data.json with current date if last activity was before today.
@@ -112,6 +89,27 @@ class Member_Log(commands.Cog):
         else:
             result = ', '.join(inactive_list)
         await ctx.send(result)
+
+
+    @commands.command(
+        name = 'updatemembers')
+    @commands.has_guild_permissions(manage_messages=True)
+    async def update_member_data(self, ctx):
+        '''
+        Adds members to self.member_data if they are not already in it.
+        '''
+        print('Updating member_data')
+        print(ctx.guild)
+        if ctx.guild != 'Concrete Jungle':
+            return
+        for member in ctx.guild.members:
+            if member.bot == False:
+                member = str(member)
+                if member not in self.member_data.keys():
+                    self.member_data[member] = 'no activity since 2021-03-03'
+                    print('Added', member)
+        with open('member_data.json', 'w') as json_file:
+            json.dump(self.member_data, json_file, indent=4)
 
 
 def setup(bot):
