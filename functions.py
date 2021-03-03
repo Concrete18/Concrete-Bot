@@ -3,6 +3,7 @@ import logging as lg
 
 class bot_functions:
 
+    bot_image = 'https://raw.githubusercontent.com/Concrete18/Discord-Bots/master/Images/bot_images.JPG'
     # Logging
     log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
     logger = lg.getLogger(__name__)
@@ -25,6 +26,13 @@ class bot_functions:
             middle = len(string)//2
             await ctx.send(string[0:middle])
             await ctx.send(string[middle:])
+
+
+    @staticmethod
+    def print_nonascii(string):
+        encoded_string = string.encode("ascii", "ignore")
+        decode_string = encoded_string.decode()
+        print(decode_string)
 
 
     @staticmethod
