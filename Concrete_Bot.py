@@ -21,22 +21,25 @@ with open('secret.json') as json_file:
 intents = ds.Intents.all()
 bot = commands.Bot(command_prefix='/', intents=intents)
 bot_func = bot_functions()
+start_time = dt.datetime.now()
+loaded_cogs = []
 
 
-def set_extensions(action='load' ):
+def set_extensions():
     '''
     Loads all cogs by default. Can also be used to reload cogs if action is set not set to 'load'.
     '''
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             location = f'cogs.{filename[:-3]}'
-            if action == 'load':
-                bot.load_extension(location)
-            else:
+            if filename in loaded_cogs:
                 bot.reload_extension(location)
+            else:
+                bot.load_extension(location)
+                loaded_cogs.append(filename)
 
 
-set_extensions('load')
+set_extensions()
 
 @commands.has_any_role('Owner', 'Admin')
 @bot.command(
@@ -48,7 +51,7 @@ async def reload_cogs(ctx):
     Reloads all cogs without stopping bot.
     '''
     try:
-        set_extensions('reload')
+        set_extensions()
     except Exception as error:
         await ctx.send(error)
         await ctx.message.delete()
@@ -60,7 +63,6 @@ async def reload_cogs(ctx):
     await ctx.send(msg)
 
 
-start_time = dt.datetime.now()
 @bot.command(
     name = 'uptime',
     brief = 'Gets Bot uptime.',
