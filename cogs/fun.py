@@ -80,9 +80,9 @@ class Fun(commands.Cog):
             rand_big = "{:,}".format(random.randrange(20000, 50000))
             is_tuesday = [
                 'Fine, I will get you a taco.... What is your address. I am finding the number for delivery.',
-                f'It is actually Taco Tuesday so give me {rand_small} to {rand_big} business days to find you a taco.',
+                f'It is actually Taco Tuesday, give me {rand_small} to {rand_big} business days to find you a taco.',
                 'Busy this Tuesday, ask next Tuesday',
-                'Sorry, out of taco\'s, would Nachos suffice?...... Nevermind, out of those too.']
+                'Sorry, out of taco\'s. Would Nachos suffice?... Nevermind, out of those too.']
             msg = random.choice(is_tuesday)
         else:
             not_tuesday = [

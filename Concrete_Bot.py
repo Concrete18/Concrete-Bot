@@ -39,8 +39,6 @@ def set_extensions():
                 loaded_cogs.append(filename)
 
 
-set_extensions()
-
 @commands.has_any_role('Owner', 'Admin')
 @bot.command(
     name = 'reload',
@@ -82,6 +80,7 @@ async def on_ready():
 
     Possible activity types: playing Streaming listening watching competing
     '''
+    set_extensions()
     if sys.platform != 'win32':
         channel = bot.get_channel(812394370849570866)
         bot_func.logger.info(f'Logged in as {bot.user}')

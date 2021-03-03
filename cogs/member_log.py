@@ -15,26 +15,50 @@ class Member_Log(commands.Cog):
         self.client = ds.Client()
         self.bot_func = bot_functions()
         # settings setup
+        self.concrete_server = None
         self.member_data = {}
         with open('data.json') as json_file:
             self.data = json.load(json_file)
+
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         if os.path.exists('member_data.json'):
             with open('member_data.json') as json_file:
                 self.member_data = json.load(json_file)
+        if sys.platform != 'win32':
+            guild_id = 172069829690261504
+        else:
+            guild_id = 665031048941404201
+        self.concrete_server = await self.bot.fetch_guild(guild_id)
+        print(self.concrete_server)
+        # TODO adds members into self.member_data if they are not currently in it.
+        print(self.concrete_server.members)
+        for member in self.concrete_server.members:
+            print(member)
+            if member not in self.member_data.keys():
+                self.member_data[member] = 'no activity since 2021-03-02'
+        with open('member_data.json', 'w') as json_file:
+            json.dump(self.member_data, json_file, indent=4)
 
 
     def update_activity(self, member):
+        '''
+        Updates member in member_data.json with current date if last activity was before today.
+
+        Logging started on 2021-03-02
+        '''
         member = str(member)
         last_action = str(dt.datetime.now().date())
         if len(self.member_data) != 0:
             if member in self.member_data.keys():
                 if self.member_data[member] == last_action:
                     return
-        # if sys.platform == 'win32':
-        print(f'{member}: New Activity Detected')
+        if sys.platform == 'win32':
+            print(f'{member}: New Activity Detected')
         self.member_data[member] = last_action
         with open('member_data.json', 'w') as json_file:
-            json.dump(self.member_data, json_file)
+            json.dump(self.member_data, json_file, indent=4)
 
 
     @commands.Cog.listener()
@@ -42,9 +66,15 @@ class Member_Log(commands.Cog):
         '''
         Updates last server action to the current date if an action has not occured yet.
         '''
+        # TODO set to only run on concrete_server
         if message.author == self.bot.user:  # Ignore messages made by the bot
             return
-        self.update_activity(message.author)
+        print(message.guild)
+        print(self.concrete_server)
+        if str(message.guild) == 'Concrete Jungle':
+            self.update_activity(message.author)
+        else:
+            print('Wrong server')
 
 
     @commands.Cog.listener()
@@ -52,8 +82,27 @@ class Member_Log(commands.Cog):
         '''
         Updates last server action to the current date if an action has not occured yet.
         '''
-        if before.channel == None and after.channel != None:
-            self.update_activity(member)
+        # TODO set to only run on concrete_server
+        if str(member.guild) == 'Concrete Jungle':
+            if before.channel == None and after.channel != None:
+                self.update_activity(member)
+        else:
+            print('Wrong server')
+
+
+    @commands.command(
+        name = 'showinactivemembers',
+        aliases=['inactivemembers', 'inactive'])
+    async def showinactivemembers(self, ctx, days: int):
+        '''
+        Lists inactive members.
+        '''
+        inactive_list = []
+        for name, last_active in self.member_data:
+            if last_active + dt.timedelta(days=int(days)) > dt.datetime.now().date():
+                inactive_list.append(name)
+        result = ', '.join(inactive_list)
+        await ctx.send(result)
 
 
 def setup(bot):
