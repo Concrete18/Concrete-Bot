@@ -16,31 +16,35 @@ class Member_Log(commands.Cog):
         self.bot_func = bot_functions()
         # settings setup
         self.concrete_server = None
-        self.member_data = {}
         with open('data.json') as json_file:
             self.data = json.load(json_file)
         # loads member_data.json
         if os.path.exists('member_data.json'):
             with open('member_data.json') as json_file:
                 self.member_data = json.load(json_file)
-                print(self.member_data)
+        else:
+            self.member_data = {}
 
 
-    @commands.Cog.listener()
-    async def on_ready(self):
+    @commands.command(
+        name = 'updatemembers')
+    @commands.has_guild_permissions(manage_messages=True)
+    async def update_member_data(self, ctx):
         '''
         Adds members to self.member_data if they are not already in it.
         '''
+        print('Updating member_data')
         if sys.platform != 'win32':
             guild_id = 172069829690261504
         else:
             guild_id = 665031048941404201
         self.concrete_server = await self.bot.fetch_guild(guild_id)
+        print()
         for member in self.concrete_server.members:
             # FIXME prints nothing
             print(member)
             if member not in self.member_data.keys():
-                self.member_data[member] = 'no activity since 2021-03-02'
+                self.member_data[member] = 'no activity since 2021-03-03'
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
 
@@ -49,10 +53,13 @@ class Member_Log(commands.Cog):
         '''
         Updates member in member_data.json with current date if last activity was before today.
 
-        Logging started on 2021-03-02
+        Logging started on 2021-03-03
         '''
+        server = str(member.guild)
+        if server != 'Concrete Jungle' and server != 'Concrete Test':
+            return
         member = str(member)
-        last_action = str(dt.datetime.now().date())
+        last_action = dt.datetime.now().date().strftime("%m-%d-%Y")
         if len(self.member_data) != 0:
             if member in self.member_data.keys():
                 if self.member_data[member] == last_action:
@@ -67,22 +74,19 @@ class Member_Log(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         '''
-        Updates last server action to the current date if an action has not occured yet.
+        Updates last server action to the current date if an action has not occured on the current day.
         '''
-        if message.author == self.bot.user:  # Ignore messages made by the bot
-            return
-        if str(message.guild) == 'Concrete Jungle':
+        if message.author != self.bot.user:  # Ignore messages made by the bot
             self.update_activity(message.author)
 
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         '''
-        Updates last server action to the current date if an action has not occured yet.
+        Updates last server action to the current date if an action has not occured on the current day.
         '''
-        if str(member.guild) == 'Concrete Jungle':
-            if before.channel == None and after.channel != None:
-                self.update_activity(member)
+        if before.channel == None and after.channel != None:
+            self.update_activity(member)
 
 
     @commands.command(
@@ -95,10 +99,13 @@ class Member_Log(commands.Cog):
         '''
         print(dt.datetime.now().date() - dt.timedelta(days=int(days)))
         inactive_list = []
+        check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
+        print(check_date)
         for name, last_active in self.member_data:
-            # FIXME wont work                               2021-02-02
-            last_active = dt.datetime.strptime(last_active, "%Y-%m-%d")
-            if last_active < dt.datetime.now().date() - dt.timedelta(days=int(days)):
+            # FIXME wont work
+            last_active = dt.datetime.strptime(last_active, "%m-%d-%Y")
+            print(last_active)
+            if last_active < check_date:
                 inactive_list.append(name)
         if len(inactive_list) == 0:
             result = f'No Members have been inactive for over {days} days.'
