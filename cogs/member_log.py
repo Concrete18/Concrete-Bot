@@ -34,13 +34,14 @@ class Member_Log(commands.Cog):
         '''
         if member.guild.id != 172069829690261504 and member.guild.id != 665031048941404201:
             return
-        member_id = member.id
+        member_id = str(member.id)
         name = member.name
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
         print(name, current_date)
         if len(self.member_data) != 0:
             if member_id in self.member_data.keys():
-                    return
+                print(f'Skipped {name}')
+                return
         if sys.platform == 'win32':
             print(f'{member}: New Activity Detected')
         self.member_data[member_id] = [name, current_date]
@@ -68,23 +69,24 @@ class Member_Log(commands.Cog):
 
     @commands.command(
         name = 'showinactivemembers',
+        brief='Lists inactive members. Defaults to 60 days.',
+        description='''
+        Lists inactive members that have not joined a chat or sent a message in a set period of time.
+        Defaults to 60 days if a number of days is not entered after the command.
+        ''',
         aliases=['inactivemembers', 'inactive'])
     @commands.has_guild_permissions(manage_messages=True)
-    async def showinactivemembers(self, ctx, days: int):
+    async def showinactivemembers(self, ctx, days: int=60):
         '''
         Lists inactive members.
         '''
         inactive_list = []
         check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
-        print(check_date)
-        for entry in self.member_data:
-            name = entry[0]
-            last_active = entry[1]
+        for entry, data in self.member_data.items():
             # FIXME wont work
-            last_active = dt.datetime.strptime(entry[1], "%m-%d-%Y")
-            print(last_active)
+            last_active = dt.datetime.strptime(data[1], "%m-%d-%Y").date()
             if last_active < check_date:
-                inactive_list.append(name)
+                inactive_list.append(data[0])
         if len(inactive_list) == 0:
             result = f'No Members have been inactive for over {days} days.'
         else:
@@ -104,7 +106,7 @@ class Member_Log(commands.Cog):
             return
         for member in ctx.guild.members:
             if member.bot == False:
-                member_id = member.id
+                member_id = str(member.id)
                 name = str(member)
                 current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
                 if member_id not in self.member_data.keys():
