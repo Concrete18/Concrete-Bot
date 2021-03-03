@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord as ds
 from functions import *
 from typing import Optional
+import asyncio
 import datetime as dt
 import random
 import json
@@ -30,7 +31,7 @@ class Fun(commands.Cog):
         '''
         On message reaction.
         '''
-        if message.author == self.client.user:  # Ignore messages made by the bot
+        if message.author == self.bot.user:  # Ignore messages made by the bot
             return
         # specific responses
         if message.content.lower() in self.responses:
@@ -62,49 +63,70 @@ class Fun(commands.Cog):
     async def complete_poll(self, channel_id, message_id):
         message = await self.bot.get_channel(channel_id).fetch_message(message_id)
         most_voted = max(message.reactions, key=lambda r: r.count)
-        await message.channel.send(f"The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!")
+        await message.channel.send(f'The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!')
         self.polls.remove((message.channel.id, message.id))
 
 
-    @commands.command(name="createpoll", aliases=["mkpoll"])
+    @staticmethod
+    def Print_nonASCII(string):
+        encoded_string = string.encode("ascii", "ignore")
+        decode_string = encoded_string.decode()
+        print(decode_string)
+
+
+    @commands.command(
+        name='createpoll',
+        aliases=['mkpoll', 'makepoll'])
     @commands.has_permissions(manage_guild=True)
-    async def create_poll(self, ctx, hours: int, question: str, *options):
+    async def create_poll(self, ctx, hours: float, question: str, *options):
+        hours_in_seconds = hours * 60 * 60
+        close_time = self.bot_func.readable_time_since(hours_in_seconds)
         numbers = (
-            "1️⃣", "2⃣", "3⃣", "4⃣", "5⃣",
-		   "6⃣", "7⃣", "8⃣", "9⃣", "🔟")
+            '1️⃣', '2⃣', '3⃣', '4⃣', '5⃣',
+		    '6⃣', '7⃣', '8⃣', '9⃣', '🔟')
         if len(options) > 10:
-            await ctx.send("You can only supply a maximum of 10 options.")
+            await ctx.send('You can only supply a maximum of 10 options.')
         else:
-            embed = ds.Embed(title="Poll",
-                        description=question,
-                        colour=ctx.author.colour,
-                        timestamp=dt.datetime.utcnow())
+            embed = ds.Embed(
+                title='Poll',
+                description=question,
+                colour=ctx.author.colour,
+                timestamp=dt.datetime.utcnow())
             fields = [
-                ("Options", "\n".join([f"{numbers[idx]} {option}" for idx, option in enumerate(options)]), False),
-                    ("Instructions", "React to cast a vote!", False)]
+                ('Options', '\n'.join([f'{numbers[index]} {option}' for index, option in enumerate(options)]), False),
+                ('Instructions', 'React to cast a vote!', False),
+                ('Poll Close', f'Poll will close in {close_time}', False)]
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
             message = await ctx.send(embed=embed)
             for emoji in numbers[:len(options)]:
                 await message.add_reaction(emoji)
             self.polls.append((message.channel.id, message.id))
-            self.bot.scheduler.add_job(
-                self.complete_poll, "date",
-                run_date=dt.datetime.now()+dt.timedelta(seconds=hours),
-                args=[message.channel.id, message.id])
+            # wait for set hours
+            await asyncio.sleep(hours_in_seconds)
+            message = await self.bot.get_channel(message.channel.id).fetch_message(message.id)
+            # TODO make it check for ties
+            most_voted = max(message.reactions, key=lambda r: r.count)
+            await message.channel.send(f'The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!')
+            self.polls.remove((message.channel.id, message.id))
 
 
     @commands.command(
         name = 'taco',
+        brief='Taco',
+        description='Taco',
+        help='Taco',
         aliases=['givetaco', 'maketaco'])
     async def taco(self, ctx):
         '''
         Command for PathieZ
         '''
         if dt.datetime.today().weekday() == 1:
+            rand_small = random.randrange(1, 8)
+            rand_big = random.randrange(20000, 50000)
             is_tuesday = [
-                'Fine, I will get you a taco.... What is your address. I am finding the number for deliviery.',
-                'It is actually Taco tuesday so give me 3 to 35,956 bussines days to find you a taco.'
+                'Fine, I will get you a taco.... What is your address. I am finding the number for delivery.',
+                f'It is actually Taco Tuesday so give me {rand_small} to {rand_big} business days to find you a taco.'
                 'Busy this Tuesday, ask next Tuesday']
             msg = random.choice(is_tuesday)
         else:
@@ -115,6 +137,15 @@ class Fun(commands.Cog):
                 'Can you make me a Taco?']
             msg = random.choice(not_tuesday)
         await ctx.send(msg)
+
+
+    @commands.command(
+        name='hello',
+        aliases=['hi', 'Hey'])
+    async def say_hello(self, ctx):
+        hello = ('Hello', 'Hi', 'Hey', 'Greetings', 'Hi there')
+        san = ('', '-san')
+        await ctx.send(f'{random.choice(hello)} {ctx.author.mention}{random.choices(san, weights=(60, 20))[0]}!')
 
 
     @commands.command(
