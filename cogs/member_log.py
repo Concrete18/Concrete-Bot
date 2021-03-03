@@ -99,8 +99,8 @@ class Member_Log(commands.Cog):
         Adds members to self.member_data if they are not already in it.
         '''
         print('Updating member_data')
-        print(ctx.guild)
-        if ctx.guild != 'Concrete Jungle':
+        print(ctx.guild.id)
+        if ctx.guild.id != 172069829690261504:
             return
         for member in ctx.guild.members:
             if member.bot == False:
