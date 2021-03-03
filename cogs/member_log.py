@@ -37,10 +37,8 @@ class Member_Log(commands.Cog):
         member_id = str(member.id)
         name = member.name
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
-        print(name, current_date)
         if len(self.member_data) != 0:
             if member_id in self.member_data.keys():
-                print(f'Skipped {name}')
                 return
         if sys.platform == 'win32':
             print(f'{member}: New Activity Detected')
