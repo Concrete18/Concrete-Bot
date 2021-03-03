@@ -32,18 +32,18 @@ class Member_Log(commands.Cog):
 
         Logging started on 2021-03-03
         '''
-        server = str(member.guild)
-        if server != 'Concrete Jungle' and server != 'Concrete Test':
+        if member.guild.id != 172069829690261504 and member.guild.id != 665031048941404201:
             return
-        member = str(member)
-        last_action = dt.datetime.now().date().strftime("%m-%d-%Y")
+        member_id = member.id
+        name = member.name
+        current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
+        print(name, current_date)
         if len(self.member_data) != 0:
-            if member in self.member_data.keys():
-                if self.member_data[member] == last_action:
+            if member_id in self.member_data.keys():
                     return
         if sys.platform == 'win32':
             print(f'{member}: New Activity Detected')
-        self.member_data[member] = last_action
+        self.member_data[member_id] = [name, current_date]
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
 
@@ -74,13 +74,14 @@ class Member_Log(commands.Cog):
         '''
         Lists inactive members.
         '''
-        print(dt.datetime.now().date() - dt.timedelta(days=int(days)))
         inactive_list = []
         check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
         print(check_date)
-        for name, last_active in self.member_data:
+        for entry in self.member_data:
+            name = entry[0]
+            last_active = entry[1]
             # FIXME wont work
-            last_active = dt.datetime.strptime(last_active, "%m-%d-%Y")
+            last_active = dt.datetime.strptime(entry[1], "%m-%d-%Y")
             print(last_active)
             if last_active < check_date:
                 inactive_list.append(name)
@@ -99,14 +100,15 @@ class Member_Log(commands.Cog):
         Adds members to self.member_data if they are not already in it.
         '''
         print('Updating member_data')
-        print(ctx.guild.id)
-        if ctx.guild.id != 172069829690261504:
+        if ctx.guild.id != 172069829690261504 and ctx.guild.id != 665031048941404201:
             return
         for member in ctx.guild.members:
             if member.bot == False:
-                member = str(member)
-                if member not in self.member_data.keys():
-                    self.member_data[member] = 'no activity since 2021-03-03'
+                member_id = member.id
+                name = str(member)
+                current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
+                if member_id not in self.member_data.keys():
+                    self.member_data[member_id] = [name, current_date]
                     print('Added', member)
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
