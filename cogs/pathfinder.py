@@ -74,7 +74,7 @@ class RPG(commands.Cog):
         '''
         # parses args
         combined=''.join(args)
-        for word in ['lat', 'latinum', 'old', 'ilver', 'opper', 'way', 'w']:
+        for word in ('lat', 'latinum', 'old', 'ilver', 'opper', 'way', 'w'):
             combined = combined.replace(word, '')
         args = re.findall(r'\d+\w?', combined)
         coins = {'p': 0, 'g': 0, 's': 0, 'c': 0, 'way': 4}
@@ -96,6 +96,7 @@ class RPG(commands.Cog):
             title='Party Gold Splitter',
             description=f'Entered totals: {amounts}',
             colour=ds.Colour(0xf1c40f))
+        embed.set_image = self.bot_func.bot_image
         embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
         if int(goldsplit) > 0:
             embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
