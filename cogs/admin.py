@@ -15,13 +15,15 @@ class Admin(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         info = f'Command: {ctx.command} | Error: {str(error)}'
-        print(info)
         self.bot_func.logger.debug(info)
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.')
         elif isinstance(error, commands.MissingAnyRole):
             await ctx.send(f'{ctx.author.mention} is missing the required role for the {ctx.command} command.')
+        elif isinstance(error, commands.CommandNotFound):
+            await ctx.send(f'Command does not exist.')
         else:
+            print(info)
             raise(error)
 
 
