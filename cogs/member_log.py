@@ -19,6 +19,11 @@ class Member_Log(commands.Cog):
         self.member_data = {}
         with open('data.json') as json_file:
             self.data = json.load(json_file)
+        # loads member_data.json
+        if os.path.exists('member_data.json'):
+            with open('member_data.json') as json_file:
+                self.member_data = json.load(json_file)
+                print(self.member_data)
 
 
     @commands.Cog.listener()
@@ -26,9 +31,6 @@ class Member_Log(commands.Cog):
         '''
         Adds members to self.member_data if they are not already in it.
         '''
-        if os.path.exists('member_data.json'):
-            with open('member_data.json') as json_file:
-                self.member_data = json.load(json_file)
         if sys.platform != 'win32':
             guild_id = 172069829690261504
         else:
@@ -94,7 +96,8 @@ class Member_Log(commands.Cog):
         print(dt.datetime.now().date() - dt.timedelta(days=int(days)))
         inactive_list = []
         for name, last_active in self.member_data:
-            # FIXME wont work
+            # FIXME wont work                               2021-02-02
+            last_active = dt.datetime.strptime(last_active, "%Y-%m-%d")
             if last_active < dt.datetime.now().date() - dt.timedelta(days=int(days)):
                 inactive_list.append(name)
         if len(inactive_list) == 0:
