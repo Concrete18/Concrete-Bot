@@ -23,6 +23,9 @@ class Member_Log(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        '''
+        Adds members to self.member_data if they are not already in it.
+        '''
         if os.path.exists('member_data.json'):
             with open('member_data.json') as json_file:
                 self.member_data = json.load(json_file)
@@ -31,10 +34,8 @@ class Member_Log(commands.Cog):
         else:
             guild_id = 665031048941404201
         self.concrete_server = await self.bot.fetch_guild(guild_id)
-        print(self.concrete_server)
-        # TODO adds members into self.member_data if they are not currently in it.
-        print(self.concrete_server.members)
         for member in self.concrete_server.members:
+            # FIXME prints nothing
             print(member)
             if member not in self.member_data.keys():
                 self.member_data[member] = 'no activity since 2021-03-02'
@@ -66,15 +67,10 @@ class Member_Log(commands.Cog):
         '''
         Updates last server action to the current date if an action has not occured yet.
         '''
-        # TODO set to only run on concrete_server
         if message.author == self.bot.user:  # Ignore messages made by the bot
             return
-        print(message.guild)
-        print(self.concrete_server)
         if str(message.guild) == 'Concrete Jungle':
             self.update_activity(message.author)
-        else:
-            print('Wrong server')
 
 
     @commands.Cog.listener()
@@ -82,26 +78,29 @@ class Member_Log(commands.Cog):
         '''
         Updates last server action to the current date if an action has not occured yet.
         '''
-        # TODO set to only run on concrete_server
         if str(member.guild) == 'Concrete Jungle':
             if before.channel == None and after.channel != None:
                 self.update_activity(member)
-        else:
-            print('Wrong server')
 
 
     @commands.command(
         name = 'showinactivemembers',
         aliases=['inactivemembers', 'inactive'])
+    @commands.has_guild_permissions(manage_messages=True)
     async def showinactivemembers(self, ctx, days: int):
         '''
         Lists inactive members.
         '''
+        print(dt.datetime.now().date() - dt.timedelta(days=int(days)))
         inactive_list = []
         for name, last_active in self.member_data:
-            if last_active + dt.timedelta(days=int(days)) > dt.datetime.now().date():
+            # FIXME wont work
+            if last_active < dt.datetime.now().date() - dt.timedelta(days=int(days)):
                 inactive_list.append(name)
-        result = ', '.join(inactive_list)
+        if len(inactive_list) == 0:
+            result = f'No Members have been inactive for over {days} days.'
+        else:
+            result = ', '.join(inactive_list)
         await ctx.send(result)
 
 
