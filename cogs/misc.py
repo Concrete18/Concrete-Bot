@@ -1,6 +1,8 @@
 from discord.ext import commands
 import discord as ds
 from functions import *
+from typing import Optional
+import asyncio
 
 
 class Misc(commands.Cog):
@@ -47,6 +49,43 @@ class Misc(commands.Cog):
 
 
     # wip commands
+
+
+    @commands.command(
+        name='createpoll',
+        aliases=['mkpoll', 'makepoll'])
+    @commands.has_permissions(manage_guild=True)
+    async def create_poll(self, ctx, hours: float, question: str, *options):
+        hours_in_seconds = hours * 60 * 60
+        close_time = self.bot_func.readable_time_since(hours_in_seconds)
+        numbers = (
+            '1️⃣', '2⃣', '3⃣', '4⃣', '5⃣',
+		    '6⃣', '7⃣', '8⃣', '9⃣', '🔟')
+        if len(options) > 10:
+            await ctx.send('You can only supply a maximum of 10 options.')
+        else:
+            embed = ds.Embed(
+                title='Poll',
+                description=question,
+                colour=ctx.author.colour,
+                timestamp=dt.datetime.utcnow())
+            fields = [
+                ('Options', '\n'.join([f'{numbers[index]} {option}' for index, option in enumerate(options)]), False),
+                ('Instructions', 'React to cast a vote!', False),
+                ('Poll Close', f'Poll will close in {close_time}', False)]
+            for name, value, inline in fields:
+                embed.add_field(name=name, value=value, inline=inline)
+            message = await ctx.send(embed=embed)
+            for emoji in numbers[:len(options)]:
+                await message.add_reaction(emoji)
+            self.polls.append((message.channel.id, message.id))
+            # wait for set hours
+            await asyncio.sleep(hours_in_seconds)
+            message = await self.bot.get_channel(message.channel.id).fetch_message(message.id)
+            # TODO make it check for ties
+            most_voted = max(message.reactions, key=lambda r: r.count)
+            await message.channel.send(f'The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!')
+            self.polls.remove((message.channel.id, message.id))
 
 
     async def get_avail_roles(self, ctx):
