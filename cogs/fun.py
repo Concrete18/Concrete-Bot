@@ -82,7 +82,9 @@ class Fun(commands.Cog):
 
     @commands.command(
         name='hello',
-        aliases=['hi', 'Hey'])
+        brief='Greets Bot and causes the bot to greet you.',
+        description='Greets Bot and causes the bot to greet you.',
+        aliases=['hi', 'hey'])
     async def say_hello(self, ctx):
         hello = ('Hello', 'Hi', 'Hey', 'Greetings', 'Hi there')
         san = ('', '-san')
