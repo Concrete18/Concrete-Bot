@@ -44,20 +44,6 @@ class Fun(commands.Cog):
                 self.bot_func.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
 
 
-    @commands.command(
-        name = 'refresh',
-        brief = 'Refreshes responses data',
-        hidden=True)
-    @commands.has_role('Owner')
-    async def refresh(self, ctx):
-        with open('data.json') as json_file:
-            self.data = json.load(json_file)
-        self.responses = self.data['responses']
-        self.jojo_lines = self.data['jojo']
-        await ctx.message.delete()
-        print('Responses have been reloaded.')
-
-
     async def complete_poll(self, channel_id, message_id):
         message = await self.bot.get_channel(channel_id).fetch_message(message_id)
         most_voted = max(message.reactions, key=lambda r: r.count)
