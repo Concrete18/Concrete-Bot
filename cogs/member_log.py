@@ -39,9 +39,14 @@ class Member_Log(commands.Cog):
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
         if len(self.member_data) != 0:
             if member_id in self.member_data.keys():
-                return
+                if current_date != self.member_data[member_id][1]:
+                    self.member_data[member_id] = [name, current_date]
+                else:
+                    return
+        info = f'{member}: New Activity Detected'
+        self.bot_func.logger.debug(info)
         if sys.platform == 'win32':
-            print(f'{member}: New Activity Detected')
+            print(info)
         self.member_data[member_id] = [name, current_date]
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
@@ -81,7 +86,6 @@ class Member_Log(commands.Cog):
         inactive_list = []
         check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
         for entry, data in self.member_data.items():
-            # FIXME wont work
             last_active = dt.datetime.strptime(data[1], "%m-%d-%Y").date()
             if last_active < check_date:
                 inactive_list.append(data[0])
