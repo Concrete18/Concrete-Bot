@@ -44,7 +44,7 @@ class Member_Log(commands.Cog):
                 else:
                     return
         info = f'{member}: New Activity Detected'
-        self.bot_func.logger.debug(info)
+        self.bot_func.logger.info(info)
         if sys.platform == 'win32':
             print(info)
         self.member_data[member_id] = [name, current_date]
