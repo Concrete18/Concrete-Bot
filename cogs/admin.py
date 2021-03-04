@@ -48,13 +48,17 @@ class Admin(commands.Cog):
         msg = f'{member} left the server'
         print(msg)
         self.bot_func.logger.info(msg)
+        # TODO remove user from message_data
+        try:
+            self.member_data.pop(str(member.id))
+        except:
+            print('self.member_data is not accesible.')
 
 
     @commands.command(
         name ='purge',
         brief='Deletes n messages from newest to oldest.',
-        description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.',
-        hidden=True)
+        description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.')
     @commands.has_guild_permissions(manage_messages=True)
     async def purge(self, ctx, num: int=5):
         '''
@@ -81,7 +85,6 @@ class Admin(commands.Cog):
         name = 'changeactivity',
         aliases=['changegame'],
         brief = 'Change the bot\'s current game with an admin command.',
-        hidden=True,
         pass_context = True)
     @commands.has_role('Owner')
     async def changeactivity(self, ctx, *activity):
@@ -96,8 +99,7 @@ class Admin(commands.Cog):
     @commands.command(
         name ='pid',
         brief='Sends current bot PID.',
-        description='Sends current bot PID.',
-        hidden=True)
+        description='Sends current bot PID.')
     async def pid(self, ctx):
         '''
         Sends current bot PID.
