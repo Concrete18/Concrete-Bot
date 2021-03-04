@@ -28,8 +28,7 @@ class Misc(commands.Cog):
     @commands.command(
         name = 'membercount',
         brief = 'Gets total members in server and total online/offline.',
-        description='Gets total members in server and total online/offline.',
-        hidden=True)
+        description='Gets total members in server and total online/offline.')
     async def membercount(self, ctx):
         '''
         Gets total members in server and total online/offline.
