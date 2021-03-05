@@ -1,7 +1,6 @@
 from discord.ext import commands
 import discord as ds
 from functions import *
-from typing import Optional
 import datetime as dt
 import asyncio
 
@@ -26,6 +25,18 @@ class Misc(commands.Cog):
 
 
     @commands.command(
+        name = 'uptime',
+        brief = 'Gets Bot uptime.',
+        description='Gets the Bot uptime since it last was started.')
+    async def uptime(self, ctx):
+        '''
+        Sends the total time the bot has been running using the readable_time_since function.
+        '''
+        uptime_seconds = dt.datetime.now().timestamp()-self.bot.start_time.timestamp()
+        await ctx.send(f'Bot Uptime: {self.bot_func.readable_time_since(uptime_seconds)}')
+
+
+    @commands.command(
         name = 'membercount',
         brief = 'Gets total members in server and total online/offline.',
         description='Gets total members in server and total online/offline.')
@@ -46,6 +57,35 @@ class Misc(commands.Cog):
         embed.add_field(name='Total Members', value=len(all_members), inline=True)
         embed.add_field(name='Total Bots', value=len(all_bots), inline=True)
         await ctx.send(embed=embed)
+
+
+    @commands.command(
+        name = 'schedulemsg',
+         aliases=['schedule', 'schedmsg'],
+        brief = 'Schedule a message to be sent after a specific number of hours.',
+        description='''
+        Schedule a message to be sent after a specific number of hours.
+        It is sent in the channel the command was typed in.''')
+    async def schedulemsg(self, ctx, hours: float, *args):
+        '''
+        Allows scheduling a message to be sent in n hours.
+        '''
+        await ctx.message.delete()
+        hours_in_seconds = hours * 60 * 60
+        msg = ' '.join(args)
+        # embed message preview
+        preview = ds.Embed(
+            title=f'Scheduled Message to send in {hours} hours.',
+            colour=ds.Colour(0x2ecc71))
+        preview.add_field(name=f'Message Contents', value=msg, inline=False)
+        await ctx.author.send(embed=preview)
+        await asyncio.sleep(hours_in_seconds)
+        # embed sent message
+        schedule_msg = ds.Embed(
+            title=f'{ctx.author} Scheduled Message',
+            colour=ds.Colour(0x2ecc71))
+        schedule_msg.add_field(name=f'Message Contents', value=msg, inline=False)
+        await ctx.channel.send(embed=schedule_msg)
 
 
     # wip commands
@@ -143,19 +183,6 @@ class Misc(commands.Cog):
     async def removerole(self, ctx, time, *args):
         '''
         TODO removerole function
-        '''
-        msg = ' '.join(args)
-        await ctx.send(f'Sheduled Message for {time}')
-
-
-    @commands.command(
-        name = 'schedulemsg',
-        brief = 'Shedule a message to be sent at a specific time.',
-        description='Shecule a message to be sent at a specific time in the channel the command was typed in.',
-        hidden=True)
-    async def schedulemsg(self, ctx, time, *args):
-        '''
-        TODO add Schedule a message function
         '''
         msg = ' '.join(args)
         await ctx.send(f'Sheduled Message for {time}')
