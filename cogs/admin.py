@@ -10,6 +10,7 @@ class Admin(commands.Cog):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
+        # TODO log errors in separate log file
 
 
     @commands.Cog.listener()
@@ -17,17 +18,23 @@ class Admin(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
             await ctx.send(info)
-            self.bot_func.logger.info(info)
+            self.bot.logger.info(info)
         elif isinstance(error, commands.MissingAnyRole):
+            info = f'{ctx.author.mention} none of the required roles for the {ctx.command} command.'
+            await ctx.send(info)
+            self.bot.logger.info(info)
+        elif isinstance(error, commands.MissingRole):
             info = f'{ctx.author.mention} is missing the required role for the {ctx.command} command.'
             await ctx.send(info)
-            self.bot_func.logger.info(info)
+            self.bot.logger.info(info)
         elif isinstance(error, commands.CommandNotFound):
             await ctx.send('Command does not exist.')
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(f'{ctx.command} was given incorrect argument.')
         else:
             info = f'Command: {ctx.command} | Error: {str(error)}'
             print(info)
-            self.bot_func.logger.info(info)
+            self.bot.logger.info(info)
             raise(error)
 
 
@@ -39,8 +46,8 @@ class Admin(commands.Cog):
         '''
         msg = f'{member} joined the server'
         print(msg)
-        self.bot_func.logger.info(msg)
-        role = member.guild.get_role(377683900580888576)
+        self.bot.logger.info(msg)
+        role = member.guild.get_role(self.bot.member_role)
         await member.add_roles(role, reason='New Member')
 
 
@@ -51,12 +58,7 @@ class Admin(commands.Cog):
         '''
         msg = f'{member} left the server'
         print(msg)
-        self.bot_func.logger.info(msg)
-        # TODO remove user from message_data
-        try:
-            self.member_data.pop(str(member.id))
-        except:
-            print('self.member_data is not accesible.')
+        self.bot.logger.info(msg)
 
 
     @commands.command(
@@ -109,23 +111,6 @@ class Admin(commands.Cog):
         Sends current bot PID.
         '''
         await ctx.send(f'PID: {os.getpid()}')
-
-
-    # WIP commands
-
-
-    @commands.command(
-        name ='getinactive',
-        brief='Check members that would be purged for inactivity passed a specific total days.',
-        description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.',
-        hidden=True)
-    @commands.has_any_role('Owner', 'Admin')
-    async def getinactive(self, days: int):
-        '''
-        Check members that would be purged for inactivity passed a specific total days.
-        '''
-        await self.bot.estimate_pruned_members(days)
-        print(await self.bot.estimate_pruned_members(days))
 
 
 def setup(bot):
