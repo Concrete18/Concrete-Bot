@@ -66,7 +66,7 @@ class MyBot(commands.Bot):
         '''
         self.set_extensions()
         if sys.platform != 'win32':
-            channel = self.bot.get_channel(self.bot_commands_chan)
+            channel = self.get_channel(self.bot_commands_chan)
             self.logger.info(f'Logged in as {bot.user}')
         else:
             channel = self.get_channel(self.bot_commands_test_chan)
