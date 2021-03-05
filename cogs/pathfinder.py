@@ -96,7 +96,6 @@ class RPG(commands.Cog):
             title='Party Gold Splitter',
             description=f'Entered totals: {amounts}',
             colour=ds.Colour(0xf1c40f))
-        embed.set_image = self.bot_func.bot_image
         embed.add_field(name=f'Split', value=f'{coins["way"]} Way', inline=False)
         if int(goldsplit) > 0:
             embed.add_field(name='Gold', value=f'{int(goldsplit)}', inline=True)
