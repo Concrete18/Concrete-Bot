@@ -32,7 +32,7 @@ class Member_Log(commands.Cog):
 
         Logging started on 2021-03-03
         '''
-        if member.guild.id != 172069829690261504 and member.guild.id != 665031048941404201:
+        if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         member_id = str(member.id)
         name = member.name
@@ -44,7 +44,7 @@ class Member_Log(commands.Cog):
                 else:
                     return
         info = f'{member}: New Activity Detected'
-        self.bot_func.logger.info(info)
+        self.bot.logger.info(info)
         if sys.platform == 'win32':
             print(info)
         self.member_data[member_id] = [name, current_date]
@@ -68,6 +68,19 @@ class Member_Log(commands.Cog):
         '''
         if before.channel == None and after.channel != None:
             self.update_activity(member)
+
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        '''
+        Removes users from member_data when they leave the server.
+        '''
+        # TODO check if this works
+        try:
+            self.member_data.pop(str(member.id))
+        except Exception as error:
+            print(error)
+            print('self.member_data is not accesible.')
 
 
     @commands.command(
@@ -104,8 +117,9 @@ class Member_Log(commands.Cog):
         Adds members to self.member_data if they are not already in it.
         '''
         print('Updating member_data')
-        if ctx.guild.id != 172069829690261504 and ctx.guild.id != 665031048941404201:
+        if ctx.guild.id != self.bot.main_server and ctx.guild.id != self.bot.test_server:
             return
+        new_members = []
         for member in ctx.guild.members:
             if member.bot == False:
                 member_id = str(member.id)
@@ -113,9 +127,17 @@ class Member_Log(commands.Cog):
                 current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
                 if member_id not in self.member_data.keys():
                     self.member_data[member_id] = [name, current_date]
+                    new_members.append(name)
                     print('Added', member)
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
+        new_count = len(new_members)
+        if new_count == 1:
+            member = 'member'
+        else:
+            member = 'members'
+        result = f'Added {new_count} new {member}.'
+        await ctx.send(result)
 
 
 def setup(bot):
