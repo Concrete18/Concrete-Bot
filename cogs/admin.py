@@ -75,12 +75,33 @@ class Admin(commands.Cog):
 
 
     @commands.command(
+        name = 'reload',
+        brief='Reloads all cogs')
+    @commands.has_permissions(manage_guild=True)
+    async def reload_cogs(self, ctx):
+        '''
+        Reloads all cogs without stopping bot.
+        '''
+        try:
+            self.bot.set_extensions()
+        except Exception as error:
+            await ctx.send(error)
+            await ctx.message.delete()
+            return
+        await ctx.message.delete()
+        msg = 'Cogs have been reloaded.'
+        print(msg)
+        self.bot.logger.info(msg)
+        await ctx.send(msg)
+
+
+    @commands.command(
         name = 'speak',
         aliases=['say'],
         brief = 'Bot says what you type after the command.',
         hidden=True,
         pass_context = True)
-    @commands.has_role('Owner')
+    @commands.has_permissions(manage_guild=True)
     async def speak(self, ctx, *args):
         msg = ' '.join(args)
         await ctx.message.delete()
@@ -92,7 +113,7 @@ class Admin(commands.Cog):
         aliases=['changegame'],
         brief = 'Change the bot\'s current game with an admin command.',
         pass_context = True)
-    @commands.has_role('Owner')
+    @commands.has_permissions(manage_guild=True)
     async def changeactivity(self, ctx, *activity):
         '''
         Change Bot Activty.
@@ -106,6 +127,7 @@ class Admin(commands.Cog):
         name ='pid',
         brief='Sends current bot PID.',
         description='Sends current bot PID.')
+    @commands.has_permissions(manage_guild=True)
     async def pid(self, ctx):
         '''
         Sends current bot PID.

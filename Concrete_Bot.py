@@ -58,27 +58,6 @@ class MyBot(commands.Bot):
                     self.loaded_cogs.append(filename)
 
 
-    @commands.has_any_role('Owner', 'Admin')
-    @commands.command(
-        name = 'reload',
-        brief='Reloads all cogs')
-    async def reload_cogs(self, ctx):
-        '''
-        Reloads all cogs without stopping bot.
-        '''
-        try:
-            self.set_extensions()
-        except Exception as error:
-            await ctx.send(error)
-            await ctx.message.delete()
-            return
-        await ctx.message.delete()
-        msg = 'Cogs have been reloaded.'
-        print(msg)
-        self.logger.info(msg)
-        await ctx.send(msg)
-
-
     async def on_ready(self):
         '''
         Notifies that bot is ready and sets activity to a random topic.
@@ -87,7 +66,7 @@ class MyBot(commands.Bot):
         '''
         self.set_extensions()
         if sys.platform != 'win32':
-            channel = bot.get_channel(self.bot_commands_chan)
+            channel = self.bot.get_channel(self.bot_commands_chan)
             self.logger.info(f'Logged in as {bot.user}')
         else:
             channel = self.get_channel(self.bot_commands_test_chan)
