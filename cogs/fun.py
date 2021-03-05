@@ -41,7 +41,7 @@ class Fun(commands.Cog):
                 await message.channel.send('Is that a Jojo reference?')
             else:
                 print('Jojo reference detected but cooldown active.')
-                self.bot_func.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
+                self.bot.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
 
 
     async def complete_poll(self, channel_id, message_id):
@@ -104,7 +104,7 @@ class Fun(commands.Cog):
         if result == 1:
             msg = '...... It landed on its side. There is a 1 in 6000 chance of that happening.'
             print(msg)
-            self.bot_func.logger.info(f'{ctx.author} flipped a coin onto it\'s side.')
+            self.bot.logger.info(f'{ctx.author} flipped a coin onto it\'s side.')
         elif (result % 2) == 0:
             msg = 'It landed on Heads.'
         else:
