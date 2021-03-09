@@ -1,16 +1,25 @@
 from discord.ext import commands
-from functions import *
 import discord as ds
+from logging.handlers import RotatingFileHandler
+import logging as lg
+from functions import *
 import os
 
 class Admin(commands.Cog):
+
+    # error Logging
+    log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
+    error_logger = lg.getLogger(__name__)
+    error_logger.setLevel(lg.DEBUG) # Log Level
+    my_handler = RotatingFileHandler('error.log', maxBytes=5*1024*1024, backupCount=2)
+    my_handler.setFormatter(log_formatter)
+    error_logger.addHandler(my_handler)
 
 
     def __init__(self, bot):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
-        # TODO log errors in separate log file
 
 
     @commands.Cog.listener()
@@ -20,7 +29,7 @@ class Admin(commands.Cog):
             await ctx.send(info)
             self.bot.logger.info(info)
         elif isinstance(error, commands.MissingAnyRole):
-            info = f'{ctx.author.mention} none of the required roles for the {ctx.command} command.'
+            info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
             await ctx.send(info)
             self.bot.logger.info(info)
         elif isinstance(error, commands.MissingRole):
@@ -30,18 +39,24 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.CommandNotFound):
             await ctx.send('Command does not exist.')
         elif isinstance(error, commands.BadArgument):
-            await ctx.send(f'{ctx.command} was given incorrect argument.')
+            msg = f'{ctx.command} was given incorrect argument.'
+            await ctx.send(msg)
+            self.error_logger.info(msg)
+        elif isinstance(error, commands.CommandInvokeError):
+            msg = f'{ctx.command} was given incorrect argument.'
+            await ctx.send(msg)
+            self.error_logger.info(msg)
         else:
             info = f'Command: {ctx.command} | Error: {str(error)}'
             print(info)
-            self.bot.logger.info(info)
+            self.error_logger.info(info)
             raise(error)
 
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         '''
-        Give new members the "Member" role.
+        Gives new members the "Member" role.
         Make sure the bot role is above the role you are wanting it to assign.
         '''
         msg = f'{member} joined the server'
@@ -59,6 +74,8 @@ class Admin(commands.Cog):
         msg = f'{member} left the server'
         print(msg)
         self.bot.logger.info(msg)
+        channel = self.get_channel(360587663377432578)
+        channel.send(msg)
 
 
     @commands.command(
