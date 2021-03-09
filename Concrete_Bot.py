@@ -29,6 +29,7 @@ class MyBot(commands.Bot):
     main_server = 172069829690261504
     test_server = 665031048941404201
     member_role = 377683900580888576
+    admin_chan = 369644679370768385
     bot_commands_chan = 812394370849570866
     bot_commands_test_chan = 667229260976619561
 
@@ -58,25 +59,11 @@ class MyBot(commands.Bot):
                     self.loaded_cogs.append(filename)
 
 
-    async def on_ready(self):
+    async def set_random_activity(self):
         '''
-        Notifies that bot is ready and sets activity to a random topic.
-
-        Possible activity types: playing Streaming listening watching competing
+        Setsa random discord activity.
+        Types: playing Streaming listening watching competing
         '''
-        self.set_extensions()
-        if sys.platform != 'win32':
-            channel = self.get_channel(self.bot_commands_chan)
-            self.logger.info(f'Logged in as {self.user}')
-        else:
-            channel = self.get_channel(self.bot_commands_test_chan)
-        print(f'{self.user} is ready.')
-        # Sends a greeting on on_ready
-        greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.']
-        greeting = random.choice(greetings)
-        await channel.send(greeting)
-        # sets discord activity
-        # types: playing Streaming listening watching competing
         activity_names = [
             'Battle Bots', 'Transformers: Battle for Cybertron', 'Factorio', 'Shenzen I/O',
             'HAL 9000 Simulator', 'Skynet', 'The Matrix'
@@ -85,13 +72,40 @@ class MyBot(commands.Bot):
         await self.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity_name))
 
 
+    async def send_random_greeting(self, channel):
+        '''
+        Sends a greeting on on_ready
+        '''
+        greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.']
+        greeting = random.choice(greetings)
+        await channel.send(greeting)
+
+
+    async def on_ready(self):
+        '''
+        Notifies that bot is ready and sets activity to a random topic.
+
+        Possible activity types: playing Streaming listening watching competing
+        '''
+        self.set_extensions()
+        print(f'{self.user} is ready.')
+        if sys.platform != 'win32':
+            channel_id = self.bot_commands_chan
+            self.logger.info(f'Logged in as {self.user}')
+        else:
+            channel_id = self.bot_commands_test_chan
+        channel = self.get_channel(channel_id)
+        await self.send_random_greeting(channel)
+        await self.set_random_activity()
+
+
     @classmethod
     async def setup(cls):
         bot = cls()
         try:
             await bot.start(bot.secret_key)
         except KeyboardInterrupt:
-            # TODO check for unifinished polls or msgs
+            # TODO check for unifinished polls or unsent scheduled msgs
             await bot.close()
 
 
