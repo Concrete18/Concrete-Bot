@@ -26,7 +26,7 @@ class Member_Log(commands.Cog):
             self.member_data = {}
 
 
-    def update_activity(self, member):
+    async def update_activity(self, member):
         '''
         Updates member in member_data.json with current date if last activity was before today.
 
@@ -34,22 +34,36 @@ class Member_Log(commands.Cog):
         '''
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
-        member_id = str(member.id)
-        name = member.name
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
+        name = member.name
+        member_id = str(member.id)
+
+        def update_log():
+            self.member_data[member_id] = [name, current_date]
+            with open('member_data.json', 'w') as json_file:
+                json.dump(self.member_data, json_file, indent=4)
+
         if len(self.member_data) != 0:
             if member_id in self.member_data.keys():
                 if current_date != self.member_data[member_id][1]:
-                    self.member_data[member_id] = [name, current_date]
+                    update_log()
+                    info = f'{member}: New Activity Detected'
+                    self.bot.logger.info(info)
+                    if sys.platform == 'win32':
+                        print(info)
+        else:
+            if os.path.exists('member_data.json'):
+                with open('member_data.json') as json_file:
+                    self.member_data = json.load(json_file)
+                update_log()
+            else:
+                msg = 'member_data.json is missing.'
+                print(msg)
+                if sys.platform == 'win32':
+                    channel = self.bot.get_channel(self.bot.bot_commands_test_chan)
                 else:
-                    return
-        info = f'{member}: New Activity Detected'
-        self.bot.logger.info(info)
-        if sys.platform == 'win32':
-            print(info)
-        self.member_data[member_id] = [name, current_date]
-        with open('member_data.json', 'w') as json_file:
-            json.dump(self.member_data, json_file, indent=4)
+                    channel = self.bot.get_channel(self.bot.admin_chan)
+                await channel.send(msg)
 
 
     @commands.Cog.listener()
@@ -58,7 +72,7 @@ class Member_Log(commands.Cog):
         Updates last server action to the current date if an action has not occured on the current day.
         '''
         if message.author != self.bot.user:  # Ignore messages made by the bot
-            self.update_activity(message.author)
+            await self.update_activity(message.author)
 
 
     @commands.Cog.listener()
@@ -67,7 +81,7 @@ class Member_Log(commands.Cog):
         Updates last server action to the current date if an action has not occured on the current day.
         '''
         if before.channel == None and after.channel != None:
-            self.update_activity(member)
+            await self.update_activity(member)
 
 
     @commands.Cog.listener()
