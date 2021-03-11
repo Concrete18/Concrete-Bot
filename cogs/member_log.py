@@ -105,7 +105,7 @@ class Member_Log(commands.Cog):
         brief='Lists active members for the day.',
         description='Lists active members that have joined a chat or sent a message today.',
         aliases=['activemembers', 'showactivemembers'])
-    @commands.has_guild_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def showactivemembers(self, ctx, days: int=60):
         '''
         Lists inactive members.
@@ -120,7 +120,7 @@ class Member_Log(commands.Cog):
             result = f'No Members have been active today.'
         else:
             result = ', '.join(active_list)
-        await ctx.send(result)
+        await ctx.send('Today\'s last active members:\n' + result)
 
 
     @commands.command(
@@ -146,7 +146,7 @@ class Member_Log(commands.Cog):
             result = f'No Members have been inactive for over {days} days.'
         else:
             result = ', '.join(inactive_list)
-        await ctx.send(result)
+        await ctx.send(f'Inactive members for the last {days}:\n' + result)
 
 
     @commands.command(

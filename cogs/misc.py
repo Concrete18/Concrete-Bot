@@ -94,7 +94,7 @@ class Misc(commands.Cog):
     @commands.command(
         name='createpoll',
         aliases=['mkpoll', 'makepoll'])
-    @commands.has_permissions(manage_guild=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def create_poll(self, ctx, hours: float, question: str, *options):
         hours_in_seconds = hours * 60 * 60
         close_time = self.bot_func.readable_time_since(hours_in_seconds)
