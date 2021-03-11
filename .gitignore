@@ -134,3 +134,4 @@ member_data.json
 secret.json
 bot.log
 *.txt
+backup_member_log.json

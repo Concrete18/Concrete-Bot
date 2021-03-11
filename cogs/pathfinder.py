@@ -22,6 +22,7 @@ class RPG(commands.Cog):
         '''
         Rolls a dice in NdN format.
         '''
+        # TODO add + option for stuff like 5d4+4
         try:
             rolls, limit = map(int, str(dice).split('d'))
         except Exception:

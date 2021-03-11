@@ -61,7 +61,7 @@ class Misc(commands.Cog):
 
     @commands.command(
         name = 'schedulemsg',
-         aliases=['schedule', 'schedmsg'],
+        aliases=['schedule', 'schedmsg'],
         brief = 'Schedule a message to be sent after a specific number of hours.',
         description='''
         Schedule a message to be sent after a specific number of hours.
