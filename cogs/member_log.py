@@ -26,6 +26,9 @@ class Member_Log(commands.Cog):
             self.member_data = {}
 
 
+    # TODO add backup of member_data.json
+
+
     async def update_activity(self, member):
         '''
         Updates member in member_data.json with current date if last activity was before today.
