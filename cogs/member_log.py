@@ -101,6 +101,29 @@ class Member_Log(commands.Cog):
 
 
     @commands.command(
+        name = 'active',
+        brief='Lists active members for the day.',
+        description='Lists active members that have joined a chat or sent a message today.',
+        aliases=['activemembers', 'showactivemembers'])
+    @commands.has_guild_permissions(manage_messages=True)
+    async def showactivemembers(self, ctx, days: int=60):
+        '''
+        Lists inactive members.
+        '''
+        active_list = []
+        check_date = dt.datetime.now().date()
+        for entry, data in self.member_data.items():
+            last_active = dt.datetime.strptime(data[1], "%m-%d-%Y").date()
+            if last_active == check_date:
+                active_list.append(data[0])
+        if len(active_list) == 0:
+            result = f'No Members have been active today.'
+        else:
+            result = ', '.join(active_list)
+        await ctx.send(result)
+
+
+    @commands.command(
         name = 'showinactivemembers',
         brief='Lists inactive members. Defaults to 60 days.',
         description='''
