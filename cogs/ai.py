@@ -20,13 +20,13 @@ class AI(commands.Cog):
         self.last_response_tag = ''
 
         # settings
-        with open("ai_data\intents.json") as file:
+        with open("intents.json") as file:
             self.phrase_data = json.load(file)
         self.similarity_req = self.phrase_data['settings']['similarity_req']
         self.debug = self.phrase_data['settings']['debug']
 
         # load stop words
-        with open("ai_data\stopwords.txt", "r") as f:
+        with open("stopwords.txt", "r") as f:
             self.stopwords = set(f.read())
 
 
@@ -77,6 +77,7 @@ class AI(commands.Cog):
         if best_response == '':
             return
         if self.debug:
+            print(phrase)
             print(f'Final pick is: {best_response["tag"]} with similarity: {max_similarity}\n{matched_pattern}\n')
         return best_response
 

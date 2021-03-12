@@ -46,6 +46,8 @@ class Admin(commands.Cog):
             msg = f'{ctx.command} was given incorrect argument.'
             await ctx.send(msg)
             self.error_logger.info(msg)
+        elif isinstance(error, commands.ModuleNotFoundError):
+            print(str(error))
         else:
             info = f'Command: {ctx.command} | Error: {str(error)}'
             print(info)
