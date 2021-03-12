@@ -12,6 +12,10 @@ class Misc(commands.Cog):
         self.bot = bot
         self.bot_func = bot_functions()
 
+        # tasks
+        self.polls = []
+        self.scheduled_messages = []
+
 
     @commands.command(
         name = 'ping',
@@ -38,8 +42,8 @@ class Misc(commands.Cog):
 
     @commands.command(
         name = 'membercount',
-        brief = 'Gets total members in server and total online/offline.',
-        description='Gets total members in server and total online/offline.')
+        brief = 'Gets total members and bots in server.',
+        description='Gets total members and bots in server.')
     async def membercount(self, ctx):
         '''
         Gets total members in server and total online/offline.
@@ -73,6 +77,7 @@ class Misc(commands.Cog):
         await ctx.message.delete()
         hours_in_seconds = hours * 60 * 60
         msg = ' '.join(args)
+        self.scheduled_messages.append((ctx.author, msg))
         # embed message preview
         preview = ds.Embed(
             title=f'Scheduled Message to send in {hours} hours.',
@@ -81,6 +86,7 @@ class Misc(commands.Cog):
         await ctx.author.send(embed=preview)
         await asyncio.sleep(hours_in_seconds)
         # embed sent message
+        self.scheduled_messages.remove((ctx.author, msg))
         schedule_msg = ds.Embed(
             title=f'{ctx.author} Scheduled Message',
             colour=ds.Colour(0x2ecc71))
@@ -92,8 +98,8 @@ class Misc(commands.Cog):
 
 
     @commands.command(
-        name='createpoll',
-        aliases=['mkpoll', 'makepoll'])
+        name='poll',
+        aliases=['createpoll', 'makepoll'])
     @commands.has_guild_permissions(manage_guild=True)
     async def create_poll(self, ctx, hours: float, question: str, *options):
         hours_in_seconds = hours * 60 * 60

@@ -20,8 +20,6 @@ class Fun(commands.Cog):
         self.jojo_lines = self.data['jojo']
         self.jojo_run_cooldown = self.data['settings']['jojo_run_cooldown']
         self.last_jojo_run = dt.datetime.now()-dt.timedelta(hours=self.jojo_run_cooldown)
-        # poll
-        self.polls = []
 
 
     @commands.Cog.listener()
@@ -32,8 +30,8 @@ class Fun(commands.Cog):
         if message.author == self.bot.user:  # Ignore messages made by the bot
             return
         # specific responses
-        if message.content.lower() in self.responses:
-            await message.channel.send(self.responses[message.content.lower()])
+        # if message.content.lower() in self.responses:
+        #     await message.channel.send(self.responses[message.content.lower()])
         # jojo refrences
         if message.content.lower() in self.jojo_lines:
             if self.last_jojo_run+dt.timedelta(hours=self.jojo_run_cooldown) <= dt.datetime.now():
@@ -42,13 +40,6 @@ class Fun(commands.Cog):
             else:
                 print('Jojo reference detected but cooldown active.')
                 self.bot.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
-
-
-    async def complete_poll(self, channel_id, message_id):
-        message = await self.bot.get_channel(channel_id).fetch_message(message_id)
-        most_voted = max(message.reactions, key=lambda r: r.count)
-        await message.channel.send(f'The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!')
-        self.polls.remove((message.channel.id, message.id))
 
 
     @commands.command(
@@ -75,7 +66,8 @@ class Fun(commands.Cog):
                 'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
                 'Taco, hahahaha',
                 'Yo quiero Taco Bell!',
-                'Can you make me a Taco?']
+                'Can you make me a Taco?',
+                'Who will give me some taco bell?']
             msg = random.choice(not_tuesday)
         await ctx.send(msg)
 
@@ -88,7 +80,7 @@ class Fun(commands.Cog):
     async def say_hello(self, ctx):
         hello = ('Hello', 'Hi', 'Hey', 'Greetings', 'Hi there')
         san = ('', '-san')
-        await ctx.send(f'{random.choice(hello)} {ctx.author.mention}{random.choices(san, weights=(60, 20))[0]}!')
+        await ctx.send(f'{random.choice(hello)} {ctx.author.mention}{random.choices(san, weights=(60, 25))[0]}!')
 
 
     @commands.command(

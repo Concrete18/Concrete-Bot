@@ -53,6 +53,9 @@ class Admin(commands.Cog):
             raise(error)
 
 
+# TODO create task loop for wiping bot_commands and backups
+
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         '''
