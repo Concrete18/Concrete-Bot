@@ -109,8 +109,8 @@ class AI(commands.Cog):
         print(message.content)
         if self.respond_if(message):
             # TODO fix mentions in other channels so it is less of a dumb fix
-            message_string = message.clean_content.replace('@Concrete Test', '')
-            message_string = message_string.replace('@Concrete Test', '')
+            message_string = message.clean_content.replace('@Concrete Test ', '')
+            message_string = message_string.replace('@Concrete Bot ', '')
             data_dict = self.phrase_matcher(message_string)
             print(data_dict)
             if data_dict == None:
