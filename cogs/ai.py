@@ -40,11 +40,7 @@ class AI(commands.Cog):
         sentence -- sentence is simplified
         '''
         sentence = self.stemmer.stem(sentence.lower())
-        try:
-            word_tokens = word_tokenize(sentence)
-        except:
-            word_tokens = word_tokenize(sentence)
-            nltk.download()
+        word_tokens = word_tokenize(sentence)
         filtered_sentence = [w for w in word_tokens if not w in self.stopwords]
         filtered_sentence = []
         for w in word_tokens:

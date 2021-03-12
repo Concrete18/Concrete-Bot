@@ -21,7 +21,7 @@
                     "What are you?", "Are you an AI?", "Who made you?"
                             ],
                 "responses":[
-                    "I am an AI made by Concrete.", "Good to see you again!", "Hi there, how can I help?", "Hey, I hope you are having a good time."
+                    "I am an AI made by Concrete."
                             ]
             },
             {
@@ -30,7 +30,7 @@
                     "How do you work?", "How are you written?", "What are you written in?"
                             ],
                 "responses":[
-                    "I was made using Python and I understand text via stopword removal, stemming, and sequence matching."
+                    "I was made using Python and I understand text via stopword removal, tokenization, stemming, and sequence matching."
                             ]
             },
             {
