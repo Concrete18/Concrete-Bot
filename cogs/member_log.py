@@ -38,7 +38,7 @@ class Member_Log(commands.Cog):
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
-        name = member.name
+        name = member.display_name
         member_id = str(member.id)
 
         def update_log():
@@ -163,7 +163,7 @@ class Member_Log(commands.Cog):
         for member in ctx.guild.members:
             if member.bot == False:
                 member_id = str(member.id)
-                name = str(member)
+                name = str(member.display_name)
                 current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
                 if member_id not in self.member_data.keys():
                     self.member_data[member_id] = [name, current_date]
