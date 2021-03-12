@@ -40,9 +40,13 @@ class MyBot(commands.Bot):
         else:
             secret_key = json.load(json_file)['config']['discord_key']
 
+
     def __init__(self):
         print('Starting Bot')
-        super().__init__(command_prefix="/", intents=ds.Intents.all(), case_insensitive=True)
+        super().__init__(
+            command_prefix="/",
+            case_insensitive=True,
+            intents=ds.Intents.all())
 
 
     def set_extensions(self):
@@ -61,7 +65,7 @@ class MyBot(commands.Bot):
 
     async def set_random_activity(self):
         '''
-        Setsa random discord activity.
+        Sets a random discord activity.
         Types: playing Streaming listening watching competing
         '''
         activity_names = [
@@ -88,7 +92,7 @@ class MyBot(commands.Bot):
         Possible activity types: playing Streaming listening watching competing
         '''
         self.set_extensions()
-        print(f'{self.user} is ready.')
+        print(f'{self.user} is ready.\n')
         if sys.platform != 'win32':
             channel_id = self.bot_commands_chan
             self.logger.info(f'Logged in as {self.user}')
@@ -106,6 +110,8 @@ class MyBot(commands.Bot):
             await bot.start(bot.secret_key)
         except KeyboardInterrupt:
             # TODO check for unifinished polls or unsent scheduled msgs
+            print(f'Current Polls: {bot.polls}')
+            print(f'Current Scheduled Messages: {bot.scheduled_messages}')
             await bot.close()
 
 
