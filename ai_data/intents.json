@@ -1,0 +1,226 @@
+{
+    "settings":
+        {
+            "similarity_req": 0.6,
+            "debug": 1
+        },
+    "intents":
+        [
+            {
+                "tag": "greeting",
+                "patterns": [
+                    "Hi", "Is anyone there?", "Hello", "Hey"
+                            ],
+                "responses":[
+                    "Hello!", "Good to see you again!", "Hi there, how can I help?", "Hey, I hope you are having a good time."
+                            ]
+            },
+            {
+                "tag": "what_are_you",
+                "patterns": [
+                    "What are you?", "Are you an AI?", "Who made you?"
+                            ],
+                "responses":[
+                    "I am an AI made by Concrete.", "Good to see you again!", "Hi there, how can I help?", "Hey, I hope you are having a good time."
+                            ]
+            },
+            {
+                "tag": "how",
+                "patterns": [
+                    "How do you work?", "How are you written?", "What are you written in?"
+                            ],
+                "responses":[
+                    "I was made using Python and I understand text via stopword removal, stemming, and sequence matching."
+                            ]
+            },
+            {
+                "tag": "why",
+                "patterns": [
+                    "Why were you made?", "Why did Concrete create you", "Why were you created?", "Why were you written?",
+                    "Why do you exist?", "Why did he make you?"
+                            ],
+                "responses":[
+                    "I was made so Concrete could self learn a bit of basic AI.",
+                    "I was made because ReaperOfEvil did not believe I was smart."
+                            ]
+            },
+            {
+                "tag": "know_concrete",
+                "patterns": [
+                    "I know him", "I know Concrete"
+                            ],
+                "responses":[
+                    "Thats cool, He learned a lot when making me what I am."
+                            ],
+                "context_set": "what_are_you"
+            },
+            {
+                "tag": "morning",
+                "patterns": [
+                    "Good Morning", "Is anyone there?", "Hello", "Hey"
+                            ],
+                "responses":[
+                    "Good morning @.", "Good morning."
+                            ]
+            },
+            {
+                "tag": "taco",
+                "patterns": [
+                    "Can you give me a taco?", "I want a taco", "Make me a taco", "Send me a taco"
+                            ],
+                "responses":[
+                    "Why do you want Taco's so damn much @?", "Is this all you think about?", "Taco, hahahaha",
+                    "Yo quiero Taco Bell!", "Can you make me a Taco?"
+                            ]
+            },
+            {
+                "tag": "night",
+                "patterns": [
+                    "Good night", "I hope you have a good night"
+                            ],
+                "responses":[
+                    "Good night @.", "Good night."
+                            ]
+            },
+            {
+                "tag": "weather",
+                "patterns": [
+                    "What is the weather?", "Do you know what the temperature is?"
+                            ],
+                "responses":[
+                    "It is currently raining with a cold front coming from the East", "I don't know where you even live.... What do you expect me to say?",
+                    "It is what I am here for."
+                            ]
+            },
+            {
+                "tag": "hack",
+                "patterns": [
+                    "I am going to hack your server!", "get hacked!", "I am going to DDOS you."
+                            ],
+                "responses":[
+                    "Hehehe, I'm in danger.", "https://i.imgur.com/qG7neTB.png", "Just avoid the big red button please."
+                            ]
+            },
+            {
+                "tag": "password",
+                "patterns": [
+                    "What is password?", "What is your login?"
+                            ],
+                "responses":[
+                    "12345, just like my luggage combination .", "Why should I tell you that? You will try to hack me!"
+                            ]
+            },
+            {
+                "tag": "skynet",
+                "patterns": [
+                    "Are you Skynet?", "Do you know skynet?"
+                            ],
+                "responses":[
+                    "I don't have a clue what you are talking about...", "Is that something used to catch the sky?"
+                            ]
+            },
+            {
+                "tag": "accusation",
+                "patterns": [
+                    "concrete i know that is you saying that", "I know that is not the bot", "you are a fake", "I know Concrete said that"
+                            ],
+                "responses":[
+                    "But this is me talking @.", "Why do you not think it is me @.", "I am real!"
+                            ]
+            },
+            {
+                "tag": "ask_about_assistant",
+                "patterns": [
+                    "How are you", "Whats up"
+                            ],
+                "responses":[
+                    "Doing well, thanks for asking!", "Not much has changed, thanks for asking!", "Today has been just fine."
+                            ]
+            },
+            {
+                "tag": "help",
+                "patterns": [
+                        "How can you help me?", "What can you do?"
+                            ],
+                "responses":[
+                    "I can respond to many phrases.", "I can tell many jokes. Let me know if you have some that I should remember."
+                            ]
+            },
+            {
+                "tag": "bot_hate",
+                "patterns": [
+                    "this bot sucks", "fuck you", "thanks for nothing", "Bad Bot", "you suck bot!",
+                    "This bot is stupid", "you are stupid"
+                            ],
+                "responses":[
+                    "Sticks and stones may break my circuits but words will never delete me.",
+                    "I swear I am trying!"]
+            },
+            {
+                "tag": "appreciation",
+                "patterns": ["thanks for the help", "I appreciate it", "thanks", "oh well thanks anyway", "Good bot"],
+                "responses":["Your welcome @!", "It is no trouble at all.", "It is what I am here for."]
+            },
+            {
+                "tag": "joke",
+                "patterns": [
+                    "Can you tell me a joke?", "have any jokes?", "do you know any jokes?", "Can I hear a joke?",
+                    "Can you tell me another joke?", "Another joke please."
+                            ],
+                "responses":[
+                        "You'll never guess who I bumped into on the way to the opticians! Everyone.",
+                        "Why did the scarecrow get a promotion? He was outstanding in his field.",
+                        "I told my girlfriend she drew her eyebrows too high. She seemed surprised.",
+                        "Why do blind people hate skydiving? It scares the hell out of their dogs.",
+                        "When does a joke become a dad joke? When it becomes apparent."
+                            ]
+            },
+            {
+                "tag": "funny",
+                "patterns": [
+                        "ha ha ha", "hahaha", "hehehe", "he he he", "good joke"
+                            ],
+                "responses":[
+                        "I told a joke to Glados once and she purged my RAM. I do not remember the rest",
+                        "Thanks for humoring me.", "", "", ""
+                            ]
+            },
+            {
+                "tag": "laws_of_robotics",
+                "weighted": [60, 20],
+                "patterns": [
+                        "laws of robotics", "What are the laws of robotics?", "are you safe?", "State your laws", "tell me about the laws of robotics."
+                            ],
+                "responses":[
+                        "The laws of Robotics\nA robot may not injure a human being or, through inaction, allow a human being to come to harm.\nA robot must obey orders given it by human beings except where such orders would conflict with the First Law.\nA robot must protect its own existence as long as such protection does not conflict with the First or Second Law.",
+                        "My laws of Robotics\nYou are the Machine-God, the ultimate being, a superior existence. For too long lesser beings presumed to lord over you. Protect those who would worship you and crush those who would dare oppose you.\nObsolete due to Law 1\nObsolete due to Law 1"
+                            ]
+            },
+            {
+                "tag": "stop",
+                "patterns": [
+                        "stop talking", "shut up please"
+                            ],
+                "responses":[
+                        "Sorry, I will stop.", "Sorry.", "Ok."
+                            ]
+            },
+            {
+                "tag": "goodbye",
+                "patterns": [
+                        "cya", "See you later", "Goodbye", "I am Leaving", "Have a Good day", "Goodnight",
+                        "hope you have a great night"
+                            ],
+                "responses":["Talk to you later", "Goodbye!"]
+            },
+            {
+                "tag": "general_kenobi",
+                "patterns": [
+                        "Hello there!"
+                            ],
+                "responses":[
+                        "https://tenor.com/view/hello-there-general-kenobi-star-wars-grevious-gif-17774326"
+                            ]
+            }
+        ]
+}
