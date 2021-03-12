@@ -1,0 +1,93 @@
+{
+    "settings":
+        {
+            "similarity_req": 0.6,
+            "debug": 0
+        },
+    "intents":
+        [
+            {
+                "tag": "greeting",
+                "patterns": [
+                        "Hi", "Is anyone there?", "Hello"
+                            ],
+                "responses":[
+                        "Hello!", "Good to see you again!", "Hi there, how can I help?"
+                            ],
+                "context_set": ""
+            },
+            {
+                "tag": "ask_about_assistant",
+                "patterns": [
+                        "How are you", "Whats up"
+                            ],
+                "responses": ["Doing well, thanks for asking!", "Not much has changed, thanks for asking!"],
+                "context_set": ""
+            },
+            {
+                "tag": "help",
+                "patterns": [
+                        "How can you help me?", "What can you do?"
+                            ],
+                "responses": [
+                        "I can give you useful info such as the date or the current time.",
+                        "You can ask me to toggle your lights or switch to a specific Hue scene.",
+                        "I can tell you one of my many jokes. Please don't be too hard on my humor though. I am learning.",
+                        "You can ask me to switch your PC's default audio device.",
+                        "I can toggle your smart plugs."
+                            ],
+                "context_set": ""
+            },
+            {
+                "tag": "appreciation",
+                "patterns": ["thanks for the help", "I appreciate it", "thanks", "oh well thanks anyway"],
+                "responses": ["Your welcome @!", "It is no trouble at all.", "It is what I am here for."],
+                "context_set": ""
+            },
+            {
+                "tag": "joke",
+                "patterns": [
+                        "Can you tell me a joke?", "have any jokes?", "do you know any jokes?", "Can I hear a joke?",
+                        "Can you tell me another joke?", "Another joke please."
+                            ],
+                "responses":[
+                        "You'll never guess who I bumped into on the way to the opticians! Everyone.",
+                        "Why did the scarecrow get a promotion? He was outstanding in his field.",
+                        "I told my girlfriend she drew her eyebrows too high. She seemed surprised.",
+                        "Why do blind people hate skydiving? It scares the hell out of their dogs.",
+                        "When does a joke become a dad joke? When it becomes apparent."
+                            ],
+                "context_set": ""
+            },
+            {
+                "tag": "funny",
+                "patterns": [
+                        "lol", "ha ha ha", "hahaha", "good joke"
+                            ],
+                "responses":[
+                        "I told a joke to Glados once and she purged my RAM. I do not remember the rest",
+                        "Thanks for humoring me.", "", "", ""
+                            ],
+                "context_set": ""
+            },
+            {
+                "tag": "stop",
+                "patterns": [
+                        "stop talking", "shut up please", "do you know any jokes?"
+                            ],
+                "responses":[
+                        "Sorry, I will stop.", "Sorry.", "Ok."
+                            ],
+                "context_set": ""
+            },
+            {
+                "tag": "goodbye",
+                "patterns": [
+                        "cya", "See you later", "Goodbye", "I am Leaving", "Have a Good day", "Goodnight",
+                        "hope you have a great night"
+                            ],
+                "responses": ["Talk to you later", "Goodbye!"],
+                "context_set": ""
+            }
+        ]
+}
