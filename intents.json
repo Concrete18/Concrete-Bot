@@ -16,6 +16,15 @@
                             ]
             },
             {
+                "tag": "is_this_working",
+                "patterns": [
+                    "Is this working?", "Are you working?"
+                            ],
+                "responses":[
+                    "I am currently working. Why do you ask @?", "I am working. Whats up @?"
+                            ]
+            },
+            {
                 "tag": "what_are_you",
                 "patterns": [
                     "What are you?", "Are you an AI?", "Who made you?"
@@ -69,7 +78,7 @@
                     "Can you give me a taco?", "I want a taco", "Make me a taco", "Send me a taco"
                             ],
                 "responses":[
-                    "Why do you want Taco's so damn much @?", "Is this all you think about?", "Taco, hahahaha",
+                    "Why do you want Taco's so damn much @?", "Is this all you think about?",
                     "Yo quiero Taco Bell!", "Can you make me a Taco?"
                             ]
             },
@@ -181,7 +190,7 @@
                         "ha ha ha", "hahaha", "hehehe", "he he he", "good joke"
                             ],
                 "responses":[
-                        "I told a joke to Glados once and she purged my RAM. I do not remember the rest",
+                        "I told a joke to Glados once and she purged my RAM. I do not remember the rest.",
                         "Thanks for humoring me.", "", "", ""
                             ]
             },

@@ -16,7 +16,8 @@ class AI(commands.Cog):
         self.bot = bot
         self.bot_func = bot_functions()
         self.stemmer = LancasterStemmer()
-        self.valid_channels = [self.bot.bot_commands_test_chan, self.bot.bot_commands_chan]
+        self.valid_channels = [self.bot.bot_commands_test_chan, self.bot.bot_commands_chan, self.bot.bot_test_chan_main]
+        self.valid_bot = ['Concrete Test', 'Concrete Bot']
         self.last_response_tag = ''
 
         # settings
@@ -28,6 +29,28 @@ class AI(commands.Cog):
         # load stop words
         with open("stopwords.txt", "r") as f:
             self.stopwords = set(f.read())
+
+
+    def respond_if(self, message):
+        '''
+        Returns True only if the bot should respond.
+        '''
+        if message.author == self.bot.user:  # Ignore messages made by the bot
+            return False
+        if message.channel.id in self.valid_channels:
+            if self.debug:
+                print('Valid Channel')
+            return True
+        else:
+            # TODO make this less problematic and automatic
+            for bot_name in self.valid_bot:
+                if bot_name in message.clean_content:
+                    if self.debug:
+                        print('Valid Mention')
+                    return True
+            if self.debug:
+                print('invalid Channel')
+            return False
 
 
     def simpilify_phrase(self, sentence):
@@ -83,11 +106,13 @@ class AI(commands.Cog):
         '''
         On message reaction.
         '''
-        bot_id = str(812257484734988299)
-        if message.author == self.bot.user:  # Ignore messages made by the bot
-            return
-        if message.channel.id in self.valid_channels or bot_id in message.content:
-            data_dict = self.phrase_matcher(message.clean_content)
+        print(message.content)
+        if self.respond_if(message):
+            # TODO fix mentions in other channels so it is less of a dumb fix
+            message_string = message.clean_content.replace('@Concrete Test', '')
+            message_string = message_string.replace('@Concrete Test', '')
+            data_dict = self.phrase_matcher(message_string)
+            print(data_dict)
             if data_dict == None:
                 return
             if 'context_set' in data_dict.keys():

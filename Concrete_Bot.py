@@ -32,6 +32,7 @@ class MyBot(commands.Bot):
     admin_chan = 369644679370768385
     bot_commands_chan = 812394370849570866
     bot_commands_test_chan = 667229260976619561
+    bot_test_chan_main = 794003088427974696
 
     # secret_key
     with open('secret.json') as json_file:
