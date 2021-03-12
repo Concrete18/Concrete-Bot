@@ -2,7 +2,7 @@
     "settings":
         {
             "similarity_req": 0.6,
-            "debug": 1
+            "debug": 0
         },
     "intents":
         [
