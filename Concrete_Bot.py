@@ -107,13 +107,7 @@ class MyBot(commands.Bot):
     @classmethod
     async def setup(cls):
         bot = cls()
-        try:
-            await bot.start(bot.secret_key)
-        except KeyboardInterrupt:
-            # TODO check for unifinished polls or unsent scheduled msgs
-            print(f'Current Polls: {bot.polls}')
-            print(f'Current Scheduled Messages: {bot.scheduled_messages}')
-            await bot.close()
+        await bot.start(bot.secret_key)
 
 
 if __name__ == "__main__":
