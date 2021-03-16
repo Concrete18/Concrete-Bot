@@ -27,7 +27,7 @@
             {
                 "tag": "what_are_you",
                 "patterns": [
-                    "What are you?", "Are you an AI?", "Who made you?"
+                    "What are you?", "Are you an AI?", "Who made you?", "Who is your creator?"
                             ],
                 "responses":[
                     "I am an AI made by Concrete."

@@ -3,6 +3,7 @@ import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
 from functions import *
+import sys
 import os
 
 class Admin(commands.Cog):
@@ -38,21 +39,22 @@ class Admin(commands.Cog):
             self.bot.logger.info(info)
         elif isinstance(error, commands.CommandNotFound):
             await ctx.send('Command does not exist.')
-        elif isinstance(error, commands.BadArgument):
-            msg = f'{ctx.command} was given incorrect argument.'
-            await ctx.send(msg)
-            self.error_logger.info(msg)
-        elif isinstance(error, commands.CommandInvokeError):
-            msg = f'{ctx.command} was given incorrect argument.'
-            await ctx.send(msg)
-            self.error_logger.info(msg)
-        elif isinstance(error, commands.ModuleNotFoundError):
-            print(str(error))
-        else:
-            info = f'Command: {ctx.command} | Error: {str(error)}'
-            print(info)
-            self.error_logger.info(info)
-            raise(error)
+        if sys.platform != 'win32':
+            if isinstance(error, commands.BadArgument):
+                msg = f'{ctx.command} was given incorrect argument.'
+                await ctx.send(msg)
+                self.error_logger.info(msg)
+            elif isinstance(error, commands.CommandInvokeError):
+                msg = f'{ctx.command} was given incorrect argument.'
+                await ctx.send(msg)
+                self.error_logger.info(msg)
+            elif isinstance(error, commands.ModuleNotFoundError):
+                print(str(error))
+            else:
+                info = f'Command: {ctx.command} | Error: {str(error)}'
+                print(info)
+                self.error_logger.info(info)
+                raise(error)
 
 
 # TODO create task loop for wiping bot_commands and backups
