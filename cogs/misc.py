@@ -19,13 +19,23 @@ class Misc(commands.Cog):
 
     @commands.command(
         name = 'ping',
-        brief = 'Fetches latency in milliseconds.',
-        description='Fetches latency in milliseconds.')
+        brief = 'Fetches latency in milliseconds.')
     async def ping(self, ctx):
         '''
         Returns current ping to bot server.
         '''
         await ctx.send(f'Current Ping: {round(self.bot.latency * 1000)}ms')
+
+
+    @commands.command(
+        name = 'servertime',
+        brief = 'Fetches current date and time for the server.')
+    async def servertime(self, ctx):
+        '''
+        Sends the current date and time for the server.
+        '''
+        server_time = dt.datetime.now(tz=None).strftime("%A, %d %B, %I:%M %p")
+        await ctx.send(f'Current server time: {server_time}')
 
 
     @commands.command(
@@ -94,9 +104,6 @@ class Misc(commands.Cog):
         await ctx.channel.send(embed=schedule_msg)
 
 
-    # wip commands
-
-
     @commands.command(
         name='poll',
         aliases=['createpoll', 'makepoll'])
@@ -134,64 +141,7 @@ class Misc(commands.Cog):
             self.polls.remove((message.channel.id, message.id))
 
 
-    async def get_avail_roles(self, ctx):
-        '''
-        Returns a list of available roles that are not in a blacklist.
-        '''
-        blacklist = []
-        blacklist = ['Owner', 'Admin', 'Active Member']
-        avail_roles = []
-        all_roles = ctx.guild.roles
-        for role in all_roles:
-            print(str(role.id))
-            if str(role) not in blacklist:
-                avail_roles.append(str(role))
-        return avail_roles
-
-
-    @commands.command(
-        name = 'roles',
-        brief = 'Shows all roles that can be given with giverole command.',
-        description='Shows all roles that can be given with giverole command.',
-        hidden=True)
-    async def roles(self, ctx):
-        '''
-        TODO roles function
-        '''
-        avail_roles = self.get_avail_roles(ctx)
-        available_roles = ' ,'.join(avail_roles)
-        print(available_roles)
-        await ctx.send(f'Available Roles:\n{available_roles}')
-
-
-    @commands.command(
-        name = 'addrole',
-        aliases=['giverole'],
-        brief = 'Gives chosen role.',
-        description='Gives chosen role if it is one of possible roles. To view roles use /roles command',
-        hidden=True)
-    async def addrole(self, ctx, role: ds.Role):
-        '''
-        TODO addrole function
-        '''
-        print(role)
-        role_info = ds.utils.get(role)
-        await ctx.author.add_roles(role_info)
-        await ctx.send(f'Added Role: {str(role)}')
-
-
-    @commands.command(
-        name = 'removerole',
-        aliases=['remrole'],
-        brief = 'Removes chosen role.',
-        description='Removes chosen role. To view roles use /roles command',
-        hidden=True)
-    async def removerole(self, ctx, time, *args):
-        '''
-        TODO removerole function
-        '''
-        msg = ' '.join(args)
-        await ctx.send(f'Sheduled Message for {time}')
+    # wip commands
 
 
     @commands.command(
