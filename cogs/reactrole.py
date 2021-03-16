@@ -44,7 +44,7 @@ class ReactRole(commands.Cog):
     @commands.has_permissions(administrator=True, manage_roles=True)
     async def reactrole(self, ctx, emoji, role: ds.Role, *message):
         if len(message) == 0:
-            message = f'React to the {emoji} to get the {role.name} role.'
+            message = f'React with {emoji} to get the {role.name} role.'
         else:
             message = ' '.join(message)
         emb = ds.Embed(description=message)
