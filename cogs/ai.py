@@ -1,7 +1,6 @@
 from discord.ext import commands
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import word_tokenize
-import nltk
 import discord as ds
 from functions import *
 import difflib
@@ -28,7 +27,7 @@ class AI(commands.Cog):
 
         # load stop words
         with open("stopwords.txt", "r") as f:
-            self.stopwords = set(f.read())
+            self.stop_words = set(f.read())
 
 
     def respond_if(self, message):
@@ -64,12 +63,7 @@ class AI(commands.Cog):
         '''
         sentence = self.stemmer.stem(sentence.lower())
         word_tokens = word_tokenize(sentence)
-        filtered_sentence = [w for w in word_tokens if not w in self.stopwords]
-        filtered_sentence = []
-        for w in word_tokens:
-            if w not in self.stopwords:
-                filtered_sentence.append(w)
-        return filtered_sentence
+        return [word for word in word_tokens if not word in self.stop_words]
 
 
     def phrase_matcher(self, phrase):
@@ -106,13 +100,11 @@ class AI(commands.Cog):
         '''
         On message reaction.
         '''
-        print(message.content)
         if self.respond_if(message):
             # TODO fix mentions in other channels so it is less of a dumb fix
             message_string = message.clean_content.replace('@Concrete Test ', '')
             message_string = message_string.replace('@Concrete Bot ', '')
             data_dict = self.phrase_matcher(message_string)
-            print(data_dict)
             if data_dict == None:
                 return
             if 'context_set' in data_dict.keys():
