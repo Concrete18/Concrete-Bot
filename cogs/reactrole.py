@@ -42,9 +42,11 @@ class ReactRole(commands.Cog):
         description='Creates a Embed that allows for gaining a role by reacting to it. Clicking again removes the role.',
         help='Creates a Embed that allows for gaining a role by reacting to it. Clicking again removes the role.')
     @commands.has_permissions(administrator=True, manage_roles=True)
-    async def reactrole(self, ctx, emoji, role: ds.Role, *, message):
-        if message == None:
+    async def reactrole(self, ctx, emoji, role: ds.Role, *message):
+        if len(message) == 0:
             message = f'React to the {emoji} to get the {role.name} role.'
+        else:
+            message = ' '.join(message)
         emb = ds.Embed(description=message)
         msg = await ctx.channel.send(embed=emb)
         await msg.add_reaction(emoji)
