@@ -38,11 +38,10 @@ class Member_Log(commands.Cog):
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
-        name = member.display_name
         member_id = str(member.id)
 
         def update_log():
-            self.member_data[member_id] = [name, current_date]
+            self.member_data[member_id] = [member.name, member.display_name, current_date]
             with open('member_data.json', 'w') as json_file:
                 json.dump(self.member_data, json_file, indent=4)
 
@@ -166,7 +165,7 @@ class Member_Log(commands.Cog):
                 name = str(member.display_name)
                 current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
                 if member_id not in self.member_data.keys():
-                    self.member_data[member_id] = [name, current_date]
+                    self.member_data[member_id] = [member.name, member.display_name, current_date]
                     new_members.append(name)
                     print('Added', member)
         with open('member_data.json', 'w') as json_file:

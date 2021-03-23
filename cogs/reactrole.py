@@ -12,6 +12,9 @@ class ReactRole(commands.Cog):
         self.bot_func = bot_functions()
 
 
+    # TODO on message delete, remove react json entry
+
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if payload.member.bot:
@@ -60,6 +63,7 @@ class ReactRole(commands.Cog):
             data.append(new_react_role)
         with open('reactrole.json', 'w') as f:
             json.dump(data, f, indent=4)
+        await ctx.message.delete()
 
 
 def setup(bot):

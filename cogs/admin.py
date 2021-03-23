@@ -21,6 +21,7 @@ class Admin(commands.Cog):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
+        self.member_log_channel = self.get_channel(360587663377432578)
 
 
     @commands.Cog.listener()
@@ -81,8 +82,7 @@ class Admin(commands.Cog):
         msg = f'{member} left the server'
         print(msg)
         self.bot.logger.info(msg)
-        channel = self.get_channel(360587663377432578)
-        channel.send(msg)
+        await self.member_log_channel.send(msg)
 
 
     @commands.command(
