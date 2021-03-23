@@ -14,6 +14,7 @@ class Member_Log(commands.Cog):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
+        self.member_log_channel = 360587663377432578
         # settings setup
         self.concrete_server = None
         with open('data.json') as json_file:
@@ -24,6 +25,29 @@ class Member_Log(commands.Cog):
                 self.member_data = json.load(json_file)
         else:
             self.member_data = {}
+
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        '''
+        Gives new members the "Member" role.
+        Make sure the bot role is above the role you are wanting it to assign.
+        '''
+        msg = f'{member} joined the server'
+        print(msg)
+        self.bot.logger.info(msg)
+        role = member.guild.get_role(self.bot.member_role)
+        await member.add_roles(role, reason='New Member')
+
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        '''
+        Logs members that left the server.
+        '''
+        self.bot.logger.info(f'{member} left the server')
+        channel = self.get_channel(self.member_log_channel)
+        await channel.send(f'{member.mention} left the server')
 
 
     # TODO add backup of member_data.json

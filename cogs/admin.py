@@ -21,7 +21,6 @@ class Admin(commands.Cog):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
-        self.member_log_channel = self.get_channel(360587663377432578)
 
 
     @commands.Cog.listener()
@@ -59,30 +58,6 @@ class Admin(commands.Cog):
 
 
 # TODO create task loop for wiping bot_commands and backups
-
-
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        '''
-        Gives new members the "Member" role.
-        Make sure the bot role is above the role you are wanting it to assign.
-        '''
-        msg = f'{member} joined the server'
-        print(msg)
-        self.bot.logger.info(msg)
-        role = member.guild.get_role(self.bot.member_role)
-        await member.add_roles(role, reason='New Member')
-
-
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        '''
-        Logs members that left the server.
-        '''
-        msg = f'{member} left the server'
-        print(msg)
-        self.bot.logger.info(msg)
-        await self.member_log_channel.send(msg)
 
 
     @commands.command(
