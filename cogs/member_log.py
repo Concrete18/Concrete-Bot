@@ -59,6 +59,8 @@ class Member_Log(commands.Cog):
 
         Logging started on 2021-03-03
         '''
+        # TODO prevent adding names if they are comprised of too many characters and remove unicode
+        # TODO check repeats from Rob within minutes of each other
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
