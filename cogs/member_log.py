@@ -53,28 +53,40 @@ class Member_Log(commands.Cog):
     # TODO add backup of member_data.json
 
 
+    @staticmethod
+    def return_ascii_only(string):
+        encoded_string = string.encode("ascii", "ignore")
+        decoded_string = encoded_string.decode().rstrip().lstrip()
+        if len(decoded_string.replace(' ', '')) < 3:
+            decoded_string = 'Deleted due below 3 ascii characters'
+        return decoded_string
+
+
+    def update_log(self, member, current_date):
+        discord_name = self.return_ascii_only(member.name)
+        nickname = self.return_ascii_only(member.display_name)
+        for item in [discord_name, nickname]:
+            if len(item.replace(' ', '')) < 3:
+                item = 'Deleted due to unicode'
+        self.member_data[str(member.id)] = [discord_name, nickname, current_date]
+
+
     async def update_activity(self, member):
         '''
         Updates member in member_data.json with current date if last activity was before today.
 
-        Logging started on 2021-03-03
+        Logging started on 03-03-2021
         '''
-        # TODO prevent adding names if they are comprised of too many characters and remove unicode
         # TODO check repeats from Rob within minutes of each other
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
-        member_id = str(member.id)
-
-        def update_log():
-            self.member_data[member_id] = [member.name, member.display_name, current_date]
-            with open('member_data.json', 'w') as json_file:
-                json.dump(self.member_data, json_file, indent=4)
-
         if len(self.member_data) != 0:
-            if member_id in self.member_data.keys():
-                if current_date != self.member_data[member_id][1]:
-                    update_log()
+            if str(member.id) in self.member_data.keys():
+                if current_date != self.member_data[str(member.id)][1]:
+                    self.update_log(member, current_date)
+                    with open('member_data.json', 'w') as json_file:
+                        json.dump(self.member_data, json_file, indent=4)
                     info = f'{member}: New Activity Detected'
                     self.bot.logger.info(info)
                     if sys.platform == 'win32':
@@ -83,7 +95,9 @@ class Member_Log(commands.Cog):
             if os.path.exists('member_data.json'):
                 with open('member_data.json') as json_file:
                     self.member_data = json.load(json_file)
-                update_log()
+                self.update_log(member, current_date)
+                with open('member_data.json', 'w') as json_file:
+                    json.dump(self.member_data, json_file, indent=4)
             else:
                 msg = 'member_data.json is missing.'
                 print(msg)
@@ -185,14 +199,12 @@ class Member_Log(commands.Cog):
         if ctx.guild.id != self.bot.main_server and ctx.guild.id != self.bot.test_server:
             return
         new_members = []
+        current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
         for member in ctx.guild.members:
             if member.bot == False:
-                member_id = str(member.id)
-                name = str(member.display_name)
-                current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
-                if member_id not in self.member_data.keys():
-                    self.member_data[member_id] = [member.name, member.display_name, current_date]
-                    new_members.append(name)
+                if str(member.id) not in self.member_data.keys():
+                    self.update_log(member, current_date)
+                    new_members.append(str(member.display_name))
                     print('Added', member)
         with open('member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
