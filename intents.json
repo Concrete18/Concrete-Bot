@@ -195,6 +195,24 @@
                             ]
             },
             {
+                "tag": "color",
+                "patterns": [
+                        "What is your favorite color?", "what color is your favorite?"
+                            ],
+                "responses":[
+                        "My favorite color has to be #0073cf."
+                            ]
+            },
+            {
+                "tag": "favorite_game",
+                "patterns": [
+                        "What is your favorite game?", "what game is your favorite?", "What is your favorite video game?", "what video game is your favorite?"
+                            ],
+                "responses":[
+                        "Hmmmm, that is a tough one.... what was the one with the that Connor Robot? I was best friends with Clancey Brown in the game!"
+                            ]
+            },
+            {
                 "tag": "laws_of_robotics",
                 "weighted": [60, 20],
                 "patterns": [
