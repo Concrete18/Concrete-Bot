@@ -39,6 +39,8 @@ class Admin(commands.Cog):
             self.bot.logger.info(info)
         elif isinstance(error, commands.CommandNotFound):
             await ctx.send('Command does not exist.')
+        elif isinstance(error, TimeoutError):
+            self.bot.logger.info('Internet Outage Detected')
         if sys.platform != 'win32':
             if isinstance(error, commands.BadArgument):
                 msg = f'{ctx.command} was given incorrect argument.'

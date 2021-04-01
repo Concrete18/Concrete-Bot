@@ -17,8 +17,6 @@ class Member_Log(commands.Cog):
         self.member_log_channel = 360587663377432578
         # settings setup
         self.concrete_server = None
-        with open('data.json') as json_file:
-            self.data = json.load(json_file)
         # loads member_data.json
         if os.path.exists('member_data.json'):
             with open('member_data.json') as json_file:
@@ -58,7 +56,7 @@ class Member_Log(commands.Cog):
         encoded_string = string.encode("ascii", "ignore")
         decoded_string = encoded_string.decode().rstrip().lstrip()
         if len(decoded_string.replace(' ', '')) < 3:
-            decoded_string = 'Deleted due below 3 ascii characters'
+            decoded_string = 'Deleted (Too few characters)'
         return decoded_string
 
 
@@ -87,10 +85,8 @@ class Member_Log(commands.Cog):
                     self.update_log(member, current_date)
                     with open('member_data.json', 'w') as json_file:
                         json.dump(self.member_data, json_file, indent=4)
-                    info = f'{member}: New Activity Detected'
-                    self.bot.logger.info(info)
                     if sys.platform == 'win32':
-                        print(info)
+                        print(f'{member}: New Activity Detected')
         else:
             if os.path.exists('member_data.json'):
                 with open('member_data.json') as json_file:
@@ -163,13 +159,13 @@ class Member_Log(commands.Cog):
 
 
     @commands.command(
-        name = 'showinactivemembers',
+        name = 'inactive',
         brief='Lists inactive members. Defaults to 60 days.',
         description='''
         Lists inactive members that have not joined a chat or sent a message in a set period of time.
         Defaults to 60 days if a number of days is not entered after the command.
         ''',
-        aliases=['inactivemembers', 'inactive'])
+        aliases=['inactivemembers'])
     @commands.has_guild_permissions(manage_messages=True)
     async def showinactivemembers(self, ctx, days: int=60):
         '''

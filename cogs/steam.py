@@ -72,12 +72,12 @@ class Steam(commands.Cog):
     @commands.command(
         name ='sharedgames',
         aliases=['delete'],
-        brief = 'Finds owned games in commmon using steam id\'s.',
-        description='Finds games in commmon among the libraries of the entered steam id\'s.',
+        brief = 'Finds owned games in common using steam id\'s.',
+        description='Finds games in common among the libraries of the entered steam id\'s.',
         help='You can use steamidfinder.com to find the steam id\'s.\nExample: /sharedgames 21312313 123123123 12312312\nSteam Id\'s must be 17 characters long.')
     async def sharedgames(self, ctx, *steam_ids):
         '''
-        Finds games in commmon among the libraries of the entered steam id's.
+        Finds games in common among the libraries of the entered steam id's.
         '''
         await ctx.message.delete()
         await ctx.send(f'Finding shared games from {len(steam_ids)} steam id\'s.')

@@ -13,33 +13,6 @@ class Fun(commands.Cog):
         self.bot = bot
         self.client = ds.Client()
         self.bot_func = bot_functions()
-        # settings setup
-        with open('data.json') as json_file:
-            self.data = json.load(json_file)
-        self.responses = self.data['responses']
-        self.jojo_lines = self.data['jojo']
-        self.jojo_run_cooldown = self.data['settings']['jojo_run_cooldown']
-        self.last_jojo_run = dt.datetime.now()-dt.timedelta(hours=self.jojo_run_cooldown)
-
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        '''
-        On message reaction.
-        '''
-        if message.author == self.bot.user:  # Ignore messages made by the bot
-            return
-        # specific responses
-        # if message.content.lower() in self.responses:
-        #     await message.channel.send(self.responses[message.content.lower()])
-        # jojo refrences
-        if message.content.lower() in self.jojo_lines:
-            if self.last_jojo_run+dt.timedelta(hours=self.jojo_run_cooldown) <= dt.datetime.now():
-                self.last_jojo_run = dt.datetime.now()
-                await message.channel.send('Is that a Jojo reference?')
-            else:
-                print('Jojo reference detected but cooldown active.')
-                self.bot.logger.info(f'{message.author} made a jojo reference while it was on cooldown.')
 
 
     @commands.command(

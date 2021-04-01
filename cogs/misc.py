@@ -52,11 +52,11 @@ class Misc(commands.Cog):
 
     @commands.command(
         name = 'membercount',
-        brief = 'Gets total members and bots in server.',
-        description='Gets total members and bots in server.')
+        brief = 'Gets the total members and bots in server.',
+        description='Gets the total members and bots in server.')
     async def membercount(self, ctx):
         '''
-        Gets total members in server and total online/offline.
+        Gets the total members in server and total online/offline.
         '''
         all_members = []
         all_bots = []
@@ -106,6 +106,8 @@ class Misc(commands.Cog):
 
     @commands.command(
         name='poll',
+        brief='Creates a poll that allows voting with reactions.',
+        description= 'Creates a poll that allows voting with reactions and allows entering an end time in hours.',
         aliases=['createpoll', 'makepoll'])
     @commands.has_guild_permissions(manage_guild=True)
     async def create_poll(self, ctx, hours: float, question: str, *options):

@@ -43,7 +43,7 @@ class MyBot(commands.Bot):
 
 
     def __init__(self):
-        print('Starting Bot')
+        print('\nStarting Bot')
         super().__init__(
             command_prefix="/",
             case_insensitive=True,
@@ -93,7 +93,7 @@ class MyBot(commands.Bot):
         Possible activity types: playing Streaming listening watching competing
         '''
         self.set_extensions()
-        print(f'{self.user} is ready.\n')
+        print(f'{self.user} is ready')
         if sys.platform != 'win32':
             channel_id = self.bot_commands_chan
             self.logger.info(f'Logged in as {self.user}')
@@ -111,5 +111,8 @@ class MyBot(commands.Bot):
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(MyBot.setup())
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(MyBot.setup())
+    except KeyboardInterrupt:
+        print('Shutting Down Concrete Bot')

@@ -114,7 +114,7 @@ class AI(commands.Cog):
                 self.last_response_tags = data_dict['tag']
             if len(data_dict['responses']) > 1:
                 if 'weighted' in data_dict.keys():
-                    response = random.choices(data_dict['responses'], weights=(data_dict['weighted']))[0]
+                    response = random.choices(data_dict['responses'], weights=(data_dict['weighted']))[0]  # TODO verify how weighted works
                 else:
                     response = random.choice(data_dict['responses'])
             elif len(data_dict['responses']) == 1:
