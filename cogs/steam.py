@@ -1,8 +1,6 @@
 from discord.ext import commands
 from functions import *
-import requests
-import json
-import time
+import requests, json, time
 
 
 class Steam(commands.Cog):

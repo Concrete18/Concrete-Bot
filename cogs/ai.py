@@ -3,9 +3,7 @@ from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import word_tokenize
 import discord as ds
 from functions import *
-import difflib
-import random
-import json
+import difflib, random, json
 
 
 class AI(commands.Cog):

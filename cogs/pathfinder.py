@@ -1,8 +1,7 @@
 from discord.ext import commands
 import discord as ds
 from functions import *
-import random
-import re
+import random, re
 
 class RPG(commands.Cog):
 

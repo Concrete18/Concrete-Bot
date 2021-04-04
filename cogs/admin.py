@@ -3,8 +3,7 @@ import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
 from functions import *
-import sys
-import os
+import sys, os
 
 class Admin(commands.Cog):
 

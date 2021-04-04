@@ -3,7 +3,6 @@ import discord as ds
 from functions import *
 import datetime as dt
 import random
-import json
 
 
 class Fun(commands.Cog):

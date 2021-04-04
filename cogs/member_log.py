@@ -2,9 +2,7 @@ from discord.ext import commands
 import discord as ds
 from functions import *
 import datetime as dt
-import json
-import sys
-import os
+import json, sys, os
 
 
 class Member_Log(commands.Cog):
