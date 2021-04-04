@@ -11,7 +11,7 @@ class Admin(commands.Cog):
     log_formatter = lg.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m-%d-%Y %I:%M:%S %p')
     error_logger = lg.getLogger(__name__)
     error_logger.setLevel(lg.DEBUG) # Log Level
-    my_handler = RotatingFileHandler('error.log', maxBytes=5*1024*1024, backupCount=2)
+    my_handler = RotatingFileHandler('Logs/error.log', maxBytes=5*1024*1024, backupCount=2)
     my_handler.setFormatter(log_formatter)
     error_logger.addHandler(my_handler)
 

@@ -16,8 +16,8 @@ class Member_Log(commands.Cog):
         # settings setup
         self.concrete_server = None
         # loads member_data.json
-        if os.path.exists('member_data.json'):
-            with open('member_data.json') as json_file:
+        if os.path.exists('Logs/member_data.json'):
+            with open('Logs/member_data.json') as json_file:
                 self.member_data = json.load(json_file)
         else:
             self.member_data = {}
@@ -81,16 +81,16 @@ class Member_Log(commands.Cog):
             if str(member.id) in self.member_data.keys():
                 if current_date != self.member_data[str(member.id)][1]:
                     self.update_log(member, current_date)
-                    with open('member_data.json', 'w') as json_file:
+                    with open('Logs/member_data.json', 'w') as json_file:
                         json.dump(self.member_data, json_file, indent=4)
                     if sys.platform == 'win32':
                         print(f'{member}: New Activity Detected')
         else:
-            if os.path.exists('member_data.json'):
-                with open('member_data.json') as json_file:
+            if os.path.exists('Logs/member_data.json'):
+                with open('Logs/member_data.json') as json_file:
                     self.member_data = json.load(json_file)
                 self.update_log(member, current_date)
-                with open('member_data.json', 'w') as json_file:
+                with open('Logs/member_data.json', 'w') as json_file:
                     json.dump(self.member_data, json_file, indent=4)
             else:
                 msg = 'member_data.json is missing.'
@@ -200,7 +200,7 @@ class Member_Log(commands.Cog):
                     self.update_log(member, current_date)
                     new_members.append(str(member.display_name))
                     print('Added', member)
-        with open('member_data.json', 'w') as json_file:
+        with open('Logs/member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
         new_count = len(new_members)
         if new_count == 1:
