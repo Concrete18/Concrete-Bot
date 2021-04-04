@@ -66,7 +66,7 @@ class Admin(commands.Cog):
         name ='purge',
         brief='Deletes n messages from newest to oldest.',
         description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.')
-    @commands.has_guild_permissions(manage_messages=True)
+    @commands.is_owner()
     async def purge(self, ctx, num: int=5):
         '''
         Purges n number of messages.
@@ -102,7 +102,7 @@ class Admin(commands.Cog):
         brief = 'Bot says what you type after the command.',
         hidden=True,
         pass_context = True)
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.is_owner()
     async def speak(self, ctx, *args):
         msg = ' '.join(args)
         await ctx.message.delete()
@@ -128,7 +128,7 @@ class Admin(commands.Cog):
         name ='pid',
         brief='Sends current bot PID.',
         description='Sends current bot PID.')
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.is_owner()
     async def pid(self, ctx):
         '''
         Sends current bot PID.
