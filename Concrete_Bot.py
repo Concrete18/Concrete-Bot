@@ -25,14 +25,15 @@ class MyBot(commands.Bot):
     start_time = dt.datetime.now()
     loaded_cogs = []
 
-    # number ID's
+    # main server ID's
     main_server = 172069829690261504
-    test_server = 665031048941404201
     member_role = 377683900580888576
     admin_chan = 369644679370768385
     bot_commands_chan = 812394370849570866
-    bot_commands_test_chan = 667229260976619561
     bot_test_chan_main = 794003088427974696
+    # test server ID's
+    bot_commands_test_chan = 667229260976619561
+    test_server = 665031048941404201
 
     # secret_key
     with open('secret.json') as json_file:
@@ -54,14 +55,14 @@ class MyBot(commands.Bot):
         '''
         Loads all cogs by default. Can also be used to reload cogs if action is set not set to 'load'.
         '''
-        for filename in os.listdir('./cogs'):
-            if filename.endswith('.py'):
-                location = f'cogs.{filename[:-3]}'
-                if filename in self.loaded_cogs:
-                    self.reload_extension(location)
+        for file in os.scandir('./cogs'):
+            if file.name.endswith('.py'):
+                location = f'cogs.{file.name[:-3]}'
+                if file.name in self.loaded_cogs:
+                    self.reload_extension(file.path)
                 else:
                     self.load_extension(location)
-                    self.loaded_cogs.append(filename)
+                    self.loaded_cogs.append(file.name)
 
 
     async def set_random_activity(self):
