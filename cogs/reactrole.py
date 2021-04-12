@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord as ds
 from functions import *
 import json
+import os
 
 
 class ReactRole(commands.Cog):
@@ -12,15 +13,26 @@ class ReactRole(commands.Cog):
         self.bot_func = bot_functions()
 
 
-    # TODO on message delete, remove react json entry
+    @staticmethod
+    def check_if_json_exists():
+        if os.path.exists('Logs/reactrole.json'):
+            print('It exists.')
+        else:
+            print('It does not exist.\nMaking it now.')
+            json_object = json.dumps([], indent = 4)
+            with open('Logs/reactrole.json', "w") as outfile:
+                outfile.write(json_object)
 
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
+        '''
+        ph
+        '''
         if payload.member.bot:
             pass
         else:
-            with open('reactrole.json') as react_file:
+            with open('Logs/reactrole.json') as react_file:
                 data = json.load(react_file)
                 for item in data:
                     if item['emoji'] == payload.emoji.name:
@@ -30,13 +42,36 @@ class ReactRole(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        with open('reactrole.json') as react_file:
+        '''
+        Detects removed reactions and removes the role for the specific reaction if it is in the reactrole.json.
+        '''
+        with open('Logs/reactrole.json') as react_file:
             data = json.load(react_file)
             for item in data:
                 if item['emoji'] == payload.emoji.name:
                     role = ds.utils.get(self.bot.get_guild(
                         payload.guild_id).roles, id=item['role_id'])
                     await self.bot.get_guild(payload.guild_id).get_member(payload.user_id).remove_roles(role)
+
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        '''
+        On message delete in the react role channel, the entry for the role reaction in the json will also be deleted.
+
+        TODO on message delete, remove react json entry
+        '''
+        test_react_role_channel = 667229260976619561
+        react_role_channel = 821139795006193694
+        print(message.id)
+        print(message.channel)
+        if message.channel == react_role_channel or message.channel == test_react_role_channel:
+            print(f'Deleted {print(message.id)} React Role. Delete the data from the json.')
+            with open('Logs/reactrole.json') as react_file:
+                data = json.load(react_file)
+            for key, value in data.items():
+                if message.channel in value:
+                    dict.pop(key)
 
 
     @commands.command(
@@ -56,7 +91,8 @@ class ReactRole(commands.Cog):
         emb = ds.Embed(description=message)
         msg = await ctx.channel.send(embed=emb)
         await msg.add_reaction(emoji)
-        with open('reactrole.json') as json_file:
+        self.check_if_json_exists()
+        with open('Logs/reactrole.json') as json_file:
             data = json.load(json_file)
             new_react_role = {
                 'role_name': role.name,
@@ -64,7 +100,7 @@ class ReactRole(commands.Cog):
                 'emoji': emoji,
                 'message_id': msg.id}
             data.append(new_react_role)
-        with open('reactrole.json', 'w') as f:
+        with open('Logs/reactrole.json', 'w') as f:
             json.dump(data, f, indent=4)
         await ctx.message.delete()
 
