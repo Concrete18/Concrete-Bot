@@ -14,17 +14,17 @@ class Special(commands.Cog):
 
 
     @commands.command(
-        name ='roku',
+        name='roku',
         brief='Changes Grandmom\'s TV to ABC.')
-    @commands.has_guild_permissions(manage_messages=True)
-    async def purge(self, ctx):
+    @commands.is_owner()
+    async def roku(self, ctx):
         '''
         Changes Grandmoms TV to ABC.
         '''
         script = "D:/Google Drive/Coding/Python/Scripts/1-Complete-Projects/Roku-Control/Instant_Set_to_ABC.py"
         if os.path.exists(script):
             subprocess.run([sys.executable, script], cwd=os.path.dirname(script))
-            await ctx.send('Roku Channel Change was stasrted.')
+            await ctx.send('Roku Channel Change was started.')
         else:
             await ctx.send('Path does not exist anymore.')
 
