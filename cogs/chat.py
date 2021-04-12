@@ -6,7 +6,7 @@ from functions import *
 import difflib, random, json
 
 
-class AI(commands.Cog):
+class Chat(commands.Cog):
 
 
     def __init__(self, bot):
@@ -128,4 +128,4 @@ class AI(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(AI(bot))
+    bot.add_cog(Chat(bot))
