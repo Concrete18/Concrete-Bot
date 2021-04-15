@@ -22,8 +22,6 @@ class Member_Log(commands.Cog):
         else:
             self.member_data = {}
 
-    # TODO add backup of member_data.json possibly by attaching a file to a message sent to myself
-
 
     @staticmethod
     def ascii_only(string):
@@ -63,8 +61,6 @@ class Member_Log(commands.Cog):
                     self.update_log(member, current_date, activity_type,)
                     with open('Logs/member_data.json', 'w') as json_file:
                         json.dump(self.member_data, json_file, indent=4)
-                    if sys.platform == 'win32':
-                        print(f'{member}: New Activity Detected')
         else:
             if os.path.exists('Logs/member_data.json'):
                 with open('Logs/member_data.json') as json_file:
@@ -159,7 +155,10 @@ class Member_Log(commands.Cog):
         for data in self.member_data.values():
             last_active = self.convert_date(data['current_date'])
             if last_active == check_date:
-                active_list.append(data['discord_name'])
+                if 'Deleted (Too few characters)' in data['nickname']:
+                    active_list.append(data['discord_name'])
+                else:
+                    active_list.append(data['nickname'])
         if len(active_list) == 0:
             result = f'No Members have been active today.'
         else:
@@ -185,7 +184,10 @@ class Member_Log(commands.Cog):
         for data in self.member_data.values():
             last_active = self.convert_date(data['current_date'])
             if last_active < check_date:
-                inactive_list.append(data['discord_name'])
+                if 'Deleted (Too few characters)' in data['nickname']:
+                    inactive_list.append(data['discord_name'])
+                else:
+                    inactive_list.append(data['nickname'])
         if len(inactive_list) == 0:
             result = f'No Members have been inactive for over {days} days.'
         else:
@@ -211,7 +213,6 @@ class Member_Log(commands.Cog):
                 if str(member.id) not in self.member_data.keys():
                     self.update_log(member, current_date)
                     new_members.append(str(member.display_name))
-                    print('Added', member)
         with open('Logs/member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
         new_count = len(new_members)
