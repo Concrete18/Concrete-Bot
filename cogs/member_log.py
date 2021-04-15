@@ -155,7 +155,7 @@ class Member_Log(commands.Cog):
         for data in self.member_data.values():
             last_active = self.convert_date(data['current_date'])
             if last_active == check_date:
-                if 'Deleted (Too few characters)' in data['nickname']:
+                if 'Deleted' in data['nickname']:
                     active_list.append(data['discord_name'])
                 else:
                     active_list.append(data['nickname'])
@@ -184,7 +184,7 @@ class Member_Log(commands.Cog):
         for data in self.member_data.values():
             last_active = self.convert_date(data['current_date'])
             if last_active < check_date:
-                if 'Deleted (Too few characters)' in data['nickname']:
+                if 'Deleted' in data['nickname']:
                     inactive_list.append(data['discord_name'])
                 else:
                     inactive_list.append(data['nickname'])
