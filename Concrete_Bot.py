@@ -22,6 +22,8 @@ class MyBot(commands.Bot):
     logger.addHandler(my_handler)
 
     # var init
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
     start_time = dt.datetime.now()
     loaded_cogs = []
 

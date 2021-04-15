@@ -3,7 +3,7 @@ import discord as ds
 from logging.handlers import RotatingFileHandler
 import logging as lg
 from functions import *
-import sys, os
+import sys, os, tarfile
 
 class Admin(commands.Cog):
 
@@ -22,40 +22,40 @@ class Admin(commands.Cog):
         self.bot_func = bot_functions()
 
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
-            await ctx.send(info)
-            self.bot.logger.info(info)
-        elif isinstance(error, commands.MissingAnyRole):
-            info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
-            await ctx.send(info)
-            self.bot.logger.info(info)
-        elif isinstance(error, commands.MissingRole):
-            info = f'{ctx.author.mention} is missing the required role for the {ctx.command} command.'
-            await ctx.send(info)
-            self.bot.logger.info(info)
-        elif isinstance(error, commands.CommandNotFound):
-            await ctx.send('Command does not exist.')
-        elif isinstance(error, TimeoutError):
-            self.bot.logger.info('Internet Outage Detected')
-        if sys.platform != 'win32':
-            if isinstance(error, commands.BadArgument):
-                msg = f'{ctx.command} was given incorrect argument.'
-                await ctx.send(msg)
-                self.error_logger.info(msg)
-            elif isinstance(error, commands.CommandInvokeError):
-                msg = f'{ctx.command} was given incorrect argument.'
-                await ctx.send(msg)
-                self.error_logger.info(msg)
-            elif isinstance(error, commands.ModuleNotFoundError):
-                print(str(error))
-            else:
-                info = f'Command: {ctx.command} | Error: {str(error)}'
-                print(info)
-                self.error_logger.info(info)
-                raise(error)
+    # @commands.Cog.listener()
+    # async def on_command_error(self, ctx, error):
+    #     if isinstance(error, commands.MissingPermissions):
+    #         info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
+    #         await ctx.send(info)
+    #         self.bot.logger.info(info)
+    #     elif isinstance(error, commands.MissingAnyRole):
+    #         info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
+    #         await ctx.send(info)
+    #         self.bot.logger.info(info)
+    #     elif isinstance(error, commands.MissingRole):
+    #         info = f'{ctx.author.mention} is missing the required role for the {ctx.command} command.'
+    #         await ctx.send(info)
+    #         self.bot.logger.info(info)
+    #     elif isinstance(error, commands.CommandNotFound):
+    #         await ctx.send('Command does not exist.')
+    #     elif isinstance(error, TimeoutError):
+    #         self.bot.logger.info('Internet Outage Detected')
+    #     if sys.platform != 'win32':
+    #         if isinstance(error, commands.BadArgument):
+    #             msg = f'{ctx.command} was given incorrect argument.'
+    #             await ctx.send(msg)
+    #             self.error_logger.info(msg)
+    #         elif isinstance(error, commands.CommandInvokeError):
+    #             msg = f'{ctx.command} was given incorrect argument.'
+    #             await ctx.send(msg)
+    #             self.error_logger.info(msg)
+    #         elif isinstance(error, commands.ModuleNotFoundError):
+    #             print(str(error))
+    #         else:
+    #             info = f'Command: {ctx.command} | Error: {str(error)}'
+    #             print(info)
+    #             self.error_logger.info(info)
+    #             raise(error)
 
 
 # TODO create task loop for wiping bot_commands and backups
@@ -121,6 +121,27 @@ class Admin(commands.Cog):
         activity = ' '.join(activity)
         await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity))
         await ctx.message.delete()
+
+
+    @commands.command(
+        name ='backup',
+        brief='Backs up log files and sends attaches them to a message.')
+    @commands.is_owner()
+    async def backup(self, ctx):
+        '''
+        Backs up log files and sends attaches them to a message.
+        TODO finish this function
+        '''
+        area = ctx.message.channel
+        source_dir = os.path.join(self.bot.script_dir, 'Logs')
+        file_name = 'Log_Backup.tar'
+        with tarfile.open(file_name, "w:gz") as tar:
+            tar.add(source_dir, arcname=os.path.basename(source_dir))
+        file = os.path.join(self.bot.script_dir, file_name)
+        # await ctx.send_file(area, file, filename="Log Backup",content="Message test")
+        await ctx.send(file=ds.File(file))
+        # TODO delete tar after it is sent
+        os.remove(file)
 
 
     @commands.command(

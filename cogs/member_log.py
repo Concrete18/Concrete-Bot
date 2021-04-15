@@ -22,6 +22,65 @@ class Member_Log(commands.Cog):
         else:
             self.member_data = {}
 
+    # TODO add backup of member_data.json possibly by attaching a file to a message sent to myself
+
+
+    @staticmethod
+    def ascii_only(string):
+        encoded_string = string.encode("ascii", "ignore")
+        decoded_string = encoded_string.decode().rstrip().lstrip()
+        if len(decoded_string.replace(' ', '')) < 3:
+            decoded_string = 'Deleted (Too few characters)'
+        return decoded_string
+
+
+    def update_log(self, member, current_date, activity_type='None'):
+        discord_name = self.ascii_only(member.name)
+        nickname = self.ascii_only(member.display_name)
+        for item in [discord_name, nickname]:
+            if len(item.replace(' ', '')) < 3:
+                item = 'Deleted due to unicode'
+        self.member_data[str(member.id)] = {
+            'discord_name':discord_name,
+            'nickname':nickname,
+            'activity_type':activity_type,
+            'current_date':current_date}
+
+
+    async def update_activity(self, member, activity_type):
+        '''
+        Updates member in member_data.json with current date if last activity was before today.
+
+        Logging started on 03-03-2021
+        '''
+        # TODO check repeats from Rob within minutes of each other
+        if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
+            return
+        current_date = str(self.convert_date(dt.datetime.now().date()))
+        if len(self.member_data) != 0:
+            if str(member.id) in self.member_data.keys():
+                if current_date != self.member_data[str(member.id)]['current_date']:
+                    self.update_log(member, current_date, activity_type,)
+                    with open('Logs/member_data.json', 'w') as json_file:
+                        json.dump(self.member_data, json_file, indent=4)
+                    if sys.platform == 'win32':
+                        print(f'{member}: New Activity Detected')
+        else:
+            if os.path.exists('Logs/member_data.json'):
+                with open('Logs/member_data.json') as json_file:
+                    self.member_data = json.load(json_file)
+                self.update_log(member, current_date, activity_type)
+                with open('Logs/member_data.json', 'w') as json_file:
+                    json.dump(self.member_data, json_file, indent=4)
+            else:
+                msg = 'member_data.json is missing.'
+                print(msg)
+                if sys.platform == 'win32':
+                    channel = self.bot.get_channel(self.bot.bot_commands_test_chan)
+                else:
+                    channel = self.bot.get_channel(self.bot.admin_chan)
+                await channel.send(msg)
+
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -46,69 +105,13 @@ class Member_Log(commands.Cog):
         await channel.send(f'{member.mention} left the server')
 
 
-    # TODO add backup of member_data.json
-
-
-    @staticmethod
-    def return_ascii_only(string):
-        encoded_string = string.encode("ascii", "ignore")
-        decoded_string = encoded_string.decode().rstrip().lstrip()
-        if len(decoded_string.replace(' ', '')) < 3:
-            decoded_string = 'Deleted (Too few characters)'
-        return decoded_string
-
-
-    def update_log(self, member, current_date):
-        discord_name = self.return_ascii_only(member.name)
-        nickname = self.return_ascii_only(member.display_name)
-        for item in [discord_name, nickname]:
-            if len(item.replace(' ', '')) < 3:
-                item = 'Deleted due to unicode'
-        self.member_data[str(member.id)] = [discord_name, nickname, current_date]
-
-
-    async def update_activity(self, member):
-        '''
-        Updates member in member_data.json with current date if last activity was before today.
-
-        Logging started on 03-03-2021
-        '''
-        # TODO check repeats from Rob within minutes of each other
-        if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
-            return
-        current_date = str(dt.datetime.now().date().strftime("%m-%d-%Y"))
-        if len(self.member_data) != 0:
-            if str(member.id) in self.member_data.keys():
-                if current_date != self.member_data[str(member.id)][1]:
-                    self.update_log(member, current_date)
-                    with open('Logs/member_data.json', 'w') as json_file:
-                        json.dump(self.member_data, json_file, indent=4)
-                    if sys.platform == 'win32':
-                        print(f'{member}: New Activity Detected')
-        else:
-            if os.path.exists('Logs/member_data.json'):
-                with open('Logs/member_data.json') as json_file:
-                    self.member_data = json.load(json_file)
-                self.update_log(member, current_date)
-                with open('Logs/member_data.json', 'w') as json_file:
-                    json.dump(self.member_data, json_file, indent=4)
-            else:
-                msg = 'member_data.json is missing.'
-                print(msg)
-                if sys.platform == 'win32':
-                    channel = self.bot.get_channel(self.bot.bot_commands_test_chan)
-                else:
-                    channel = self.bot.get_channel(self.bot.admin_chan)
-                await channel.send(msg)
-
-
     @commands.Cog.listener()
     async def on_message(self, message):
         '''
         Updates last server action to the current date if an action has not occured on the current day.
         '''
         if message.author != self.bot.user:  # Ignore messages made by the bot
-            await self.update_activity(message.author)
+            await self.update_activity(message.author, 'text')
 
 
     @commands.Cog.listener()
@@ -117,7 +120,7 @@ class Member_Log(commands.Cog):
         Updates last server action to the current date if an action has not occured on the current day.
         '''
         if before.channel == None and after.channel != None:
-            await self.update_activity(member)
+            await self.update_activity(member, 'voice')
 
 
     @commands.Cog.listener()
@@ -133,22 +136,30 @@ class Member_Log(commands.Cog):
             print('self.member_data is not accesible.')
 
 
+    @staticmethod
+    def convert_date(date):
+        if type(date) == str:
+            return dt.datetime.strptime(date, "%m-%d-%Y").date()
+        else:
+            return date.strftime("%m-%d-%Y")
+
+
     @commands.command(
         name = 'active',
         brief='Lists active members for the day.',
         description='Lists active members that have joined a chat or sent a message today.',
         aliases=['activemembers', 'showactivemembers'])
     @commands.has_guild_permissions(manage_guild=True)
-    async def showactivemembers(self, ctx, days: int=60):
+    async def showactivemembers(self, ctx):
         '''
-        Lists inactive members.
+        Lists active members.
         '''
         active_list = []
         check_date = dt.datetime.now().date()
-        for entry, data in self.member_data.items():
-            last_active = dt.datetime.strptime(data[1], "%m-%d-%Y").date()
+        for data in self.member_data.values():
+            last_active = self.convert_date(data['current_date'])
             if last_active == check_date:
-                active_list.append(data[0])
+                active_list.append(data['discord_name'])
         if len(active_list) == 0:
             result = f'No Members have been active today.'
         else:
@@ -157,11 +168,11 @@ class Member_Log(commands.Cog):
 
 
     @commands.command(
-        name = 'inactive',
+        name ='inactive',
         brief='Lists inactive members. Defaults to 60 days.',
         description='''
         Lists inactive members that have not joined a chat or sent a message in a set period of time.
-        Defaults to 60 days if a number of days is not entered after the command.
+        Defaults to 60 days if a number of days is not entered as an arguement after the command.
         ''',
         aliases=['inactivemembers'])
     @commands.has_guild_permissions(manage_messages=True)
@@ -171,19 +182,20 @@ class Member_Log(commands.Cog):
         '''
         inactive_list = []
         check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
-        for entry, data in self.member_data.items():
-            last_active = dt.datetime.strptime(data[1], "%m-%d-%Y").date()
+        for data in self.member_data.values():
+            last_active = self.convert_date(data['current_date'])
             if last_active < check_date:
-                inactive_list.append(data[0])
+                inactive_list.append(data['discord_name'])
         if len(inactive_list) == 0:
             result = f'No Members have been inactive for over {days} days.'
         else:
             result = ', '.join(inactive_list)
-        await ctx.send(f'Inactive members for the last {days}:\n' + result)
+        await ctx.send(f'Inactive members for the last {days} days:\n' + result)
 
 
     @commands.command(
-        name = 'updatemembers')
+        name='updatemembers',
+        brief='Adds missing members to member_data.')
     @commands.has_guild_permissions(manage_messages=True)
     async def update_member_data(self, ctx):
         '''
@@ -193,7 +205,7 @@ class Member_Log(commands.Cog):
         if ctx.guild.id != self.bot.main_server and ctx.guild.id != self.bot.test_server:
             return
         new_members = []
-        current_date = dt.datetime.now().date().strftime("%m-%d-%Y")
+        current_date = self.convert_date(dt.datetime.now().date())
         for member in ctx.guild.members:
             if member.bot == False:
                 if str(member.id) not in self.member_data.keys():
