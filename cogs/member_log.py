@@ -84,21 +84,34 @@ class Member_Log(commands.Cog):
         Gives new members the "Member" role.
         Make sure the bot role is above the role you are wanting it to assign.
         '''
-        msg = f'{member} joined the server'
-        print(msg)
-        self.bot.logger.info(msg)
-        role = member.guild.get_role(self.bot.member_role)
-        await member.add_roles(role, reason='New Member')
+        # logs new member
+        self.bot.logger.info(f'{member} joined the server')
+        # adds member role
+        if member.channel.id == self.bot.main_server:
+            role = member.guild.get_role(self.bot.member_role)
+            await member.add_roles(role, reason='New Member')
+        # posts in member log channel
+        channel = self.bot.get_channel(self.member_log_channel)
+        await channel.send(f'{member.mention} joined the server')
 
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         '''
-        Logs members that left the server.
+        Logs members that left the server and removes users from member_data.
         '''
+        # logs leaving member
         self.bot.logger.info(f'{member} left the server')
-        channel = self.get_channel(self.member_log_channel)
-        await channel.send(f'{member.mention} left the server')
+        # posts in member log channel
+        if member.channel.id == self.bot.main_server:
+            channel = self.bot.get_channel(self.member_log_channel)
+            await channel.send(f'{member.mention} left the server')
+        # TODO check if this works
+        try:
+            self.member_data.pop(str(member.id))
+        except Exception as error:
+            print(error)
+            print('self.member_data is not accesible.')
 
 
     @commands.Cog.listener()
@@ -117,19 +130,6 @@ class Member_Log(commands.Cog):
         '''
         if before.channel == None and after.channel != None:
             await self.update_activity(member, 'voice')
-
-
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        '''
-        Removes users from member_data when they leave the server.
-        '''
-        # TODO check if this works
-        try:
-            self.member_data.pop(str(member.id))
-        except Exception as error:
-            print(error)
-            print('self.member_data is not accesible.')
 
 
     @staticmethod

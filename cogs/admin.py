@@ -40,22 +40,22 @@ class Admin(commands.Cog):
             await ctx.send('Command does not exist.')
         elif isinstance(error, TimeoutError):
             self.bot.logger.info('Internet Outage Detected')
-        if sys.platform != 'win32':
-            if isinstance(error, commands.BadArgument):
-                msg = f'{ctx.command} was given incorrect argument.'
-                await ctx.send(msg)
-                self.error_logger.info(msg)
-            elif isinstance(error, commands.CommandInvokeError):
-                msg = f'{ctx.command} was given incorrect argument.'
-                await ctx.send(msg)
-                self.error_logger.info(msg)
-            elif isinstance(error, commands.ModuleNotFoundError):
-                print(str(error))
-            else:
-                info = f'Command: {ctx.command} | Error: {str(error)}'
-                print(info)
-                self.error_logger.info(info)
-                raise(error)
+    #     if sys.platform != 'win32':
+    #         if isinstance(error, commands.BadArgument):
+    #             msg = f'{ctx.command} was given incorrect argument.'
+    #             await ctx.send(msg)
+    #             self.error_logger.info(msg)
+    #         elif isinstance(error, commands.CommandInvokeError):
+    #             msg = f'{ctx.command} was given incorrect argument.'
+    #             await ctx.send(msg)
+    #             self.error_logger.info(msg)
+    #         elif isinstance(error, commands.ModuleNotFoundError):
+    #             print(str(error))
+    #         else:
+    #             info = f'Command: {ctx.command} | Error: {str(error)}'
+    #             print(info)
+    #             self.error_logger.info(info)
+    #             raise(error)
 
 
     @commands.command(
