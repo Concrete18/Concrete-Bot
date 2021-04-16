@@ -42,7 +42,7 @@ class Member_Log(commands.Cog):
             'discord_name':discord_name,
             'nickname':nickname,
             'activity_type':activity_type,
-            'current_date':current_date}
+            'last_active':current_date}
 
 
     async def update_activity(self, member, activity_type):
@@ -57,10 +57,14 @@ class Member_Log(commands.Cog):
         current_date = str(self.convert_date(dt.datetime.now().date()))
         if len(self.member_data) != 0:
             if str(member.id) in self.member_data.keys():
-                if current_date != self.member_data[str(member.id)]['current_date']:
+                if current_date != self.member_data[str(member.id)]['last_active']:
                     self.update_log(member, current_date, activity_type,)
                     with open('Logs/member_data.json', 'w') as json_file:
                         json.dump(self.member_data, json_file, indent=4)
+            else:
+                self.update_log(member, current_date, activity_type,)
+                with open('Logs/member_data.json', 'w') as json_file:
+                    json.dump(self.member_data, json_file, indent=4)
         else:
             if os.path.exists('Logs/member_data.json'):
                 with open('Logs/member_data.json') as json_file:
@@ -86,13 +90,13 @@ class Member_Log(commands.Cog):
         '''
         # logs new member
         self.bot.logger.info(f'{member} joined the server')
-        # adds member role
-        if member.channel.id == self.bot.main_server:
-            role = member.guild.get_role(self.bot.member_role)
-            await member.add_roles(role, reason='New Member')
         # posts in member log channel
         channel = self.bot.get_channel(self.member_log_channel)
         await channel.send(f'{member.mention} joined the server')
+        # adds member role
+        if member.guild.id == self.bot.main_server:
+            role = member.guild.get_role(self.bot.member_role)
+            await member.add_roles(role, reason='New Member')
 
 
     @commands.Cog.listener()
@@ -103,7 +107,7 @@ class Member_Log(commands.Cog):
         # logs leaving member
         self.bot.logger.info(f'{member} left the server')
         # posts in member log channel
-        if member.channel.id == self.bot.main_server:
+        if member.guild.id == self.bot.main_server:
             channel = self.bot.get_channel(self.member_log_channel)
             await channel.send(f'{member.mention} left the server')
         # TODO check if this works
@@ -153,7 +157,7 @@ class Member_Log(commands.Cog):
         active_list = []
         check_date = dt.datetime.now().date()
         for data in self.member_data.values():
-            last_active = self.convert_date(data['current_date'])
+            last_active = self.convert_date(data['last_active'])
             if last_active == check_date:
                 if 'Deleted' in data['nickname']:
                     active_list.append(data['discord_name'])
@@ -182,7 +186,7 @@ class Member_Log(commands.Cog):
         inactive_list = []
         check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
         for data in self.member_data.values():
-            last_active = self.convert_date(data['current_date'])
+            last_active = self.convert_date(data['last_active'])
             if last_active < check_date:
                 if 'Deleted' in data['nickname']:
                     inactive_list.append(data['discord_name'])
