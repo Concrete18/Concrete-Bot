@@ -27,6 +27,9 @@ class MyBot(commands.Bot):
     start_time = dt.datetime.now()
     loaded_cogs = []
 
+    # server_vars
+    server_name = 'Concrete Jungle'
+
     # main server ID's
     main_server = 172069829690261504
     member_role = 377683900580888576
