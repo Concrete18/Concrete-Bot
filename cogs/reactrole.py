@@ -12,6 +12,7 @@ class ReactRole(commands.Cog):
         self.bot = bot
         self.bot_func = bot_functions()
 
+    # FIXME can't reload this cog
 
     @staticmethod
     def check_if_json_exists():

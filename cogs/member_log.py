@@ -51,7 +51,6 @@ class Member_Log(commands.Cog):
 
         Logging started on 03-03-2021
         '''
-        # TODO check repeats from Rob within minutes of each other
         if member.guild.id != self.bot.main_server and member.guild.id != self.bot.test_server:
             return
         current_date = str(self.convert_date(dt.datetime.now().date()))
