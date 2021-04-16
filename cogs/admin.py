@@ -44,11 +44,11 @@ class Admin(commands.Cog):
             await ctx.send('Command does not exist.')
         elif isinstance(error, TimeoutError):
             self.bot.logger.info('Internet Outage Detected')
-    #     if sys.platform != 'win32':
-    #         if isinstance(error, commands.BadArgument):
-    #             msg = f'{ctx.command} was given incorrect argument.'
-    #             await ctx.send(msg)
-    #             self.error_logger.info(msg)
+        if sys.platform != 'win32':
+            if isinstance(error, commands.BadArgument):
+                msg = f'{ctx.command} was given incorrect argument.'
+                await ctx.send(msg)
+                self.error_logger.info(msg)
     #         elif isinstance(error, commands.CommandInvokeError):
     #             msg = f'{ctx.command} was given incorrect argument.'
     #             await ctx.send(msg)
@@ -106,7 +106,7 @@ class Admin(commands.Cog):
     async def speak(self, ctx, *args):
         msg = ' '.join(args)
         await ctx.message.delete()
-        return await ctx.send(msg)
+        await ctx.send(msg)
 
 
     @commands.command(
