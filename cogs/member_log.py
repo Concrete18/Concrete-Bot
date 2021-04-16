@@ -45,6 +45,14 @@ class Member_Log(commands.Cog):
             'last_active':current_date}
 
 
+    def update_json(self):
+        '''
+        Updates member_data.json.
+        '''
+        with open('Logs/member_data.json', 'w') as json_file:
+            json.dump(self.member_data, json_file, indent=4)
+
+
     async def update_activity(self, member, activity_type):
         '''
         Updates member in member_data.json with current date if last activity was before today.
@@ -58,19 +66,16 @@ class Member_Log(commands.Cog):
             if str(member.id) in self.member_data.keys():
                 if current_date != self.member_data[str(member.id)]['last_active']:
                     self.update_log(member, current_date, activity_type,)
-                    with open('Logs/member_data.json', 'w') as json_file:
-                        json.dump(self.member_data, json_file, indent=4)
+                    self.update_json()
             else:
                 self.update_log(member, current_date, activity_type,)
-                with open('Logs/member_data.json', 'w') as json_file:
-                    json.dump(self.member_data, json_file, indent=4)
+                self.update_json()
         else:
             if os.path.exists('Logs/member_data.json'):
                 with open('Logs/member_data.json') as json_file:
                     self.member_data = json.load(json_file)
                 self.update_log(member, current_date, activity_type)
-                with open('Logs/member_data.json', 'w') as json_file:
-                    json.dump(self.member_data, json_file, indent=4)
+                self.update_json()
             else:
                 msg = 'member_data.json is missing.'
                 print(msg)
@@ -84,16 +89,34 @@ class Member_Log(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         '''
+        Sends welcome message as a direct message.
         Gives new members the "Member" role.
-        Make sure the bot role is above the role you are wanting it to assign.
+        Logs user join in main bot log.
+        (Make sure the bot role is above the role you are wanting it to assign.)
         '''
-        # logs new member
-        self.bot.logger.info(f'{member} joined the server')
-        # posts in member log channel
-        channel = self.bot.get_channel(self.member_log_channel)
-        await channel.send(f'{member.mention} joined the server')
-        # adds member role
         if member.guild.id == self.bot.main_server:
+            # Sends welcome message to new member.
+            embed = ds.Embed(
+                title=f'Welcome to {self.bot.server_name}!',
+                description=f'Owned and run by Concrete',
+                colour=ds.Colour(0xf1c40f))
+            features = '''
+            React based role assignment.
+            Intelligent chat bot within bot-commands.
+            RPG Currency splitter for multiplayer parties.
+            Shared Steam Game finder with support for more than just to users.
+            Taco and much more.
+            '''
+            embed.add_field(name='Features', value=features, inline=False)
+            help_msg = 'Use a / before all commands to properly use them.\nFor help with using the commands. Use /help'
+            embed.add_field(name='Help', value=help_msg, inline=False)
+            await member.send(embed=embed)
+            # logs new member
+            self.bot.logger.info(f'{member} joined the server')
+            # posts in member log channel
+            channel = self.bot.get_channel(self.member_log_channel)
+            await channel.send(f'{member.mention} joined the server')
+            # adds member role
             role = member.guild.get_role(self.bot.member_role)
             await member.add_roles(role, reason='New Member')
 
@@ -103,24 +126,20 @@ class Member_Log(commands.Cog):
         '''
         Logs members that left the server and removes users from member_data.
         '''
-        # logs leaving member
-        self.bot.logger.info(f'{member} left the server')
-        # posts in member log channel
         if member.guild.id == self.bot.main_server:
+            # logs leaving member
+            self.bot.logger.info(f'{member} left the server')
+            # posts in member log channel
             channel = self.bot.get_channel(self.member_log_channel)
             await channel.send(f'{member.mention} left the server')
-        # TODO check if this works
-        try:
             self.member_data.pop(str(member.id))
-        except Exception as error:
-            print(error)
-            print('self.member_data is not accesible.')
+            self.update_json()
 
 
     @commands.Cog.listener()
     async def on_message(self, message):
         '''
-        Updates last server action to the current date if an action has not occured on the current day.
+        Updates last server action to the current date if an action has not occurred  on the current day.
         '''
         if message.author != self.bot.user:  # Ignore messages made by the bot
             await self.update_activity(message.author, 'text')
@@ -129,7 +148,7 @@ class Member_Log(commands.Cog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         '''
-        Updates last server action to the current date if an action has not occured on the current day.
+        Updates last server action to the current date if an action has not occurred  on the current day.
         '''
         if before.channel == None and after.channel != None:
             await self.update_activity(member, 'voice')
@@ -174,7 +193,7 @@ class Member_Log(commands.Cog):
         brief='Lists inactive members. Defaults to 60 days.',
         description='''
         Lists inactive members that have not joined a chat or sent a message in a set period of time.
-        Defaults to 60 days if a number of days is not entered as an arguement after the command.
+        Defaults to 60 days if a number of days is not entered as an argument  after the command.
         ''',
         aliases=['inactivemembers'])
     @commands.has_guild_permissions(manage_messages=True)
@@ -216,8 +235,7 @@ class Member_Log(commands.Cog):
                 if str(member.id) not in self.member_data.keys():
                     self.update_log(member, current_date)
                     new_members.append(str(member.display_name))
-        with open('Logs/member_data.json', 'w') as json_file:
-            json.dump(self.member_data, json_file, indent=4)
+        self.update_json()
         new_count = len(new_members)
         if new_count == 1:
             member = 'member'
