@@ -28,6 +28,10 @@ class Admin(commands.Cog):
             info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
             await ctx.send(info)
             self.bot.logger.info(info)
+        if isinstance(error, commands.NotOwner):
+            info = f'{ctx.author.mention} is not the owner. The {ctx.command} command is only usable for the owner.'
+            await ctx.send(info)
+            self.bot.logger.info(info)
         elif isinstance(error, commands.MissingAnyRole):
             info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
             await ctx.send(info)
@@ -62,7 +66,7 @@ class Admin(commands.Cog):
         name ='purge',
         brief='Deletes n messages from newest to oldest.',
         description='Deletes n number of messages from the current channel. This only works for this with the manage messages permission.')
-    @commands.is_owner()
+    @commands.has_guild_permissions(manage_messages=True)
     async def purge(self, ctx, num: int=5):
         '''
         Purges n number of messages.
