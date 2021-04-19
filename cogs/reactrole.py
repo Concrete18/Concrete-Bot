@@ -28,7 +28,7 @@ class ReactRole(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         '''
-        ph
+        Detects reaction and gives set role in response.
         '''
         if payload.member.bot:
             pass
@@ -64,8 +64,6 @@ class ReactRole(commands.Cog):
         '''
         test_react_role_channel = 667229260976619561
         react_role_channel = 821139795006193694
-        print(message.id)
-        print(message.channel)
         if message.channel == react_role_channel or message.channel == test_react_role_channel:
             print(f'Deleted {print(message.id)} React Role. Delete the data from the json.')
             with open('Logs/reactrole.json') as react_file:
