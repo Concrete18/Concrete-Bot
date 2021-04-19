@@ -26,8 +26,8 @@
                 "Are you working?"
             ],
             "responses":[
-                "I am currently working. Why do you ask @?",
-                "I am working. Whats up @?"
+                "I am currently working. Why do you ask {display_name}?",
+                "I am working. Whats up {display_name}?"
             ]
         },
         {
@@ -88,7 +88,7 @@
                 "Hey"
             ],
             "responses":[
-                "Good morning @.",
+                "Good morning {display_name}.",
                 "Good morning."
             ]
         },
@@ -101,7 +101,7 @@
                 "Send me a taco"
             ],
             "responses":[
-                "Why do you want Taco's so damn much @?",
+                "Why do you want Taco's so damn much {display_name}?",
                 "Is this all you think about?",
                 "Yo quiero Taco Bell!",
                 "Can you make me a Taco?"
@@ -114,7 +114,7 @@
                 "I hope you have a good night"
             ],
             "responses":[
-                "Good night @.",
+                "Good night {display_name}.",
                 "Good night."
             ]
         },
@@ -174,8 +174,8 @@
                 "I know Concrete said that"
             ],
             "responses":[
-                "But this is me talking @.",
-                "Why do you not think it is me @.",
+                "But this is me talking {display_name}.",
+                "Why do you not think it is me {display_name}.",
                 "I am real!"
             ]
         },
@@ -228,7 +228,7 @@
                 "Good bot"
             ],
             "responses":[
-                "Your welcome @!",
+                "Your welcome {display_name}!",
                 "It is no trouble at all.",
                 "It is what I am here for."
             ]
@@ -237,6 +237,7 @@
             "tag":"joke",
             "patterns":[
                 "Can you tell me a joke?",
+                "What's a good joke?",
                 "have any jokes?",
                 "do you know any jokes?",
                 "Can I hear a joke?",
