@@ -125,6 +125,7 @@ class Member_Log(commands.Cog):
     async def on_member_remove(self, member):
         '''
         Logs members that left the server and removes users from member_data.
+        TODO likely does not work if kicked or banned
         '''
         if member.guild.id == self.bot.main_server:
             # logs leaving member
@@ -185,7 +186,7 @@ class Member_Log(commands.Cog):
             result = f'No Members have been active today.'
         else:
             result = ', '.join(active_list)
-        await ctx.send('Today\'s last active members:\n' + result)
+        await ctx.send('Today\'s active members:\n' + result)
 
 
     @commands.command(
@@ -225,7 +226,6 @@ class Member_Log(commands.Cog):
         '''
         Adds members to self.member_data if they are not already in it.
         '''
-        print('Updating member_data')
         if ctx.guild.id != self.bot.main_server and ctx.guild.id != self.bot.test_server:
             return
         new_members = []
@@ -242,6 +242,7 @@ class Member_Log(commands.Cog):
         else:
             member = 'members'
         result = f'Added {new_count} new {member}.'
+        self.bot.logger.info(result)
         await ctx.send(result)
 
 
