@@ -1,9 +1,9 @@
 from discord.ext import commands
+import discord as ds
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import word_tokenize
-import discord as ds
-from functions import *
 import difflib, random, json
+from functions import *
 
 
 class Chat(commands.Cog):
@@ -120,9 +120,14 @@ class Chat(commands.Cog):
             else:
                 print('No responses.')
                 return
-            # sends message
-            if '@' in response:
-                response = response.replace('@', str(message.author.display_name))
+            # replaces some text with variable
+            if '{' in response:
+                replacements = {
+                    '{display_name}':str(message.author.display_name)
+                }
+                for placeholder, replacement in replacements.items():
+                    response = response.replace(placeholder, replacement)
+            # sends message if not blank
             if response != '':
                 await message.channel.send(response)
 
