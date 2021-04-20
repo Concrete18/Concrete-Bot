@@ -25,6 +25,9 @@ class Member_Log(commands.Cog):
 
     @staticmethod
     def ascii_only(string):
+        '''
+        Returns ascii characters only.
+        '''
         encoded_string = string.encode("ascii", "ignore")
         decoded_string = encoded_string.decode().rstrip().lstrip()
         if len(decoded_string.replace(' ', '')) < 3:
@@ -47,7 +50,7 @@ class Member_Log(commands.Cog):
 
     def update_json(self):
         '''
-        Updates member_data.json.
+        Writes self.member_data to member_data.json.
         '''
         with open('Logs/member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
@@ -125,7 +128,6 @@ class Member_Log(commands.Cog):
     async def on_member_remove(self, member):
         '''
         Logs members that left the server and removes users from member_data.
-        TODO likely does not work if kicked or banned
         '''
         if member.guild.id == self.bot.main_server:
             # logs leaving member

@@ -77,11 +77,8 @@ class ReactRole(commands.Cog):
         name = 'reactrole',
         brief='Creates a Embed that allows for gaining a role by reacting to it.',
         description='Creates a Embed that allows for gaining a role by reacting to it. Clicking again removes the role.',
-        help='''
-        Mention the role and type the emoji you want to use.
-        The message is optional and will be standardized if left blank.
-        ''')
-    @commands.has_permissions(administrator=True, manage_roles=True)
+        help='Mention the role and type the emoji you want to use. The message is optional.')
+    @commands.has_permissions(manage_roles=True)
     async def reactrole(self, ctx, emoji, role: ds.Role, *message):
         if len(message) == 0:
             message = f'Click {emoji} reaction to get the {role.mention} role.'
