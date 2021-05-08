@@ -4,6 +4,7 @@ from functions import *
 import json
 import os
 
+# FIXME can't reload this cog
 
 class ReactRole(commands.Cog):
 
@@ -12,7 +13,6 @@ class ReactRole(commands.Cog):
         self.bot = bot
         self.bot_func = bot_functions()
 
-    # FIXME can't reload this cog
 
     @staticmethod
     def check_if_json_exists():
@@ -30,9 +30,7 @@ class ReactRole(commands.Cog):
         '''
         Detects reaction and gives set role in response.
         '''
-        if payload.member.bot:
-            pass
-        else:
+        if not payload.member.bot:
             with open('Logs/reactrole.json') as react_file:
                 data = json.load(react_file)
                 for item in data:

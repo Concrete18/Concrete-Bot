@@ -66,7 +66,12 @@ class MyBot(commands.Bot):
                 if file.name in self.loaded_cogs:
                     self.reload_extension(file.path)
                 else:
-                    self.load_extension(location)
+                    try:
+                        self.load_extension(location)
+                    except commands.ExtensionAlreadyLoaded:
+                        self.logger.info(f'{location} is already loaded.')
+                    except commands.ExtensionNotFound:
+                        self.logger.info(f'{location} not found')
                     self.loaded_cogs.append(file.name)
 
 
