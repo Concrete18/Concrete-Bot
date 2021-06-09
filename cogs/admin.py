@@ -98,7 +98,7 @@ class Admin(commands.Cog):
 
     @commands.command(
         name = 'speak',
-        aliases=['say'],
+        aliases=['say', 's'],
         brief = 'Bot says what you type after the command.',
         hidden=True,
         pass_context = True)
