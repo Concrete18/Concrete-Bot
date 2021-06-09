@@ -47,6 +47,8 @@ class MyBot(commands.Bot):
         else:
             secret_key = json.load(json_file)['config']['discord_key']
 
+    # TODO Add new slash commands https://pypi.org/project/discord-py-slash-command/
+
 
     def __init__(self):
         print('\nStarting Bot')
@@ -64,7 +66,7 @@ class MyBot(commands.Bot):
             if file.name.endswith('.py'):
                 location = f'cogs.{file.name[:-3]}'
                 if file.name in self.loaded_cogs:
-                    self.reload_extension(file.path)
+                    self.reload_extension(location)
                 else:
                     try:
                         self.load_extension(location)
@@ -104,6 +106,7 @@ class MyBot(commands.Bot):
         Possible activity types: playing Streaming listening watching competing
         '''
         self.set_extensions()
+        print(f'Startup completed on {dt.datetime.now().strftime("%A, %d %B, %I:%M %p")}')
         print(f'{self.user} is ready')
         if sys.platform != 'win32':
             channel_id = self.bot_commands_chan
