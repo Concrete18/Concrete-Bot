@@ -184,11 +184,14 @@
             "tag":"ask_about_assistant",
             "patterns":[
                 "How are you",
+                "What are you up to?",
+                "What up",
                 "Whats up"
             ],
             "responses":[
                 "Doing well, thanks for asking!",
                 "Not much has changed, thanks for asking!",
+                "Not much, I hope I am not currently broken and just don't know it yet.",
                 "Today has been just fine."
             ]
         },
@@ -311,6 +314,7 @@
                 "What are the laws of robotics?",
                 "are you safe?",
                 "State your laws",
+                "Do you have laws?",
                 "tell me about the laws of robotics."
             ],
             "weighted":[
