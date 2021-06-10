@@ -71,7 +71,6 @@ class Admin(commands.Cog):
         '''
         Purges n number of messages.
         '''
-        # TODO add support to delete all of a specific users messages
         await ctx.channel.purge(limit=int(num) + 1)
 
 

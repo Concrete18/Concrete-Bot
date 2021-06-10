@@ -21,8 +21,6 @@ class RPG(commands.Cog):
         '''
         Rolls a dice in NdN format. + and DL, KH are optional.
         '''
-        # TODO k and d for advantage and disadvantage
-        # Roll 2 d20 and keep highest 1, and roll 2 d20 and drop highest 1, respectively.
         drop_lowest = 0
         keep_highest = 0
         dice = dice.lower()
