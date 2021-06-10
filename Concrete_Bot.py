@@ -29,6 +29,7 @@ class MyBot(commands.Bot):
 
     # server_vars
     server_name = 'Concrete Jungle'
+    first_run = 1
 
     # main server ID's
     main_server = 172069829690261504
@@ -47,15 +48,10 @@ class MyBot(commands.Bot):
         else:
             secret_key = json.load(json_file)['config']['discord_key']
 
-    # TODO Add new slash commands https://pypi.org/project/discord-py-slash-command/
-
 
     def __init__(self):
         print('\nStarting Bot')
-        super().__init__(
-            command_prefix="/",
-            case_insensitive=True,
-            intents=ds.Intents.all())
+        super().__init__(command_prefix="/", case_insensitive=True, intents=ds.Intents.all())
 
 
     def set_extensions(self):
@@ -106,8 +102,14 @@ class MyBot(commands.Bot):
         Possible activity types: playing Streaming listening watching competing
         '''
         self.set_extensions()
-        print(f'Startup completed on {dt.datetime.now().strftime("%A, %d %B, %I:%M %p")}')
+        print(f'Startup completed on {self.start_time.strftime("%A, %d %B, %I:%M %p")}')
         print(f'{self.user} is ready')
+        if self.first_run:
+            pass
+            # WIP send message about system bing back up again
+            # user = await client.get_user_info('136589810025496576')
+            # await user.send('Internet or Power is back.')
+            # self.first_run = 0
         if sys.platform != 'win32':
             channel_id = self.bot_commands_chan
             self.logger.info(f'Logged in as {self.user}')
