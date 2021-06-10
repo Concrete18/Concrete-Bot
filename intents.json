@@ -183,10 +183,11 @@
         {
             "tag":"ask_about_assistant",
             "patterns":[
-                "How are you",
                 "What are you up to?",
-                "What up",
-                "Whats up"
+                "how have you been?",
+                "How are you",
+                "Whats up",
+                "What up"
             ],
             "responses":[
                 "Doing well, thanks for asking!",
@@ -210,7 +211,6 @@
             "tag":"bot_hate",
             "patterns":[
                 "this bot sucks",
-                "fuck you",
                 "thanks for nothing",
                 "Bad Bot",
                 "you suck bot!",
