@@ -62,7 +62,7 @@ class ReactRole(commands.Cog):
         test_react_role_channel = 667229260976619561
         react_role_channel = 821139795006193694
         if message.channel == react_role_channel or message.channel == test_react_role_channel:
-            print(f'Deleted {print(message.id)} React Role. Delete the data from the json.')
+            self.bot.logger.info(f'Deleted {print(message.id)} React Role. Check the data from the json.')
             with open('Logs/reactrole.json') as react_file:
                 data = json.load(react_file)
             for key, value in data.items():
