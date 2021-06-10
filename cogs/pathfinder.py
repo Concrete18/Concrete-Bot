@@ -19,19 +19,45 @@ class RPG(commands.Cog):
         description='Example: 2d6 for 2 6 sided dice. Gives the sum of the numbers and a list of all of the numbers')
     async def roll(self, ctx, dice: str):
         '''
-        Rolls a dice in NdN format.
+        Rolls a dice in NdN format. + and DL, KH are optional.
         '''
-        # TODO add + option for stuff like 5d4+4
-        try:
-            rolls, limit = map(int, str(dice).split('d'))
-        except Exception:
-            await ctx.send('Format has to be in NdN!\nExample: 2d6 for 2 6 sided dice.')
-            return
-        int_list = []
-        for _ in range(rolls):
-            int_list.append(random.randint(1, limit))
-        result = f'Sum: {sum(int_list)}\nRolls: {", ".join(map(str, int_list))}'
-        await ctx.send(result)
+        # TODO k and d for advantage and disadvantage
+        # Roll 2 d20 and keep highest 1, and roll 2 d20 and drop highest 1, respectively.
+        drop_lowest = 0
+        keep_highest = 0
+        dice = dice.lower()
+        pattern = r"^\d+[d]\d+([+]\d+)?(kh)?(dl)?([+]\d+)?$"
+        if re.match(pattern, dice):
+            if 'dl' in dice:
+                dice = dice.replace('dl','')
+                drop_lowest = 1
+            if 'kh' in dice:
+                dice = dice.replace('kh','')
+                keep_highest = 1
+            main_roll = str(dice).split('+')
+            rolls, limit = map(int, main_roll[0].split('d'))
+            int_list = []
+            lowest_roll = 1000
+            highest_roll = 0
+            for _ in range(rolls):
+                roll = random.randint(1, limit)
+                if roll > highest_roll:
+                    highest_roll = roll
+                if roll < lowest_roll:
+                    lowest_roll = roll
+                int_list.append(roll)
+            dice_sum = sum(int_list)
+            if '+' in dice:
+                result = f'Sum: {dice_sum+int(main_roll[1])}\nRolls: {", ".join(map(str, int_list))} + {main_roll[1]}'
+            else:
+                result = f'Sum: {dice_sum}\nRolls: {", ".join(map(str, int_list))}'
+            if drop_lowest:
+                result += f'\nFinal Roll: {dice_sum - lowest_roll}'
+            if keep_highest:
+                result += f'\nHighest: {highest_roll}'
+            await ctx.send(result)
+        else:
+            await ctx.send('Format has to be in NdN or NdN+N!\nExample:\n2d6 or 2d6+4')
 
 
     @commands.command(
