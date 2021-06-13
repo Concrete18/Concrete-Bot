@@ -1,5 +1,4 @@
 from discord.ext import commands
-import discord as ds
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import word_tokenize
 import difflib, random, json
@@ -13,8 +12,15 @@ class Chat(commands.Cog):
         self.bot = bot
         self.bot_func = bot_functions()
         self.stemmer = LancasterStemmer()
-        self.valid_channels = [self.bot.bot_commands_test_chan, self.bot.bot_commands_chan, self.bot.bot_test_chan_main]
-        self.valid_bot = ['Concrete Test', 'Concrete Bot']
+        self.valid_channels = [
+            self.bot.bot_commands_test_chan,
+            self.bot.bot_commands_chan,
+            self.bot.bot_test_chan_main
+            ]
+        self.valid_bot = [
+            'Concrete Test',
+            'Concrete Bot'
+            ]
         self.last_response_tag = ''
 
         # settings
@@ -34,7 +40,7 @@ class Chat(commands.Cog):
         '''
         if message.author == self.bot.user:  # Ignore messages made by the bot
             return False
-        if message.channel.id in self.valid_channels:
+        elif message.channel.id in self.valid_channels:
             if self.debug:
                 print('Valid Channel')
             return True
