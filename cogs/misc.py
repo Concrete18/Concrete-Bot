@@ -113,7 +113,6 @@ class Misc(commands.Cog):
     async def create_poll(self, ctx, hours: float, question: str, *options):
         if hours > 0:
             hours_in_seconds = hours * 60 * 60
-            hours_in_seconds = 7
         numbers = (
             '1️⃣', '2⃣', '3⃣', '4⃣', '5⃣',
 		    '6⃣', '7⃣', '8⃣', '9⃣', '🔟')
