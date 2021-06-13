@@ -111,8 +111,9 @@ class Misc(commands.Cog):
         aliases=['createpoll', 'makepoll'])
     @commands.has_guild_permissions(manage_guild=True)
     async def create_poll(self, ctx, hours: float, question: str, *options):
-        hours_in_seconds = hours * 60 * 60
-        close_time = self.bot_func.readable_time_since(hours_in_seconds)
+        if hours > 0:
+            hours_in_seconds = hours * 60 * 60
+            hours_in_seconds = 7
         numbers = (
             '1️⃣', '2⃣', '3⃣', '4⃣', '5⃣',
 		    '6⃣', '7⃣', '8⃣', '9⃣', '🔟')
@@ -126,8 +127,13 @@ class Misc(commands.Cog):
                 timestamp=dt.datetime.utcnow())
             fields = [
                 ('Options', '\n'.join([f'{numbers[index]} {option}' for index, option in enumerate(options)]), False),
-                ('Instructions', 'React to cast a vote!', False),
-                ('Poll Close', f'Poll will close in {close_time}', False)]
+                ('Instructions', 'React to cast a vote!', False)
+                ]
+            if hours > 0:
+                close_time = self.bot_func.readable_time_since(hours_in_seconds)
+                fields.append(('Poll Close', f'Poll will close in {close_time}', False))
+            else:
+                fields.append(('Poll Close', f'No end was set.', False))
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
             message = await ctx.send(embed=embed)
@@ -135,11 +141,39 @@ class Misc(commands.Cog):
                 await message.add_reaction(emoji)
             self.polls.append((message.channel.id, message.id))
             # wait for set hours
+            if hours == 0:
+                return
             await asyncio.sleep(hours_in_seconds)
+            # removes poll from active polls list
             message = await self.bot.get_channel(message.channel.id).fetch_message(message.id)
-            # TODO make it check for ties
-            most_voted = max(message.reactions, key=lambda r: r.count)
-            await message.channel.send(f'The results are in and option {most_voted.emoji} was the most popular with {most_voted.count-1:,} votes!')
+            # vote totaling
+            results_dict = {}
+            winners = []
+            winning_total = 0
+            for index, reaction in enumerate(message.reactions):
+                total_votes = reaction.count-1
+                results_dict[options[index]] = total_votes
+                if total_votes > winning_total:
+                    winning_total = total_votes
+            for option, votes in results_dict.items():
+                if votes == winning_total and votes > 0:
+                    winners.append(option)
+            # vote result setup
+            win_total = len(winners)
+            if win_total > 1:
+                result = f'There was a tie among {", ".join(winners)} with {winning_total} votes each.'
+            elif win_total == 0:
+                result = 'No one voted.'
+            else:
+                result = f'The most voted choice was {winners[0]} with {winning_total} votes.'
+            # embed and send
+            embed = ds.Embed(
+                title='Poll Complete',
+                description=question,
+                colour=ctx.author.colour,
+                timestamp=dt.datetime.utcnow())
+            embed.add_field(name='Results', value=result, inline=inline)
+            await message.channel.send(embed=embed)
             self.polls.remove((message.channel.id, message.id))
 
 
