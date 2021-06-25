@@ -15,9 +15,20 @@
             ],
             "responses":[
                 "Hello!",
-                "Good to see you again!",
                 "Hi there, how can I help?",
                 "Hey, I hope you are having a good time."
+            ]
+        },
+        {
+            "tag":"say_hello",
+            "patterns":[
+                "Say hello",
+                "Meet Concrete Bot",
+                "Introduce yourself Concrete Bot"
+            ],
+            "responses":[
+                "Hello!",
+                "Hello, I am Concrete Bot."
             ]
         },
         {
@@ -29,6 +40,17 @@
             "responses":[
                 "I am currently working. Why do you ask {display_name}?",
                 "I am working. Whats up {display_name}?"
+            ]
+        },
+        {
+            "tag":"name?",
+            "patterns":[
+                "What is your name?",
+                "What do I call you?"
+            ],
+            "responses":[
+                "I am Concrete Bot. I was named after my creator.",
+                "My name is Concrete Bot. Is your name {display_name}?"
             ]
         },
         {
