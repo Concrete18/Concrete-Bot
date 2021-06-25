@@ -1,3 +1,5 @@
+import datetime as dt
+
 class bot_functions:
 
     bot_image = 'https://raw.githubusercontent.com/Concrete18/Discord-Bots/master/Images/bot_images.JPG'
@@ -31,6 +33,8 @@ class bot_functions:
         Returns time since based on seconds argument in the unit of time that makes the most sense
         rounded to 1 decimal place.
         '''
+        if isinstance(seconds, dt.datetime):
+            seconds = dt.datetime.now().timestamp()-seconds.timestamp()
         seconds_in_minute = 60
         seconds_in_hour = 3600
         seconds_in_day = 86400

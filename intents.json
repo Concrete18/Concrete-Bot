@@ -44,6 +44,20 @@
             ]
         },
         {
+            "tag":"how_old",
+            "patterns":[
+                "How old are you?",
+                "What is your age?",
+                "What is your birthday?",
+                "When were you first written?",
+                "When were you built?",
+                "When were you created?"
+            ],
+            "responses":[
+                "I was created on February 18th, 2021 which makes me {years_old} old."
+            ]
+        },
+        {
             "tag":"how",
             "patterns":[
                 "How do you work?",
@@ -97,6 +111,7 @@
             "tag":"taco",
             "patterns":[
                 "Can you give me a taco?",
+                "Can you make me a taco?",
                 "I want a taco",
                 "Make me a taco",
                 "Send me a taco"

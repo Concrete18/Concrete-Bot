@@ -28,7 +28,7 @@ class Admin(commands.Cog):
             info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
             await ctx.send(info)
             self.bot.logger.info(info)
-        if isinstance(error, commands.NotOwner):
+        elif isinstance(error, commands.NotOwner):
             info = f'{ctx.author.mention} is not the owner. The {ctx.command} command is only usable for the owner.'
             await ctx.send(info)
             self.bot.logger.info(info)
@@ -131,14 +131,16 @@ class Admin(commands.Cog):
         '''
         Backs up log files and sends attaches them to a message.
         '''
-        area = ctx.message.channel
         source_dir = os.path.join(self.bot.script_dir, 'Logs')
-        file_name = 'Log_Backup.tar'
-        with tarfile.open(file_name, "w:gz") as tar:
-            tar.add(source_dir, arcname=os.path.basename(source_dir))
-        file = os.path.join(self.bot.script_dir, file_name)
-        await ctx.send(file=ds.File(file))
-        os.remove(file)
+        if os.path.exists(source_dir):
+            file_name = 'Log_Backup.tar'
+            with tarfile.open(file_name, "w:gz") as tar:
+                tar.add(source_dir, arcname=os.path.basename(source_dir))
+            file = os.path.join(self.bot.script_dir, file_name)
+            await ctx.send(file=ds.File(file))
+            os.remove(file)
+        else:
+            await ctx.send(f'{os.path.basename(source_dir)} does not exist. Backup has been cancelled.')
 
 
     @commands.command(

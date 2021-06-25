@@ -3,6 +3,7 @@ from nltk.stem.lancaster import LancasterStemmer
 from nltk.tokenize import word_tokenize
 import difflib, random, json
 from functions import *
+import datetime as dt
 
 
 class Chat(commands.Cog):
@@ -129,7 +130,8 @@ class Chat(commands.Cog):
             # replaces some text with variable
             if '{' in response:
                 replacements = {
-                    '{display_name}':str(message.author.display_name)
+                    '{display_name}':str(message.author.display_name),
+                    '{years_old}':str(self.bot_func.readable_time_since(dt.datetime(2020,2,18,0,0,0,0)))
                 }
                 for placeholder, replacement in replacements.items():
                     response = response.replace(placeholder, replacement)
