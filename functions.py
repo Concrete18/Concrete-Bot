@@ -34,7 +34,7 @@ class bot_functions:
         rounded to 1 decimal place.
         '''
         if isinstance(seconds, dt.datetime):
-            seconds = dt.datetime.now().timestamp()-seconds.timestamp()
+            seconds = int(dt.datetime.now().timestamp()-seconds.timestamp())
         seconds_in_minute = 60
         seconds_in_hour = 3600
         seconds_in_day = 86400
