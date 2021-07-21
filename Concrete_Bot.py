@@ -103,7 +103,7 @@ class MyBot(commands.Bot):
         '''
         self.set_extensions()
         print(f'Startup completed on {self.start_time.strftime("%A, %d %B, %I:%M %p")}')
-        print(f'{self.user} is ready')
+        print(f'{self.user} is ready\n')
         if self.first_run:
             pass
             # WIP send message about system bing back up again
