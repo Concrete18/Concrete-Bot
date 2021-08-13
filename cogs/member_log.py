@@ -134,7 +134,7 @@ class Member_Log(commands.Cog):
             self.bot.logger.info(f'{member} left the server')
             # posts in member log channel
             channel = self.bot.get_channel(self.member_log_channel)
-            await channel.send(f'{member.mention} left the server')
+            await channel.send(f'{member.name} left the server\n{member.mention}')
             self.member_data.pop(str(member.id))
             self.update_json()
 
