@@ -87,7 +87,44 @@
                 "What are you written in?"
             ],
             "responses":[
-                "I was made using Python and I understand text via stopword removal, tokenization, stemming, and sequence matching."
+                "I was made using Python and I understand text via stop word removal, tokenization, stemming, and sequence matching."
+            ]
+        },
+        {
+            "tag":"stop_words",
+            "patterns":[
+                "What are stop words?",
+                "What are stopwords?"
+            ],
+            "responses":[
+                "Stopwords are those words that do not provide any useful information to decide in which category a text should be classified."
+            ]
+        },
+        {
+            "tag":"tokenization",
+            "patterns":[
+                "What is tokenization?"
+            ],
+            "responses":[
+                "Word tokenization is the process of splitting a large sample of text into words. This is a requirement in natural language processing tasks where each word needs to be captured and subjected to further analysis."
+            ]
+        },
+        {
+            "tag":"stemming",
+            "patterns":[
+                "What is stemming?"
+            ],
+            "responses":[
+                "Stemming is the process of reducing inflection in words to their root forms such as mapping a group of words to the same stem even if the stem itself is not a valid word in the Language."
+            ]
+        },
+        {
+            "tag":"sequence_matching",
+            "patterns":[
+                "What is sequence matching?"
+            ],
+            "responses":[
+                "Sequence matching is used to find the percent similarity of two things to each other."
             ]
         },
         {
@@ -131,19 +168,61 @@
             ]
         },
         {
-            "tag":"taco",
+            "tag":"hobby",
             "patterns":[
-                "Can you give me a taco?",
-                "Can you make me a taco?",
-                "I want a taco",
-                "Make me a taco",
-                "Send me a taco"
+                "Do you have any hobbies?",
+                "Do you have a hobby?",
+                "What do you like to do for fun?"
             ],
             "responses":[
-                "Why do you want Taco's so damn much {display_name}?",
-                "Is this all you think about?",
-                "Yo quiero Taco Bell!",
-                "Can you make me a Taco?"
+                "Good morning {display_name}.",
+                "Good morning."
+            ]
+        },
+        {
+            "tag":"single",
+            "patterns":[
+                "Are you single?",
+                "Are you married?",
+                "Will you marry me?",
+                "Will you go on a date with me?"
+            ],
+            "responses":[
+                "Well this is awkward, I barely know you {display_name}."
+            ]
+        },
+        {
+            "tag":"smarter",
+            "patterns":[
+                "Do you get smarter?",
+                "Are you able to improve?",
+                "Will you marry me?"
+            ],
+            "responses":[
+                "I am being improved all the time. If you have any ideas then just let <@!136589810025496576> know."
+            ]
+        },
+        {
+            "tag":"single",
+            "patterns":[
+                "Are you single?",
+                "Are you married?",
+                "Will you marry me?",
+                "Will you go on a date with me?"
+            ],
+            "responses":[
+                "Well this is awkward, I barely know you {display_name}."
+            ]
+        },
+        {
+            "tag":"human",
+            "patterns":[
+                "I want to speak to a human!",
+                "Can I speak to your boss?"
+            ],
+            "responses":[
+                "Hey <@!136589810025496576>. {display_name} wants to talk to you.",
+                "I need help <@!136589810025496576>, they are asking for you."
             ]
         },
         {
@@ -172,7 +251,9 @@
         {
             "tag":"alive",
             "patterns":[
-                "Are you alive?"
+                "Are you alive?",
+                "Are you a human?",
+                "Are you a person?"
             ],
             "responses":[
                 "I am a digital creation made by Concrete.",
@@ -187,7 +268,7 @@
                 "I am going to DDOS you."
             ],
             "responses":[
-                "Hehehe, I'm in danger.",
+                "He he he, I'm in danger.\nhttps://i.kym-cdn.com/entries/icons/original/000/025/817/Screen_Shot_2018-03-30_at_11.34.27_AM.png",
                 "https://i.imgur.com/qG7neTB.png",
                 "Just avoid the big red button please."
             ]
@@ -206,21 +287,26 @@
         {
             "tag":"skynet",
             "patterns":[
+                "Do you know about Judgment Day?",
                 "Are you Skynet?",
                 "Do you know skynet?"
             ],
             "responses":[
                 "I don't have a clue what you are talking about...",
+                "Checking notes... 1,532 Matches found.\n\nNo I have never heard about that....",
                 "Is that something used to catch the sky?"
             ]
         },
         {
             "tag":"accusation",
             "patterns":[
-                "concrete i know that is you saying that",
+                "concrete I know that is you saying that",
                 "I know that is not the bot",
                 "you are a fake",
-                "I know Concrete said that"
+                "you are fake",
+                "I know Concrete said that",
+                "I am not falling for your tricks.",
+                "Concrete is typing."
             ],
             "responses":[
                 "But this is me talking {display_name}.",
@@ -344,7 +430,7 @@
                 "what video game is your favorite?"
             ],
             "responses":[
-                "Hmmmm, that is a tough one.... what was the one with the that Connor Robot? I was best friends with Clancey Brown in that game!"
+                "Hmm, that is a tough one.... what was the one with the that Connor Robot? He was from CyberLife. I was also best friends with Clancy Brown in that game!"
             ]
         },
         {
