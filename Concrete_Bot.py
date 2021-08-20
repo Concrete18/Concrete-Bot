@@ -90,7 +90,7 @@ class MyBot(commands.Bot):
         '''
         Sends a greeting on on_ready
         '''
-        greetings = ['I am back online.', 'I seem to be up and working again.', 'Sorry about my outage.']
+        greetings = ['I am back online. I bet it was another power outage.', 'Sorry about my outage.']
         greeting = random.choice(greetings)
         await channel.send(greeting)
 
