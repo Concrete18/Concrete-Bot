@@ -9,7 +9,11 @@ import datetime as dt
 class Chat(commands.Cog):
 
 
+
     def __init__(self, bot):
+        '''
+        Chat Cog
+        '''
         self.bot = bot
         self.bot_func = bot_functions()
         self.stemmer = LancasterStemmer()
@@ -22,8 +26,11 @@ class Chat(commands.Cog):
             'Concrete Test',
             'Concrete Bot'
             ]
+        # special actions
+        self.actions = {
+            'taco':self.taco,
+            }
         self.last_response_tag = ''
-
         # settings
         with open("intents.json") as file:
             self.phrase_data = json.load(file)
@@ -68,7 +75,40 @@ class Chat(commands.Cog):
         '''
         sentence = self.stemmer.stem(sentence.lower())
         word_tokens = word_tokenize(sentence)
-        return [word for word in word_tokens if not word in self.stop_words]
+        # return [word for word in word_tokens if not word in self.stop_words]
+        # WIP new method.
+        return_string = ''
+        for word in word_tokens:
+            if word not in self.stop_words:
+                for letter in word:
+                    return_string += letter + ' '
+        return return_string.strip()
+
+
+    async def taco(self, channel):
+        '''
+        Taco
+
+        For for PathieZ.
+        '''
+        if dt.datetime.today().weekday() == 1:
+            rand_small = "{:,}".format(random.randrange(1, 8))
+            rand_big = "{:,}".format(random.randrange(20000, 50000))
+            is_tuesday = [
+                'Fine, I will get you a taco.... What is your address. I am finding the number for delivery.',
+                f'It is actually Taco Tuesday, give me {rand_small} to {rand_big} business days to find you a taco.',
+                'Busy this Tuesday, ask next Tuesday',
+                'Sorry, out of taco\'s. Would Nachos suffice?... Nevermind, out of those too.']
+            msg = random.choice(is_tuesday)
+        else:
+            not_tuesday = [
+                'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
+                'Taco, hahahaha',
+                'Yo quiero Taco Bell!',
+                'Can you make me a Taco?',
+                'Who will give me some taco bell?']
+            msg = random.choice(not_tuesday)
+        await channel.send(msg)
 
 
     def phrase_matcher(self, phrase):
@@ -117,6 +157,11 @@ class Chat(commands.Cog):
                     return
             if 'tag' in data_dict.keys():
                 self.last_response_tags = data_dict['tag']
+            # function based responses
+            if data_dict["tag"] in self.actions.keys():
+                await self.actions[data_dict["tag"]](message.channel)
+                return
+            # normal responses
             if len(data_dict['responses']) > 1:
                 if 'weighted' in data_dict.keys():
                     response = random.choices(data_dict['responses'], weights=(data_dict['weighted']))[0]
