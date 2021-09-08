@@ -24,6 +24,7 @@ class Fun(commands.Cog):
         '''
         Command for PathieZ
         '''
+        # TODO delete if other method works well enough
         if dt.datetime.today().weekday() == 1:
             rand_small = "{:,}".format(random.randrange(1, 8))
             rand_big = "{:,}".format(random.randrange(20000, 50000))

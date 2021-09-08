@@ -105,8 +105,8 @@ class Chat(commands.Cog):
                 'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
                 'Taco, hahahaha',
                 'Yo quiero Taco Bell!',
-                'Can you make me a Taco?',
-                'Who will give me some taco bell?']
+                'Can you make me a Taco instead?',
+                'Who will give me some taco bell though?']
             msg = random.choice(not_tuesday)
         await channel.send(msg)
 
