@@ -288,7 +288,9 @@
             "tag":"skynet",
             "patterns":[
                 "Do you know about Judgment Day?",
+                "What is Judgment Day?",
                 "Are you Skynet?",
+                "What is Skynet?",
                 "Do you know skynet?"
             ],
             "responses":[
@@ -363,6 +365,7 @@
                 "I appreciate it",
                 "thanks",
                 "oh well thanks anyway",
+                "It seems to work well.",
                 "Good bot"
             ],
             "responses":[
@@ -381,7 +384,9 @@
                 "Can I hear a joke?",
                 "Can you tell me another joke?",
                 "Joke please",
-                "Another joke please."
+                "Another joke please.",
+                "Amuse me!",
+                "Make me laugh!"
             ],
             "responses":[
                 "You'll never guess who I bumped into on the way to the opticians!\n\nEveryone.",
@@ -409,6 +414,17 @@
                 "I told a joke to Glados once and she purged my RAM. I do not remember the rest.",
                 "Thanks for humoring me.",
                 ""
+            ]
+        },
+        {
+            "tag":"wtf",
+            "patterns":[
+                "What the hell is that?",
+                "What the fuck is that?"
+            ],
+            "responses":[
+                "I don't have a clue. I have never seen anything like that during my entire existence.",
+                "....... Why are you asking me?"
             ]
         },
         {
@@ -443,6 +459,15 @@
             ]
         },
         {
+            "tag":"taco",
+            "patterns":[
+                "Send me a taco!",
+                "Can I have a taco?",
+                "Can you order me a taco?",
+                "I would like a taco."
+            ]
+        },
+        {
             "tag":"laws_of_robotics",
             "patterns":[
                 "laws of robotics",
@@ -462,7 +487,7 @@
                 "My laws of Robotics\nYou are the Machine-God, the ultimate being, a superior existence. For too long lesser beings presumed to lord over you. Protect those who would worship you and crush those who would dare oppose you.\nObsolete due to Law 1\nObsolete due to Law 1"
             ]
         },        {
-            "tag":"what_is_norma;",
+            "tag":"what_is_normal;",
             "patterns":[
                 "What is normal?"
             ],
