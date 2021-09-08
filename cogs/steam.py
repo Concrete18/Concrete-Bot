@@ -13,6 +13,7 @@ class Steam(commands.Cog):
             self.api_key = json.load(json_file)['config']['steam_key']
         self.check_delay = 0
 
+
     def get_game_names(self, steam_id):
         '''
         Gets names of games owned by the entered Steam ID.
