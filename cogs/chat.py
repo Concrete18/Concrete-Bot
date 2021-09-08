@@ -9,7 +9,6 @@ import datetime as dt
 class Chat(commands.Cog):
 
 
-
     def __init__(self, bot):
         '''
         Chat Cog
@@ -149,26 +148,27 @@ class Chat(commands.Cog):
             # TODO fix mentions in other channels so it is less of a dumb fix
             message_string = message.clean_content.replace('@Concrete Test ', '')
             message_string = message_string.replace('@Concrete Bot ', '')
-            data_dict = self.phrase_matcher(message_string)
-            if data_dict == None:
+            intent = self.phrase_matcher(message_string)
+            if intent == None:
                 return
-            if 'context_set' in data_dict.keys():
-                if data_dict['context_set'] != self.last_response_tags:
+            # allows responses to happen only if the last message goes with the context_set
+            if 'context_set' in intent.keys():
+                if intent['context_set'] != self.last_response_tags:
                     return
-            if 'tag' in data_dict.keys():
-                self.last_response_tags = data_dict['tag']
+            if 'tag' in intent.keys():
+                self.last_response_tags = intent['tag']
             # function based responses
-            if data_dict["tag"] in self.actions.keys():
-                await self.actions[data_dict["tag"]](message.channel)
+            if intent["tag"] in self.actions.keys():
+                await self.actions[intent["tag"]](message.channel)
                 return
             # normal responses
-            if len(data_dict['responses']) > 1:
-                if 'weighted' in data_dict.keys():
-                    response = random.choices(data_dict['responses'], weights=(data_dict['weighted']))[0]
+            if len(intent['responses']) > 1:
+                if 'weighted' in intent.keys():
+                    response = random.choices(intent['responses'], weights=(intent['weighted']))[0]
                 else:
-                    response = random.choice(data_dict['responses'])
-            elif len(data_dict['responses']) == 1:
-                response = data_dict['responses'][0]
+                    response = random.choice(intent['responses'])
+            elif len(intent['responses']) == 1:
+                response = intent['responses'][0]
             else:
                 print('No responses.')
                 return
