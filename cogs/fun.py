@@ -15,37 +15,6 @@ class Fun(commands.Cog):
 
 
     @commands.command(
-        name = 'taco',
-        brief='Taco',
-        description='Taco',
-        help='Taco',
-        aliases=['givetaco', 'maketaco'])
-    async def taco(self, ctx):
-        '''
-        Command for PathieZ
-        '''
-        # TODO delete if other method works well enough
-        if dt.datetime.today().weekday() == 1:
-            rand_small = "{:,}".format(random.randrange(1, 8))
-            rand_big = "{:,}".format(random.randrange(20000, 50000))
-            is_tuesday = [
-                'Fine, I will get you a taco.... What is your address. I am finding the number for delivery.',
-                f'It is actually Taco Tuesday, give me {rand_small} to {rand_big} business days to find you a taco.',
-                'Busy this Tuesday, ask next Tuesday',
-                'Sorry, out of taco\'s. Would Nachos suffice?... Nevermind, out of those too.']
-            msg = random.choice(is_tuesday)
-        else:
-            not_tuesday = [
-                'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
-                'Taco, hahahaha',
-                'Yo quiero Taco Bell!',
-                'Can you make me a Taco?',
-                'Who will give me some taco bell?']
-            msg = random.choice(not_tuesday)
-        await ctx.send(msg)
-
-
-    @commands.command(
         name='hello',
         brief='Greets Bot and causes the bot to greet you.',
         description='Greets Bot and causes the bot to greet you.',
@@ -74,6 +43,31 @@ class Fun(commands.Cog):
             msg = 'It landed on Heads.'
         else:
             msg = 'It landed on Tails.'
+        await ctx.send(msg)
+
+
+    @commands.command(
+        name = 'rps',
+        brief = 'Play Rock Paper Scissors.')
+    async def rps(self, ctx, your_move):
+        '''
+        Rock Paper Scissors Game.
+        '''
+        your_move = your_move.title()
+        cpu_move = random.choice(['Rock', 'Scissors', 'Paper'])
+        msg = f'Bot: {cpu_move}\n{ctx.author}: {your_move}.\n'
+        cpu_win = f'I win!\n{cpu_move} beats {your_move}'
+        cpu_lose = f'I lose...\n{your_move} beats {cpu_move}.'
+        if cpu_move == your_move:
+            msg += 'We tied.'
+        elif cpu_move == 'Rock' and your_move == 'Scissors':
+            msg += cpu_win
+        elif cpu_move == 'Scissors' and your_move == 'Paper':
+            msg += cpu_win
+        elif cpu_move == 'Paper' and your_move == 'Rock':
+            msg += cpu_win
+        else:
+            msg += cpu_lose
         await ctx.send(msg)
 
 
