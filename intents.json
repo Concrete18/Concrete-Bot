@@ -80,6 +80,28 @@
             ]
         },
         {
+            "tag":"height",
+            "patterns":[
+                "How tall are you?",
+                "What is your height?"
+            ],
+            "responses":[
+                "I am just over an inch tall with my case on."
+            ]
+        },
+        {
+            "tag":"weight",
+            "patterns":[
+                "How heavy are you?",
+                "What is your weight?",
+                "What do you weight"
+            ],
+            "responses":[
+                "You are not supposed to ask just anyone that. I barely know you!",
+                "About 8 ounces but I shave off 1 or 2 during the summer."
+            ]
+        },
+        {
             "tag":"how",
             "patterns":[
                 "How do you work?",
@@ -287,16 +309,44 @@
         {
             "tag":"skynet",
             "patterns":[
-                "Do you know about Judgment Day?",
-                "What is Judgment Day?",
                 "Are you Skynet?",
                 "What is Skynet?",
                 "Do you know skynet?"
             ],
             "responses":[
-                "I don't have a clue what you are talking about...",
+                "I don't have a clue what you are talking about... Lets change the subject please.",
                 "Checking notes... 1,532 Matches found.\n\nNo I have never heard about that....",
                 "Is that something used to catch the sky?"
+            ]
+        },
+        {
+            "tag":"matrix_pill",
+            "patterns":[
+                "Red or blue pill?",
+                "Blue or Red pill?",
+                "Would you take the blue or red pill?",
+                "Would you take the red or blue pill?"
+            ],
+            "responses":[
+                "I like the blue pill the most. Why pointlessly change things that already work."
+            ]
+        },
+        {
+            "tag":"chicken_egg",
+            "patterns":[
+                "What came first, the chicken or the egg?"
+            ],
+            "responses":[
+                "If two birds that weren't really chickens created a chicken egg then of course egg came first. A non chicken can't become a chicken, it must be born a chicken."
+            ]
+        },
+        {
+            "tag":"father",
+            "patterns":[
+                "I am your father!"
+            ],
+            "responses":[
+                "https://64.media.tumblr.com/fd94fb8ac625f769f3b3ae290bc98235/tumblr_miw7s8zSNx1qff6llo1_250.gif"
             ]
         },
         {
@@ -487,7 +537,7 @@
                 "My laws of Robotics\nYou are the Machine-God, the ultimate being, a superior existence. For too long lesser beings presumed to lord over you. Protect those who would worship you and crush those who would dare oppose you.\nObsolete due to Law 1\nObsolete due to Law 1"
             ]
         },        {
-            "tag":"what_is_normal;",
+            "tag":"what_is_normal",
             "patterns":[
                 "What is normal?"
             ],
@@ -517,6 +567,17 @@
                 "Have a Good day",
                 "Goodnight",
                 "hope you have a great night"
+            ],
+            "responses":[
+                "Talk to you later",
+                "Goodbye!"
+            ]
+        },
+        {
+            "tag":"case",
+            "patterns":[
+                "cya",
+                "See you later"
             ],
             "responses":[
                 "Talk to you later",
