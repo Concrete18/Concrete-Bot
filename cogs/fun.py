@@ -55,7 +55,7 @@ class Fun(commands.Cog):
         '''
         your_move = your_move.title()
         cpu_move = random.choice(['Rock', 'Scissors', 'Paper'])
-        msg = f'Bot: {cpu_move}\n{ctx.member.display_name}: {your_move}.\n'
+        msg = f'Bot: {cpu_move}\n{ctx.author.display_name}: {your_move}.\n'
         cpu_win = f'I win!\n{cpu_move} beats {your_move}'
         cpu_lose = f'I lose...\n{your_move} beats {cpu_move}.'
         if cpu_move == your_move:

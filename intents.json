@@ -116,7 +116,9 @@
             "tag":"stop_words",
             "patterns":[
                 "What are stop words?",
-                "What are stopwords?"
+                "What are stopwords?",
+                "what is stop word removal?",
+                "what is stopword removal?"
             ],
             "responses":[
                 "Stopwords are those words that do not provide any useful information to decide in which category a text should be classified."
@@ -428,6 +430,7 @@
             "tag":"joke",
             "patterns":[
                 "Can you tell me a joke?",
+                "Tell a joke?",
                 "What's a good joke?",
                 "have any jokes?",
                 "do you know any jokes?",

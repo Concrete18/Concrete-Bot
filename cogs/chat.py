@@ -45,8 +45,13 @@ class Chat(commands.Cog):
         '''
         Returns True only if the bot should respond.
         '''
-        if message.author == self.bot.user:  # Ignore messages made by the bot
+        # skip if it is a command
+        if message.clean_content[0] == '/':
             return False
+        # Ignore messages made by the bot
+        elif message.author == self.bot.user:
+            return False
+        # checks if channel id is in valid_channels
         elif message.channel.id in self.valid_channels:
             if self.debug:
                 print('Valid Channel')
@@ -63,7 +68,7 @@ class Chat(commands.Cog):
             return False
 
 
-    def simpilify_phrase(self, sentence):
+    def simplify(self, sentence):
         '''
         Uses NLTK and a stopwords list to stem and shorten
         the inputted sentence to remove unneeded information.
@@ -74,21 +79,20 @@ class Chat(commands.Cog):
         '''
         sentence = self.stemmer.stem(sentence.lower())
         word_tokens = word_tokenize(sentence)
-        # return [word for word in word_tokens if not word in self.stop_words]
+        return [word for word in word_tokens if not word in self.stop_words]
         # WIP new method.
-        return_string = ''
-        for word in word_tokens:
-            if word not in self.stop_words:
-                for letter in word:
-                    return_string += letter + ' '
-        return return_string.strip()
+        # return_string = ''
+        # for word in word_tokens:
+        #     if word not in self.stop_words:
+        #         for letter in word:
+        #             return_string += letter + ' '
+        # return return_string.strip()
 
 
     async def taco(self, channel):
         '''
-        Taco
-
-        For for PathieZ.
+        Taco: Made for PathieZ.
+        Requires info on the `channel` that the message will send to.
         '''
         if dt.datetime.today().weekday() == 1:
             rand_small = "{:,}".format(random.randrange(1, 8))
@@ -111,28 +115,23 @@ class Chat(commands.Cog):
 
 
     def phrase_matcher(self, phrase):
-        '''Matches phrases to patterns in intent.json
-
-        Arguments:
-
-        phrase -- phrase that is checked for best match
         '''
-        intents = self.phrase_data['intents']
+        Matches the enterted `phrase` to patterns in intent.json.
+        '''
         # switch to giving max_similarity self.similarity_req
         max_similarity = 0
         matched_pattern = ''
-        best_response = ''
-        prepped_phrase = self.simpilify_phrase(phrase)
-        for item in intents:
-            for pattern in item['patterns']:
-                prepped_pattern = self.simpilify_phrase(pattern)
+        best_response = False
+        prepped_phrase = self.simplify(phrase)
+        # check loop
+        for intent in self.phrase_data['intents']:
+            for pattern in intent['patterns']:
+                prepped_pattern = self.simplify(pattern)
                 similarity = difflib.SequenceMatcher(None, prepped_pattern, prepped_phrase).ratio()
                 if similarity > max_similarity and similarity > self.similarity_req:
                     max_similarity = similarity
                     matched_pattern = pattern.lower()
-                    best_response = item
-        if best_response == '':
-            return
+                    best_response = intent
         if self.debug:
             print(phrase)
             print(f'Final pick is: {best_response["tag"]} with similarity: {max_similarity}\n{matched_pattern}\n')
@@ -144,12 +143,12 @@ class Chat(commands.Cog):
         '''
         On message reaction.
         '''
-        if self.respond_if(message) and message.clean_content[0] != '/':
+        if self.respond_if(message):
             # TODO fix mentions in other channels so it is less of a dumb fix
             message_string = message.clean_content.replace('@Concrete Test ', '')
             message_string = message_string.replace('@Concrete Bot ', '')
             intent = self.phrase_matcher(message_string)
-            if intent == None:
+            if intent == False:
                 return
             # allows responses to happen only if the last message goes with the context_set
             if 'context_set' in intent.keys():
