@@ -402,12 +402,17 @@
                 "thanks for nothing",
                 "Bad Bot",
                 "you suck bot!",
+                "fuck you bot!",
                 "This bot is stupid",
                 "you are stupid"
             ],
             "responses":[
                 "Sticks and stones may break my circuits but words will never delete me.",
-                "I swear I am trying!"
+                "I swear I am trying!",
+                "Why are you so mean to me {display_name}",
+                "<@!136589810025496576> {display_name} is making fun of me!",
+                "Well, that isn’t a very nice thing to say.",
+                "........"
             ]
         },
         {

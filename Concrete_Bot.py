@@ -110,6 +110,8 @@ class MyBot(commands.Bot):
             # user = await client.get_user_info('136589810025496576')
             # await user.send('Internet or Power is back.')
             # self.first_run = 0
+        else:
+            print('Restarted Bot')
         if sys.platform != 'win32':
             channel_id = self.bot_commands_chan
             self.logger.info(f'Logged in as {self.user}')

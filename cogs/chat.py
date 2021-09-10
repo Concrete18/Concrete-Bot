@@ -79,14 +79,14 @@ class Chat(commands.Cog):
         '''
         sentence = self.stemmer.stem(sentence.lower())
         word_tokens = word_tokenize(sentence)
-        return [word for word in word_tokens if not word in self.stop_words]
+        # return [word for word in word_tokens if not word in self.stop_words]
         # WIP new method.
-        # return_string = ''
-        # for word in word_tokens:
-        #     if word not in self.stop_words:
-        #         for letter in word:
-        #             return_string += letter + ' '
-        # return return_string.strip()
+        return_string = ''
+        for word in word_tokens:
+            if word not in self.stop_words:
+                for letter in word:
+                    return_string += letter + ' '
+        return return_string.strip()
 
 
     async def taco(self, channel):
