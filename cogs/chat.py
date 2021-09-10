@@ -113,6 +113,9 @@ class Chat(commands.Cog):
             msg = random.choice(not_tuesday)
         await channel.send(msg)
 
+    
+    # TODO update whats up phrase to rememeber something that happened recently
+
 
     def phrase_matcher(self, phrase):
         '''
