@@ -171,24 +171,24 @@ class Member_Log(commands.Cog):
         description='Lists active members that have joined a chat or sent a message today.',
         aliases=['activemembers', 'showactivemembers'])
     @commands.has_guild_permissions(manage_guild=True)
-    async def showactivemembers(self, ctx):
+    async def showactivemembers(self, ctx, days: int=1):
         '''
         Lists active members.
         '''
         active_list = []
-        check_date = dt.datetime.now().date()
+        check_date = dt.datetime.now().date() - dt.timedelta(days=int(days))
         for data in self.member_data.values():
             last_active = self.convert_date(data['last_active'])
-            if last_active == check_date:
+            if last_active > check_date:
                 if 'Deleted' in data['nickname']:
                     active_list.append(data['discord_name'])
                 else:
                     active_list.append(data['nickname'])
         if len(active_list) == 0:
-            result = f'No Members have been active today.'
+            result = f'No Members have been active for over {days} days..'
         else:
             result = ', '.join(active_list)
-        await ctx.send('Today\'s active members:\n' + result)
+        await ctx.send(f'{len(active_list)} active members for the last {days} days:\n{result}')
 
 
     @commands.command(
@@ -217,7 +217,7 @@ class Member_Log(commands.Cog):
             result = f'No Members have been inactive for over {days} days.'
         else:
             result = ', '.join(inactive_list)
-        await ctx.send(f'Inactive members for the last {days} days:\n' + result)
+        await ctx.send(f'{len(inactive_list)} inactive members for the last {days} days:\n{result}')
 
 
     @commands.command(
