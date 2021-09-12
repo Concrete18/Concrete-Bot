@@ -22,33 +22,33 @@ class Admin(commands.Cog):
         self.bot_func = bot_functions()
 
 
-    # @commands.Cog.listener()
-    # async def on_command_error(self, ctx, error):
-    #     if isinstance(error, commands.MissingPermissions):
-    #         info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
-    #         await ctx.send(info)
-    #         self.bot.logger.info(info)
-    #     elif isinstance(error, commands.NotOwner):
-    #         info = f'{ctx.author.mention} is not the owner. The {ctx.command} command is only usable for the owner.'
-    #         await ctx.send(info)
-    #         self.bot.logger.info(info)
-    #     elif isinstance(error, commands.MissingAnyRole):
-    #         info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
-    #         await ctx.send(info)
-    #         self.bot.logger.info(info)
-    #     elif isinstance(error, commands.MissingRole):
-    #         info = f'{ctx.author.mention} is missing the required role for the {ctx.command} command.'
-    #         await ctx.send(info)
-    #         self.bot.logger.info(info)
-    #     elif isinstance(error, commands.CommandNotFound):
-    #         await ctx.send('Command does not exist.')
-    #     elif isinstance(error, TimeoutError):
-    #         self.bot.logger.info('Internet Outage Detected')
-    #     if sys.platform != 'win32':
-    #         if isinstance(error, commands.BadArgument):
-    #             msg = f'{ctx.command} was given incorrect argument.'
-    #             await ctx.send(msg)
-    #             self.error_logger.info(msg)
+    if sys.platform != 'win32':
+        @commands.Cog.listener()
+        async def on_command_error(self, ctx, error):
+            if isinstance(error, commands.MissingPermissions):
+                info = f'{ctx.author.mention} is missing the required permission for the {ctx.command} command.'
+                await ctx.send(info)
+                self.bot.logger.info(info)
+            elif isinstance(error, commands.NotOwner):
+                info = f'{ctx.author.mention} is not the owner. The {ctx.command} command is only usable for the owner.'
+                await ctx.send(info)
+                self.bot.logger.info(info)
+            elif isinstance(error, commands.MissingAnyRole):
+                info = f'{ctx.author.mention} has none of the required roles for the {ctx.command} command.'
+                await ctx.send(info)
+                self.bot.logger.info(info)
+            elif isinstance(error, commands.MissingRole):
+                info = f'{ctx.author.mention} is missing the required role for the {ctx.command} command.'
+                await ctx.send(info)
+                self.bot.logger.info(info)
+            elif isinstance(error, commands.CommandNotFound):
+                await ctx.send('Command does not exist.')
+            elif isinstance(error, TimeoutError):
+                self.bot.logger.info('Internet Outage Detected')
+            if isinstance(error, commands.BadArgument):
+                msg = f'{ctx.command} was given incorrect argument.'
+                await ctx.send(msg)
+                self.error_logger.info(msg)
 
     #         elif isinstance(error, commands.CommandInvokeError):
     #             msg = f'{ctx.command} was given incorrect argument.'

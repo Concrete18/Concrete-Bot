@@ -28,6 +28,7 @@ class MyBot(commands.Bot):
     loaded_cogs = []
 
     # server_vars
+    bot_name = 'Concrete Bot'
     server_name = 'Concrete Jungle'
     first_run = 1
 

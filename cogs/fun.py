@@ -48,26 +48,42 @@ class Fun(commands.Cog):
     @commands.command(
         name = 'rps',
         brief = 'Play Rock Paper Scissors.')
-    async def rps(self, ctx, your_move):
+    async def rps(self, ctx, player_move):
         '''
         Rock Paper Scissors Game.
         '''
-        your_move = your_move.title()
+        if player_move.lower() not in ['rock', 'paper', 'scissors']:
+            await ctx.channel.send('Invalid gesture, please use Rock, Paper or Scissors.')
+            return
+        # player
+        player_name = ctx.author.display_name
+        player_move = player_move.title()
+        # bot
+        bot_name = self.bot.bot_name
         cpu_move = random.choice(['Rock', 'Scissors', 'Paper'])
-        msg = f'Bot: {cpu_move}\n{ctx.author.display_name}: {your_move}.\n'
-        cpu_win = f'I win!\n{cpu_move} beats {your_move}'
-        cpu_lose = f'I lose...\n{your_move} beats {cpu_move}.'
-        if cpu_move == your_move:
-            msg += 'We tied.'
-        elif cpu_move == 'Rock' and your_move == 'Scissors':
-            msg += cpu_win
-        elif cpu_move == 'Scissors' and your_move == 'Paper':
-            msg += cpu_win
-        elif cpu_move == 'Paper' and your_move == 'Rock':
-            msg += cpu_win
+        # result check
+        cpu_win = f'{cpu_move} beats {player_move}\nI win!'
+        cpu_lose = f'{player_move} beats {cpu_move}.\nI lose...'
+        result = ''
+        if cpu_move == player_move:
+            result = 'We tied.'
+        elif cpu_move == 'Rock' and player_move == 'Scissors':
+            result = cpu_win
+        elif cpu_move == 'Scissors' and player_move == 'Paper':
+            result = cpu_win
+        elif cpu_move == 'Paper' and player_move == 'Rock':
+            result = cpu_win
         else:
-            msg += cpu_lose
-        await ctx.send(msg)
+            result = cpu_lose
+        # shows results via embed
+        embed = ds.Embed(
+            title='Rock Paper Scissors',
+            description=f'Match results between {bot_name} and {player_name}',
+            colour=ds.Colour(0xf1c40f))
+        embed.add_field(name=f'{bot_name} Played', value=f'{cpu_move}', inline=True)
+        embed.add_field(name=f'{player_name} Played', value=f'{player_move}', inline=True)
+        embed.add_field(name='Winner', value=result, inline=False)
+        await ctx.channel.send(embed=embed)
 
 
 def setup(bot):

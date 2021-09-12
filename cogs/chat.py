@@ -23,7 +23,7 @@ class Chat(commands.Cog):
             ]
         self.valid_bot = [
             'Concrete Test',
-            'Concrete Bot'
+            self.bot.bot_name
             ]
         # special actions
         self.actions = {
@@ -45,11 +45,11 @@ class Chat(commands.Cog):
         '''
         Returns True only if the bot should respond.
         '''
-        # skip if it is a command
-        if message.clean_content[0] == '/':
-            return False
         # Ignore messages made by the bot
-        elif message.author == self.bot.user:
+        if message.author == self.bot.user:
+            return False
+        # skip if it is a command
+        elif message.clean_content[0] == '/':
             return False
         # checks if channel id is in valid_channels
         elif message.channel.id in self.valid_channels:
