@@ -52,6 +52,9 @@ class Fun(commands.Cog):
         '''
         Rock Paper Scissors Game.
         '''
+        if player_move.lower() in ['spock', 'lizard']:
+            await ctx.channel.send('We only play with Rock, Paper and Scissors here.')
+            return
         if player_move.lower() not in ['rock', 'paper', 'scissors']:
             await ctx.channel.send('Invalid gesture, please use Rock, Paper or Scissors.')
             return
