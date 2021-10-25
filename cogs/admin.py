@@ -62,7 +62,6 @@ class Admin(commands.Cog):
     #             self.error_logger.info(info)
     #             raise(error)
 
-
     @commands.command(
         name ='purge',
         brief='Deletes n messages from newest to oldest.',
@@ -73,7 +72,6 @@ class Admin(commands.Cog):
         Purges n number of messages.
         '''
         await ctx.channel.purge(limit=int(num) + 1)
-
 
     @commands.command(
         name = 'reload',
@@ -95,7 +93,6 @@ class Admin(commands.Cog):
         self.bot.logger.info(msg)
         await ctx.send(msg)
 
-
     @commands.command(
         name = 'speak',
         aliases=['say', 's'],
@@ -107,7 +104,6 @@ class Admin(commands.Cog):
         msg = ' '.join(args)
         await ctx.message.delete()
         await ctx.send(msg)
-
 
     @commands.command(
         name = 'changeactivity',
@@ -122,7 +118,6 @@ class Admin(commands.Cog):
         activity = ' '.join(activity)
         await self.bot.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity))
         await ctx.message.delete()
-
 
     @commands.command(
         name ='backup',
@@ -142,7 +137,6 @@ class Admin(commands.Cog):
             os.remove(file)
         else:
             await ctx.send(f'{os.path.basename(source_dir)} does not exist. Backup has been cancelled.')
-
 
     @commands.command(
         name ='pid',

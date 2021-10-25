@@ -34,7 +34,6 @@ class Member_Log(commands.Cog):
             decoded_string = 'Deleted (Too few characters)'
         return decoded_string
 
-
     def update_log(self, member, current_date, activity_type='None'):
         discord_name = self.ascii_only(member.name)
         nickname = self.ascii_only(member.display_name)
@@ -47,14 +46,12 @@ class Member_Log(commands.Cog):
             'activity_type':activity_type,
             'last_active':current_date}
 
-
     def update_json(self):
         '''
         Writes self.member_data to member_data.json.
         '''
         with open('Logs/member_data.json', 'w') as json_file:
             json.dump(self.member_data, json_file, indent=4)
-
 
     async def update_activity(self, member, activity_type):
         '''
@@ -87,7 +84,6 @@ class Member_Log(commands.Cog):
                 else:
                     channel = self.bot.get_channel(self.bot.admin_chan)
                 await channel.send(msg)
-
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -123,7 +119,6 @@ class Member_Log(commands.Cog):
             role = member.guild.get_role(self.bot.member_role)
             await member.add_roles(role, reason='New Member')
 
-
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         '''
@@ -138,7 +133,6 @@ class Member_Log(commands.Cog):
             self.member_data.pop(str(member.id))
             self.update_json()
 
-
     @commands.Cog.listener()
     async def on_message(self, message):
         '''
@@ -146,7 +140,6 @@ class Member_Log(commands.Cog):
         '''
         if message.author != self.bot.user:  # Ignore messages made by the bot
             await self.update_activity(message.author, 'text')
-
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -156,14 +149,12 @@ class Member_Log(commands.Cog):
         if before.channel == None and after.channel != None:
             await self.update_activity(member, 'voice')
 
-
     @staticmethod
     def convert_date(date):
         if type(date) == str:
             return dt.datetime.strptime(date, "%m-%d-%Y").date()
         else:
             return date.strftime("%m-%d-%Y")
-
 
     @commands.command(
         name = 'active',
@@ -189,7 +180,6 @@ class Member_Log(commands.Cog):
         else:
             result = ', '.join(active_list)
         await ctx.send(f'{len(active_list)} active members for the last {days} days:\n{result}')
-
 
     @commands.command(
         name ='inactive',
@@ -218,7 +208,6 @@ class Member_Log(commands.Cog):
         else:
             result = ', '.join(inactive_list)
         await ctx.send(f'{len(inactive_list)} inactive members for the last {days} days:\n{result}')
-
 
     @commands.command(
         name='updatemembers',

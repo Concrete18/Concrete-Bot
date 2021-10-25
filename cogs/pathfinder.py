@@ -57,7 +57,6 @@ class RPG(commands.Cog):
         else:
             await ctx.send('Format has to be in NdN or NdN+N!\nExample:\n2d6 or 2d6+4')
 
-
     @commands.command(
         name = 'groupsplit',
         aliases=['gsplit', 'lootsplit'],
@@ -77,7 +76,8 @@ class RPG(commands.Cog):
 
         You should notice that it can accept more then one set of each type of coin in case you want to add 438 gold
         from selling some items plus the 1250 award for the quest.
-        ''')
+        '''
+    )
     async def groupsplit(self, ctx, *args):
         '''
         Gives a group coin split divided by any number.

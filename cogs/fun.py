@@ -23,7 +23,6 @@ class Fun(commands.Cog):
         san = ('', '-san')
         await ctx.send(f'{random.choice(hello)} {ctx.author.mention}{random.choices(san, weights=(60, 25))[0]}!')
 
-
     @commands.command(
         name = 'flip',
         aliases=['flipcoin'],
@@ -43,7 +42,6 @@ class Fun(commands.Cog):
         else:
             msg = 'It landed on Tails.'
         await ctx.send(msg)
-
 
     @commands.command(
         name = 'rps',

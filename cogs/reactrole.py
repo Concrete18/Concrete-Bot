@@ -21,7 +21,6 @@ class ReactRole(commands.Cog):
             with open('Logs/reactrole.json', "w") as outfile:
                 outfile.write(json_object)
 
-
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         '''
@@ -35,7 +34,6 @@ class ReactRole(commands.Cog):
                     role = ds.utils.get(self.bot.get_guild(payload.guild_id).roles, id=item['role_id'])
                     await payload.member.add_roles(role)
 
-
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
         '''
@@ -47,7 +45,6 @@ class ReactRole(commands.Cog):
             if item['emoji'] == payload.emoji.name:
                 role = ds.utils.get(self.bot.get_guild(payload.guild_id).roles, id=item['role_id'])
                 await self.bot.get_guild(payload.guild_id).get_member(payload.user_id).remove_roles(role)
-
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -64,7 +61,6 @@ class ReactRole(commands.Cog):
             #     print(key, value)
             #     if message.channel in value:
                     # dict.pop(key)
-
 
     @commands.command(
         name = 'reactrole',

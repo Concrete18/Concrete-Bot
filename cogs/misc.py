@@ -26,7 +26,6 @@ class Misc(commands.Cog):
         '''
         await ctx.send(f'Current Ping: {round(self.bot.latency * 1000)}ms')
 
-
     @commands.command(
         name = 'servertime',
         brief = 'Fetches current date and time for the server.')
@@ -36,7 +35,6 @@ class Misc(commands.Cog):
         '''
         server_time = dt.datetime.now(tz=None).strftime("%A, %d %B, %I:%M %p")
         await ctx.send(f'Current server time: {server_time}')
-
 
     @commands.command(
         name = 'uptime',
@@ -48,7 +46,6 @@ class Misc(commands.Cog):
         '''
         uptime_seconds = dt.datetime.now().timestamp()-self.bot.start_time.timestamp()
         await ctx.send(f'Bot Uptime: {self.bot_func.readable_time_since(uptime_seconds)}')
-
 
     @commands.command(
         name = 'membercount',
@@ -71,7 +68,6 @@ class Misc(commands.Cog):
         embed.add_field(name='Total Members', value=len(all_members), inline=True)
         embed.add_field(name='Total Bots', value=len(all_bots), inline=True)
         await ctx.send(embed=embed)
-
 
     @commands.command(
         name = 'schedulemsg',
@@ -102,7 +98,6 @@ class Misc(commands.Cog):
             colour=ds.Colour(0x2ecc71))
         schedule_msg.add_field(name=f'Message Contents', value=msg, inline=False)
         await ctx.channel.send(embed=schedule_msg)
-
 
     @commands.command(
         name='poll',
@@ -175,9 +170,7 @@ class Misc(commands.Cog):
             await message.channel.send(embed=embed)
             self.polls.remove((message.channel.id, message.id))
 
-
     # wip commands
-
 
     @commands.command(
         name = 'serverstatus',

@@ -35,7 +35,6 @@ class Chat(commands.Cog):
             self.phrase_data = json.load(file)
         self.similarity_req = self.phrase_data['settings']['similarity_req']
         self.debug = self.phrase_data['settings']['debug']
-
         # load stop words
         with open("stopwords.txt", "r") as f:
             self.stop_words = set(f.read())
@@ -61,7 +60,6 @@ class Chat(commands.Cog):
                     return True
             return False
 
-
     def simplify(self, sentence):
         '''
         Uses NLTK and a stopwords list to stem and shorten
@@ -81,7 +79,6 @@ class Chat(commands.Cog):
                 for letter in word:
                     return_string += letter + ' '
         return return_string.strip()
-
 
     async def taco(self, channel):
         '''
@@ -107,9 +104,7 @@ class Chat(commands.Cog):
             msg = random.choice(not_tuesday)
         await channel.send(msg)
 
-    
     # TODO update whats up phrase to rememeber something that happened recently
-
 
     def phrase_matcher(self, phrase):
         '''
@@ -133,7 +128,6 @@ class Chat(commands.Cog):
             print(phrase)
             print(f'Final pick is: {best_response["tag"]} with similarity: {max_similarity}\n{matched_pattern}\n')
         return best_response
-
 
     @commands.Cog.listener()
     async def on_message(self, message):

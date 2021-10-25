@@ -32,7 +32,6 @@ class Steam(commands.Cog):
         else:
             raise Exception
 
-
     @staticmethod
     def check_for_shared_games(games):
         '''
@@ -42,7 +41,6 @@ class Steam(commands.Cog):
         for game in games:
             shared &= set(game)
         return shared
-
 
     def create_game_lists(self, steam_ids):
         '''
@@ -66,7 +64,6 @@ class Steam(commands.Cog):
         shared_games = ', '.join(final_list)
         result = f'{len(final_list)} shared games found.\n\n{shared_games}'
         return result
-
 
     @commands.command(
         name ='sharedgames',
