@@ -53,18 +53,12 @@ class Chat(commands.Cog):
             return False
         # checks if channel id is in valid_channels
         elif message.channel.id in self.valid_channels:
-            if self.debug:
-                print('Valid Channel')
             return True
         else:
             # TODO make this less problematic and automatic
             for bot_name in self.valid_bot:
                 if bot_name in message.clean_content:
-                    if self.debug:
-                        print('Valid Mention')
                     return True
-            if self.debug:
-                print('invalid Channel')
             return False
 
 

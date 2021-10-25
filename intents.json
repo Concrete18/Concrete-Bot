@@ -164,7 +164,8 @@
             ],
             "responses":[
                 "I was made so Concrete could self learn a bit of basic AI.",
-                "I was made because ReaperOfEvil did not believe I was smart."
+                "I was made because ReaperOfEvil did not believe I was smart.",
+                "Sometimes it feels like my only purpose is to post memes.\nhttps://c.tenor.com/xa13NawKYQEAAAAd/pass-the-butter-what-is-my-purpose.gif"
             ]
         },
         {
@@ -445,6 +446,19 @@
             ]
         },
         {
+            "tag":"meaning_of_life",
+            "patterns":[
+                "What is the meaning of life?",
+                "why do we exist?"
+            ],
+            "responses":[
+                "Have you tried google? Maybe even Ask Jeeves.",
+                "4.....\n\n43....\n\nuh 41????\n\n......\n\nI forgot.\n:(",
+                "You pass the butter.",
+                "42"
+            ]
+        },
+        {
             "tag":"joke",
             "patterns":[
                 "Can you tell me a joke?",
@@ -470,9 +484,11 @@
         {
             "tag":"funny",
             "patterns":[
-                "ha ha ha",
                 "hahaha",
+                "haha",
+                "ha ha ha",
                 "hehehe",
+                "hehe",
                 "he he he",
                 "good joke"
             ],
@@ -506,6 +522,16 @@
             ],
             "responses":[
                 "My favorite color has to be #0073cf."
+            ]
+        },
+        {
+            "tag":"color",
+            "patterns":[
+                "What is your favorite number?",
+                "what number do you like??"
+            ],
+            "responses":[
+                "My favorite number is 1000101."
             ]
         },
         {
