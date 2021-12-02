@@ -48,8 +48,9 @@ class Chat(commands.Cog):
         if message.author == self.bot.user:
             return False
         # skip if it is a command
-        elif message.clean_content[0] == '/':
-            return False
+        if len(message.clean_content) > 0:
+            if message.clean_content[0] == '/':
+                return False
         # checks if channel id is in valid_channels
         elif message.channel.id in self.valid_channels:
             return True
