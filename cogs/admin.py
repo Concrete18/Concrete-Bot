@@ -74,6 +74,16 @@ class Admin(commands.Cog):
         await ctx.channel.purge(limit=int(num) + 1)
 
     @commands.command(
+        name ='clear',
+        brief='Deletes 200 messages.')
+    @commands.has_guild_permissions(manage_messages=True)
+    async def purge(self, ctx):
+        '''
+        Deletes 200 messages.
+        '''
+        await ctx.channel.purge(limit=200)
+
+    @commands.command(
         name = 'reload',
         brief='Reloads all cogs')
     @commands.has_guild_permissions(manage_guild=True)
