@@ -61,7 +61,7 @@ class MyBot(commands.Bot):
         '''
         for file in os.scandir('./cogs'):
             if file.name.endswith('.py'):
-                location = f'cogs.{file.name[:-3]}'
+                location = f"cogs.{file.name.replace('.py', '')}"
                 if file.name in self.loaded_cogs:
                     self.reload_extension(location)
                 else:
