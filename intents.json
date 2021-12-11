@@ -565,7 +565,9 @@
         {
             "tag":"taco",
             "patterns":[
+                "taco",
                 "Send me a taco!",
+                "Get me a taco!",
                 "Can I have a taco?",
                 "Can you order me a taco?",
                 "I would like a taco."

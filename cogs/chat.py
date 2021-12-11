@@ -52,7 +52,7 @@ class Chat(commands.Cog):
             if message.clean_content[0] == '/':
                 return False
         # checks if channel id is in valid_channels
-        elif message.channel.id in self.valid_channels:
+        if message.channel.id in self.valid_channels:
             return True
         else:
             # TODO make this less problematic and automatic
@@ -81,14 +81,14 @@ class Chat(commands.Cog):
                     return_string += letter + ' '
         return return_string.strip()
 
-    async def taco(self, channel):
+    async def taco(self, message, channel):
         '''
         Taco: Made for PathieZ.
         Requires info on the `channel` that the message will send to.
         '''
         if dt.datetime.today().weekday() == 1:
             rand_small = "{:,}".format(random.randrange(1, 8))
-            rand_big = "{:,}".format(random.randrange(20000, 50000))
+            rand_big = "{:,}".format(random.randrange(20000, 50000000))
             is_tuesday = [
                 'Fine, I will get you a taco.... What is your address. I am finding the number for delivery.',
                 f'It is actually Taco Tuesday, give me {rand_small} to {rand_big} business days to find you a taco.',
@@ -99,6 +99,8 @@ class Chat(commands.Cog):
             not_tuesday = [
                 'It is not even Taco Tuesday.... Are you addicted to taco\'s or something?',
                 'Taco, hahahaha',
+                'I like tacos.',
+                message.clean_content[::-1],
                 'Yo quiero Taco Bell!',
                 'Can you make me a Taco instead?',
                 'Who will give me some taco bell though?']
@@ -150,7 +152,7 @@ class Chat(commands.Cog):
                 self.last_response_tags = intent['tag']
             # function based responses
             if intent["tag"] in self.actions.keys():
-                await self.actions[intent["tag"]](message.channel)
+                await self.actions[intent["tag"]](message, message.channel)
                 return
             # normal responses
             if len(intent['responses']) > 1:
