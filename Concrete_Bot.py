@@ -73,7 +73,6 @@ class MyBot(commands.Bot):
                         self.logger.info(f'{location} not found')
                     self.loaded_cogs.append(file.name)
 
-
     async def set_random_activity(self):
         '''
         Sets a random discord activity.
@@ -86,7 +85,6 @@ class MyBot(commands.Bot):
         activity_name = random.choice(activity_names)
         await self.change_presence(activity=ds.Activity(type = ds.ActivityType.playing, name=activity_name))
 
-
     async def send_random_greeting(self, channel):
         '''
         Sends a greeting on on_ready
@@ -94,7 +92,6 @@ class MyBot(commands.Bot):
         greetings = ['I am back online. I bet it was another power outage.', 'Sorry about my outage.']
         greeting = random.choice(greetings)
         await channel.send(greeting)
-
 
     async def on_ready(self):
         '''
@@ -121,7 +118,6 @@ class MyBot(commands.Bot):
         channel = self.get_channel(channel_id)
         await self.send_random_greeting(channel)
         await self.set_random_activity()
-
 
     @classmethod
     async def setup(cls):
