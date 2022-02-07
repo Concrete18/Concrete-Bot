@@ -20,15 +20,16 @@ class Chat(commands.Cog):
             self.bot.bot_commands_test_chan,
             self.bot.bot_commands_chan,
             self.bot.bot_test_chan_main
-            ]
+        ]
         self.valid_bot = [
             'Concrete Test',
             self.bot.bot_name
-            ]
+        ]
         # special actions
-        self.actions = {
+        self.actions = { 
+            'ask_about_assistant': self.whats_up,
             'taco':self.taco,
-            }
+        }
         self.last_response_tag = ''
         # settings
         with open("intents.json") as file:
@@ -81,6 +82,13 @@ class Chat(commands.Cog):
                     return_string += letter + ' '
         return return_string.strip()
 
+    async def whats_up(self, message, channel):
+        '''
+        ph
+        '''
+        # TODO update whats up phrase to rememeber something that happened recently
+        pass
+
     async def taco(self, message, channel):
         '''
         Taco: Made for PathieZ.
@@ -106,8 +114,6 @@ class Chat(commands.Cog):
                 'Who will give me some taco bell though?']
             msg = random.choice(not_tuesday)
         await channel.send(msg)
-
-    # TODO update whats up phrase to rememeber something that happened recently
 
     def phrase_matcher(self, phrase):
         '''
