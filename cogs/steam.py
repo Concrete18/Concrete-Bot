@@ -27,7 +27,7 @@ class Steam(commands.Cog):
                 return data['response']['steamid']
         return False
 
-    def get_game_names(self, steam_id):
+    def get_owned_names(self, steam_id):
         '''
         Gets names of games owned by the entered Steam ID.
         '''
@@ -42,48 +42,36 @@ class Steam(commands.Cog):
                 game_name = item['name']
                 game_list.append(game_name)
             return game_list
-        else:
-            raise Exception
+        return False
 
     @staticmethod
-    def check_for_shared_games(games):
+    def check_for_shared_games(games_list):
         '''
         Finds the shared games among the lists entered.
         '''
-        shared = set(games[0])
-        for game in games:
-            shared &= set(game)
-        return shared
+        base_list = set(games_list[0])
+        for game_list in games_list:
+            base_list &= set(game_list)
+        return base_list
 
     def create_game_lists(self, steam_ids):
         '''
-        Creates a list containing a list each of the profiles games entered using the get_game_names Function.
+        Creates a list containing a list each of the profiles games entered using the get_owned_names Function.
         '''
-        lists_to_check = []
+        game_lists = []
         if len(steam_ids) > 4:
             self.check_delay = 1
         for id in steam_ids:
-            games = self.get_game_names(id)
-            lists_to_check.append(games)
-        lists_to_check_num = len(lists_to_check)
-        if lists_to_check_num == 1:
-            return 'Only 1 user is valid'
-        elif lists_to_check_num == 0:
-            return 'No users are valid'
-        final_list = self.check_for_shared_games(lists_to_check)
-        if len(final_list) == 0:
-            return 'No shared games found.'
-        shared_games = ', '.join(final_list)
-        result = f'{len(final_list)} shared games found.\n{shared_games}'
-        return result
+            games = self.get_owned_names(id)
+            if games:
+                game_lists.append(games)
+        return game_lists
 
     @commands.command(
         name ='sharedgames',
-        aliases=['delete'],
-        brief = 'Finds owned games in common using steam id\'s.',
+        brief = 'Finds owned games in common among steam users.',
         description='Finds games in common among the libraries of the entered steam users.',
-        help=
-        '''
+        help='''
         You can enter your username from your vanity url or use your steam id.
         You can find your steam id using steamidfinder.com if prefered.
         \nExample: /sharedgames caseygamealot gaming4fun 12312312\nSteam Id\'s must be 17 characters long.
@@ -113,8 +101,21 @@ class Steam(commands.Cog):
         if not all_vanity:
             await ctx.message.delete()
         await ctx.send(f'Finding shared Steam games for the following valid users:\n{", ".join(valid_users)}')
-        result = self.create_game_lists(steam_ids)
-        await self.bot_func.split_send(ctx, result, delimiter=',')
+        game_lists = self.create_game_lists(steam_ids)
+        # checks if enough data was found to properly complete the command
+        total_game_lists = len(game_lists)
+        if total_game_lists == 1:
+            await ctx.send('Only 1 user is valid')
+        elif total_game_lists == 0:
+            await ctx.send('No users are valid')
+        shared_games_list = self.check_for_shared_games(game_lists)
+        if len(shared_games_list) == 0:
+            await ctx.send('No shared games found.')
+        shared_games = ', '.join(shared_games_list)
+        message = f'{len(shared_games_list)} shared games found.\n{shared_games}'
+        messages = self.bot_func.split_text(message, delimiter=',')
+        for message in messages:
+            await ctx.send(message)
 
 
 def setup(bot):
