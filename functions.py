@@ -6,26 +6,32 @@ class bot_functions:
 
 
     @staticmethod
-    async def split_string(ctx, string):
+    async def split_send(ctx, string, delimiter= ' ', limit=2000):
         '''
         Sends a split string in half if it is over 2000 characters.
         '''
-        if len(string) <= 2000:
-            await ctx.send(string)
-        elif len(string) > 4000:
-            await ctx.send('Output is too large.')
-        else:
-            middle = len(string)//2
-            await ctx.send(string[0:middle])
-            await ctx.send(string[middle:])
-
+        string_split = string.split(delimiter)
+        messages = [[]]
+        messages_index = 0
+        current_len = 0
+        delimiter_len = len(delimiter)
+        for split in string_split:
+            split_len = len(split)
+            delimiters_needed = len(messages[messages_index]) * delimiter_len
+            if current_len + split_len + delimiters_needed >= limit:
+                messages.append([])
+                messages_index += 1
+                current_len = 0
+            messages[messages_index].append(split)
+            current_len += split_len
+        for message in messages:
+            await ctx.send(delimiter.join(message))
 
     @staticmethod
     def print_nonascii(string):
         encoded_string = string.encode("ascii", "ignore")
         decode_string = encoded_string.decode()
         print(decode_string)
-
 
     @staticmethod
     def readable_time_since(seconds):
