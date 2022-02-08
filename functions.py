@@ -8,8 +8,11 @@ class bot_functions:
     @staticmethod
     def split_text(string, delimiter= ' ', limit=2000):
         '''
-        Sends a split string in half if it is over 2000 characters.
+        Returns a list of strings within the set character `limit` without breaking up beyong the `delimiter` point.
         '''
+        # exits early if string is already within the limit.
+        if len(string) <= limit:
+            return [string]
         string_split = string.split(delimiter)
         messages = [[]]
         messages_index = 0
