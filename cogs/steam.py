@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord as ds
 from functions import *
 import requests, json, time
 
@@ -37,11 +38,12 @@ class Steam(commands.Cog):
         url_end = f'?key={self.api_key}&steamid={steam_id}&include_played_free_games=0&format=json&include_appinfo=1?l=english'
         data = requests.get(base_url + url_end)
         if data.status_code == requests.codes.ok:
-            game_list = []
-            for item in data.json()['response']['games']:
-                game_name = item['name']
-                game_list.append(game_name)
-            return game_list
+            if 'games' in data.json()['response'].keys():
+                game_list = []
+                for item in data.json()['response']['games']:
+                    game_name = item['name']
+                    game_list.append(game_name)
+                return game_list
         return False
 
     @staticmethod
@@ -59,13 +61,15 @@ class Steam(commands.Cog):
         Creates a list containing a list each of the profiles games entered using the get_owned_names Function.
         '''
         game_lists = []
+        valid_users = []
         if len(steam_ids) > 4:
             self.check_delay = 1
         for id in steam_ids:
             games = self.get_owned_names(id)
             if games:
                 game_lists.append(games)
-        return game_lists
+                valid_users.append(id)
+        return game_lists, valid_users
 
     @commands.command(
         name ='sharedgames',
@@ -82,38 +86,40 @@ class Steam(commands.Cog):
         Finds games in common among the libraries of the entered steam id's.
         '''
         steam_ids = []
-        all_vanity = True
         valid_users = []
         for user in users:
             if user.isnumeric() and len(user) == 17:
                 # adds user if it is likely already a steam id
                 if user not in steam_ids:
                     steam_ids.append(user)
-                    valid_users.append(user)
-                    all_vanity = False
             elif type(user) is str:
                 # gets steam id using vanity username
                 steam_id = self.get_steam_id(user)
                 if steam_id and steam_id not in steam_ids:
                     steam_ids.append(steam_id)
-                    valid_users.append(user)
-        # deletes message if all users are not given as vanity username
-        if not all_vanity:
-            await ctx.message.delete()
-        await ctx.send(f'Finding shared Steam games for the following valid users:\n{", ".join(valid_users)}')
-        game_lists = self.create_game_lists(steam_ids)
+        # info embed
+        embed = ds.Embed(
+            title='Shared Games Finder',
+            description=f'Finding shared Steam games between {len(users)} users',
+            colour=ds.Colour(0xf1c40f))
+        game_lists, valid_users = self.create_game_lists(steam_ids)
         # checks if enough data was found to properly complete the command
         total_game_lists = len(game_lists)
         if total_game_lists == 1:
-            await ctx.send('Only 1 user is valid')
+            await ctx.send(f'Only {valid_users[0]} is valid\nCheck on other users info to be sure it is accurate.')
+            return
         elif total_game_lists == 0:
-            await ctx.send('No users are valid')
+            await ctx.send('No users are valid. Make sure you have the correct information.')
+            return
         shared_games_list = self.check_for_shared_games(game_lists)
         if len(shared_games_list) == 0:
             await ctx.send('No shared games found.')
+            return
+        # sends info about what games are being shown
         shared_games = ', '.join(shared_games_list)
-        message = f'{len(shared_games_list)} shared games found.\n{shared_games}'
-        messages = self.bot_func.split_text(message, delimiter=',')
+        messages = self.bot_func.split_text(shared_games, delimiter=',')
+        embed.add_field(name=f'Valid Users', value=", ".join(valid_users), inline=False)
+        await ctx.send(embed=embed)
         for message in messages:
             await ctx.send(message)
 
