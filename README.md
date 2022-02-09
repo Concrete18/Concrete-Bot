@@ -6,6 +6,14 @@ Custom discord bot for my discord server. It is build using the following module
 * requests
 * Natural Language Tool Kit
 
+## Auto Startup
+
+Allows easy start up if bot on reboot
+
+```crontab
+@reboot `path to startup.bash `
+```
+
 ## Cogs
 
 * Admin

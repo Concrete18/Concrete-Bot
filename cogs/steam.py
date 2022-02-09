@@ -1,7 +1,7 @@
 from discord.ext import commands
 import discord as ds
 from functions import *
-import requests, json, time
+import requests, json, time, re
 
 
 class Steam(commands.Cog):
@@ -75,7 +75,9 @@ class Steam(commands.Cog):
         name ='getsteamid',
         aliases=['steamid'],
         brief ='Finds your Steam ID using your vanity url from your steam profile.',
-        help='Enter your full steam profile pages address or just the customized username.'
+        help='''Enter your full steam profile pages address or just the customized username.
+        Example: https://steamcommunity.com/id/concretesurfer/
+        '''
     )
     async def getsteamid(self, ctx, vanity_url):
         '''
@@ -85,7 +87,8 @@ class Steam(commands.Cog):
         # https://steamcommunity.com/id/concretesurfer/
         url = 'https://steamcommunity.com/id/'
         if url in vanity_url:
-            vanity_url = vanity_url.replace(url, '').replace('/', '')
+            pattern = r'https://steamcommunity.com/id/(.*)/'
+            vanity_url = re.findall(pattern, vanity_url)[0]
         steam_id = self.get_steam_id(vanity_url)
         if steam_id:
             await ctx.send(f'Your Steam ID is {steam_id}')
@@ -96,9 +99,7 @@ class Steam(commands.Cog):
         name ='sharedgames',
         brief ='Finds owned games in common among steam users.',
         description='Finds games in common among the libraries of the entered steam users.',
-        help='''
-        You can enter your username from your vanity url or use your steam id.
-        You can find your steam id using steamidfinder.com if prefered.
+        help='''You can enter your username from your vanity url or use your steam id.
         \nExample: /sharedgames caseygamealot gaming4fun 12312312\nSteam Id\'s must be 17 characters long.
         '''
     )
