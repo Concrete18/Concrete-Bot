@@ -72,8 +72,29 @@ class Steam(commands.Cog):
         return game_lists, valid_users
 
     @commands.command(
+        name ='getsteamid',
+        aliases=['steamid'],
+        brief ='Finds your Steam ID using your vanity url from your steam profile.',
+        help='Enter your full steam profile pages address or just the customized username.'
+    )
+    async def getsteamid(self, ctx, vanity_url):
+        '''
+        Finds your Steam ID using your vanity url from your steam profile.
+        '''
+        # checks if vanity_url is a full url or just the custom username
+        # https://steamcommunity.com/id/concretesurfer/
+        url = 'https://steamcommunity.com/id/'
+        if url in vanity_url:
+            vanity_url = vanity_url.replace(url, '').replace('/', '')
+        steam_id = self.get_steam_id(vanity_url)
+        if steam_id:
+            await ctx.send(f'Your Steam ID is {steam_id}')
+        else:
+            await ctx.send(f'No Steam ID was found.')
+
+    @commands.command(
         name ='sharedgames',
-        brief = 'Finds owned games in common among steam users.',
+        brief ='Finds owned games in common among steam users.',
         description='Finds games in common among the libraries of the entered steam users.',
         help='''
         You can enter your username from your vanity url or use your steam id.
